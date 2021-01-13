@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>SbRails</title>
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+    <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
+  </head>
+
+  <body>
+    <img class="user-picture" src="<%= current_user.picture %>" />
+    <%= "#{current_user.first_name} #{current_user.last_name}" %>
+    <%= link_to "Sign out", destroy_user_session_path, :method => :delete %>
+
+    <%= yield %>
+  </body>
+</html>

@@ -1,0 +1,20 @@
+
+owned_by_admin: {
+  name: "project 1",
+  owner: admin,
+}
+
+owned_by_member: {
+  name: "project 2",
+  owner: member,
+}
+
+owned_by_admin_with_update_permissions: {
+  name: "project 3",
+  owner: admin,
+}
+
+owned_by_admin_with_read_permissions: {
+  name: "project 4",
+  owner: admin,
+}

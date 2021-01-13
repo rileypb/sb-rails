@@ -1,0 +1,11 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  project: owned_by_admin_with_update_permissions
+  user: member
+  scope: 'update'
+
+two:
+  project: owned_by_admin_with_read_permissions
+  user: member
+  scope: 'read'

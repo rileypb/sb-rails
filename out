@@ -1,0 +1,536 @@
+=> Booting Puma
+=> Rails 5.2.4.3 application starting in development 
+=> Run `rails server -h` for more startup options
+Puma starting in single mode...
+* Version 3.12.6 (ruby 2.4.0-p0), codename: Llamas in Pajamas
+* Min threads: 5, max threads: 5
+* Environment: development
+* Listening on tcp://localhost:3000
+Use Ctrl-C to stop
+Started GET "/cable" for ::1 at 2020-09-01 21:57:09 -0400
+  [1m[35m (0.1ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  ↳ /Users/rileypb/.rvm/gems/ruby-2.4.0/gems/activerecord-5.2.4.3/lib/active_record/log_subscriber.rb:98
+Started GET "/cable/" [WebSocket] for ::1 at 2020-09-01 21:57:09 -0400
+Successfully upgraded to WebSocket (REQUEST_METHOD: GET, HTTP_CONNECTION: Upgrade, HTTP_UPGRADE: websocket)
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = ? ORDER BY "users"."id" ASC LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/channels/application_cable/connection.rb:11
+*** #<User:0x007fa8a833ee08>
+Registered connection (Z2lkOi8vc2ItcmFpbHMvVXNlci8x)
+#<User:0x007fa8a833ee08>
+SyncChannel is transmitting the subscription confirmation
+SyncChannel is streaming from sync
+SyncChannel#sync({"type"=>"projects", "selector"=>"projects/1"})
+SyncChannel is streaming from sync:projects/1
+Started GET "/api/projects/1" for 127.0.0.1 at 2020-09-01 21:57:10 -0400
+Processing by ProjectsController#show as JSON
+  Parameters: {"id"=>"1"}
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = ? ORDER BY "users"."id" ASC LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/application_controller.rb:26
+  [1m[36mProject Load (0.1ms)[0m  [1m[34mSELECT  "projects".* FROM "projects" WHERE "projects"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/projects_controller.rb:88
+  Rendering projects/show.json.jbuilder
+  Rendered projects/_project.json.jbuilder (1.5ms)
+  Rendered projects/show.json.jbuilder (3.2ms)
+broadcast_sync: []
+Completed 200 OK in 50ms (Views: 19.9ms | ActiveRecord: 0.6ms)
+
+
+SyncChannel#sync({"type"=>"", "selector"=>"projects/1/issues"})
+SyncChannel is streaming from sync:projects/1/issues
+SyncChannel#sync({"type"=>"", "selector"=>"projects/1/sprints"})
+Started GET "/api/projects/1/issues" for 127.0.0.1 at 2020-09-01 21:57:10 -0400
+Processing by IssuesController#index as JSON
+SyncChannel is streaming from sync:projects/1/sprints
+  Parameters: {"project_id"=>"1"}
+Started GET "/api/projects/1/sprints" for 127.0.0.1 at 2020-09-01 21:57:10 -0400
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = ? ORDER BY "users"."id" ASC LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/application_controller.rb:26
+Processing by SprintsController#index as JSON
+  [1m[36mProject Load (0.1ms)[0m  [1m[34mSELECT  "projects".* FROM "projects" WHERE "projects"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  Parameters: {"project_id"=>"1"}
+  ↳ app/controllers/issues_controller.rb:9
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = ? ORDER BY "users"."id" ASC LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mIssueList Load (0.1ms)[0m  [1m[34mSELECT  "issue_lists".* FROM "issue_lists" WHERE "issue_lists"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/application_controller.rb:26
+  ↳ app/controllers/issues_controller.rb:12
+  [1m[36mIssue Load (0.1ms)[0m  [1m[34mSELECT  "issues".* FROM "issues" WHERE "issues"."issue_list_id" = ? AND "issues"."id" = ? LIMIT ?[0m  [["issue_list_id", 1], ["id", 9], ["LIMIT", 1]]
+  ↳ app/controllers/issues_controller.rb:20
+  [1m[36mIssue Load (0.2ms)[0m  [1m[34mSELECT  "issues".* FROM "issues" WHERE "issues"."issue_list_id" = ? AND "issues"."id" = ? LIMIT ?[0m  [["issue_list_id", 1], ["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/issues_controller.rb:20
+  [1m[36mIssue Load (0.2ms)[0m  [1m[34mSELECT "issues".* FROM "issues" WHERE "issues"."issue_list_id" = ?[0m  [["issue_list_id", 1]]
+  ↳ app/controllers/issues_controller.rb:25
+  Rendering issues/index.json.jbuilder
+  [1m[36mProject Load (0.2ms)[0m  [1m[34mSELECT  "projects".* FROM "projects" WHERE "projects"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/views/issues/_issue.json.jbuilder:2
+  Rendered issues/_issue.json.jbuilder (3.3ms)
+  [1m[36mCACHE Project Load (0.0ms)[0m  [1m[34mSELECT  "projects".* FROM "projects" WHERE "projects"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/views/issues/_issue.json.jbuilder:2
+  Rendered issues/_issue.json.jbuilder (1.3ms)
+  Rendered issues/index.json.jbuilder (7.1ms)
+broadcast_sync: []
+Completed 200 OK in 83ms (Views: 23.1ms | ActiveRecord: 1.8ms)
+
+
+  [1m[36mProject Load (0.1ms)[0m  [1m[34mSELECT  "projects".* FROM "projects" WHERE "projects"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/sprints_controller.rb:5
+  [1m[36mSprint Load (0.1ms)[0m  [1m[34mSELECT "sprints".* FROM "sprints" WHERE "sprints"."project_id" = ?[0m  [["project_id", 1]]
+  ↳ app/controllers/sprints_controller.rb:7
+  Rendering sprints/index.json.jbuilder
+  Rendered sprints/_sprint.json.jbuilder (1.2ms)
+  Rendered sprints/_sprint.json.jbuilder (0.6ms)
+  Rendered sprints/_sprint.json.jbuilder (0.6ms)
+  Rendered sprints/_sprint.json.jbuilder (0.7ms)
+  Rendered sprints/index.json.jbuilder (6.8ms)
+broadcast_sync: []
+Completed 200 OK in 109ms (Views: 22.0ms | ActiveRecord: 1.1ms)
+
+
+SyncChannel#sync({"type"=>"", "selector"=>"projects/1/sprints/1/issues"})
+SyncChannel is streaming from sync:projects/1/sprints/1/issues
+Started GET "/api/projects/1/sprints/1/issues" for 127.0.0.1 at 2020-09-01 21:57:10 -0400
+Processing by IssuesController#index as JSON
+  Parameters: {"project_id"=>"1", "sprint_id"=>"1"}
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = ? ORDER BY "users"."id" ASC LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/application_controller.rb:26
+  [1m[36mProject Load (0.1ms)[0m  [1m[34mSELECT  "projects".* FROM "projects" WHERE "projects"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/issues_controller.rb:9
+  [1m[36mSprint Load (0.1ms)[0m  [1m[34mSELECT  "sprints".* FROM "sprints" WHERE "sprints"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/issues_controller.rb:10
+  [1m[36mIssueList Load (0.2ms)[0m  [1m[34mSELECT  "issue_lists".* FROM "issue_lists" WHERE "issue_lists"."id" = ? LIMIT ?[0m  [["id", 4], ["LIMIT", 1]]
+  ↳ app/controllers/issues_controller.rb:14
+  [1m[36mIssue Load (0.2ms)[0m  [1m[34mSELECT  "issues".* FROM "issues" WHERE "issues"."issue_list_id" = ? AND "issues"."id" = ? LIMIT ?[0m  [["issue_list_id", 4], ["id", 7], ["LIMIT", 1]]
+  ↳ app/controllers/issues_controller.rb:20
+  [1m[36mIssue Load (0.1ms)[0m  [1m[34mSELECT  "issues".* FROM "issues" WHERE "issues"."issue_list_id" = ? AND "issues"."id" = ? LIMIT ?[0m  [["issue_list_id", 4], ["id", 4], ["LIMIT", 1]]
+  ↳ app/controllers/issues_controller.rb:20
+  [1m[36mIssue Load (0.1ms)[0m  [1m[34mSELECT  "issues".* FROM "issues" WHERE "issues"."issue_list_id" = ? AND "issues"."id" = ? LIMIT ?[0m  [["issue_list_id", 4], ["id", 2], ["LIMIT", 1]]
+  ↳ app/controllers/issues_controller.rb:20
+  [1m[36mIssue Load (0.1ms)[0m  [1m[34mSELECT  "issues".* FROM "issues" WHERE "issues"."issue_list_id" = ? AND "issues"."id" = ? LIMIT ?[0m  [["issue_list_id", 4], ["id", 3], ["LIMIT", 1]]
+  ↳ app/controllers/issues_controller.rb:20
+  [1m[36mIssue Load (0.1ms)[0m  [1m[34mSELECT  "issues".* FROM "issues" WHERE "issues"."issue_list_id" = ? AND "issues"."id" = ? LIMIT ?[0m  [["issue_list_id", 4], ["id", 5], ["LIMIT", 1]]
+  ↳ app/controllers/issues_controller.rb:20
+  [1m[36mIssue Load (0.4ms)[0m  [1m[34mSELECT "issues".* FROM "issues" WHERE "issues"."issue_list_id" = ?[0m  [["issue_list_id", 4]]
+  ↳ app/controllers/issues_controller.rb:25
+  Rendering issues/index.json.jbuilder
+  [1m[36mProject Load (0.1ms)[0m  [1m[34mSELECT  "projects".* FROM "projects" WHERE "projects"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/views/issues/_issue.json.jbuilder:2
+  Rendered issues/_issue.json.jbuilder (5.8ms)
+  [1m[36mCACHE Project Load (0.0ms)[0m  [1m[34mSELECT  "projects".* FROM "projects" WHERE "projects"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/views/issues/_issue.json.jbuilder:2
+  Rendered issues/_issue.json.jbuilder (3.8ms)
+  [1m[36mCACHE Project Load (0.0ms)[0m  [1m[34mSELECT  "projects".* FROM "projects" WHERE "projects"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/views/issues/_issue.json.jbuilder:2
+  Rendered issues/_issue.json.jbuilder (2.4ms)
+  [1m[36mCACHE Project Load (0.0ms)[0m  [1m[34mSELECT  "projects".* FROM "projects" WHERE "projects"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/views/issues/_issue.json.jbuilder:2
+  Rendered issues/_issue.json.jbuilder (2.3ms)
+  [1m[36mCACHE Project Load (0.0ms)[0m  [1m[34mSELECT  "projects".* FROM "projects" WHERE "projects"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/views/issues/_issue.json.jbuilder:2
+  Rendered issues/_issue.json.jbuilder (3.3ms)
+  Rendered issues/index.json.jbuilder (25.5ms)
+broadcast_sync: []
+Completed 200 OK in 74ms (Views: 55.4ms | ActiveRecord: 1.7ms)
+
+
+Started PATCH "/api/projects/1/sprints/1" for 127.0.0.1 at 2020-09-01 21:57:13 -0400
+Processing by SprintsController#update as JSON
+  Parameters: {"sprint"=>{"order"=>"4,7,2,3,5"}, "project_id"=>"1", "id"=>"1"}
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = ? ORDER BY "users"."id" ASC LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/application_controller.rb:26
+  [1m[36mProject Load (0.1ms)[0m  [1m[34mSELECT  "projects".* FROM "projects" WHERE "projects"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/sprints_controller.rb:44
+  [1m[36mSprint Load (0.1ms)[0m  [1m[34mSELECT  "sprints".* FROM "sprints" WHERE "sprints"."project_id" = ? AND "sprints"."id" = ? LIMIT ?[0m  [["project_id", 1], ["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/sprints_controller.rb:45
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  ↳ app/controllers/sprints_controller.rb:20
+  [1m[36mIssueList Load (0.1ms)[0m  [1m[34mSELECT  "issue_lists".* FROM "issue_lists" WHERE "issue_lists"."id" = ? LIMIT ?[0m  [["id", 4], ["LIMIT", 1]]
+  ↳ app/controllers/sprints_controller.rb:26
+  [1m[36mIssueList Update (0.3ms)[0m  [1m[33mUPDATE "issue_lists" SET "order" = ?, "updated_at" = ? WHERE "issue_lists"."id" = ?[0m  [["order", "4,7,2,3,5"], ["updated_at", "2020-09-02 01:57:13.021932"], ["id", 4]]
+  ↳ app/controllers/sprints_controller.rb:26
+  Rendering sprints/show.json.jbuilder
+  Rendered sprints/_sprint.json.jbuilder (1.8ms)
+  Rendered sprints/show.json.jbuilder (3.4ms)
+  [1m[35m (2.6ms)[0m  [1m[36mcommit transaction[0m
+  ↳ app/controllers/sprints_controller.rb:20
+broadcast_sync: ["projects/1/sprints/1/issues", "projects/1/sprints/1", "projects/1/sprints", "projects/1", "projects"]
+BROADCAST projects/1/sprints/1/issues
+[ActionCable] Broadcasting to sync:projects/1/sprints/1/issues: {:action=>"sync", :selector=>"projects/1/sprints/1/issues"}
+SyncChannel transmitting {"action"=>"sync", "selector"=>"projects/1/sprints/1/issues"} (via streamed from sync:projects/1/sprints/1/issues)
+BROADCAST projects/1/sprints/1
+[ActionCable] Broadcasting to sync:projects/1/sprints/1: {:action=>"sync", :selector=>"projects/1/sprints/1"}
+BROADCAST projects/1/sprints
+[ActionCable] Broadcasting to sync:projects/1/sprints: {:action=>"sync", :selector=>"projects/1/sprints"}
+BROADCAST projects/1
+SyncChannel transmitting {"action"=>"sync", "selector"=>"projects/1/sprints"} (via streamed from sync:projects/1/sprints)
+[ActionCable] Broadcasting to sync:projects/1: {:action=>"sync", :selector=>"projects/1"}
+BROADCAST projects
+SyncChannel transmitting {"action"=>"sync", "selector"=>"projects/1"} (via streamed from sync:projects/1)
+[ActionCable] Broadcasting to sync:projects: {:action=>"sync", :selector=>"projects"}
+Completed 200 OK in 42ms (Views: 19.5ms | ActiveRecord: 3.4ms)
+
+
+Started GET "/api/projects/1/sprints/1/issues" for 127.0.0.1 at 2020-09-01 21:57:13 -0400
+Processing by IssuesController#index as JSON
+  Parameters: {"project_id"=>"1", "sprint_id"=>"1"}
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = ? ORDER BY "users"."id" ASC LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/application_controller.rb:26
+  [1m[36mProject Load (0.1ms)[0m  [1m[34mSELECT  "projects".* FROM "projects" WHERE "projects"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/issues_controller.rb:9
+  [1m[36mSprint Load (0.1ms)[0m  [1m[34mSELECT  "sprints".* FROM "sprints" WHERE "sprints"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+Started GET "/api/projects/1/sprints" for 127.0.0.1 at 2020-09-01 21:57:13 -0400
+  ↳ app/controllers/issues_controller.rb:10
+Processing by SprintsController#index as JSON
+  [1m[36mIssueList Load (0.1ms)[0m  [1m[34mSELECT  "issue_lists".* FROM "issue_lists" WHERE "issue_lists"."id" = ? LIMIT ?[0m  [["id", 4], ["LIMIT", 1]]
+Started GET "/api/projects/1" for 127.0.0.1 at 2020-09-01 21:57:13 -0400
+  Parameters: {"project_id"=>"1"}
+  ↳ app/controllers/issues_controller.rb:14
+Processing by ProjectsController#show as JSON
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = ? ORDER BY "users"."id" ASC LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mIssue Load (0.1ms)[0m  [1m[34mSELECT  "issues".* FROM "issues" WHERE "issues"."issue_list_id" = ? AND "issues"."id" = ? LIMIT ?[0m  [["issue_list_id", 4], ["id", 4], ["LIMIT", 1]]
+  Parameters: {"id"=>"1"}
+  ↳ app/controllers/application_controller.rb:26
+  ↳ app/controllers/issues_controller.rb:20
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = ? ORDER BY "users"."id" ASC LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mProject Load (0.1ms)[0m  [1m[34mSELECT  "projects".* FROM "projects" WHERE "projects"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mIssue Load (0.1ms)[0m  [1m[34mSELECT  "issues".* FROM "issues" WHERE "issues"."issue_list_id" = ? AND "issues"."id" = ? LIMIT ?[0m  [["issue_list_id", 4], ["id", 7], ["LIMIT", 1]]
+  ↳ app/controllers/application_controller.rb:26
+  ↳ app/controllers/sprints_controller.rb:5
+  ↳ app/controllers/issues_controller.rb:20
+  [1m[36mProject Load (0.1ms)[0m  [1m[34mSELECT  "projects".* FROM "projects" WHERE "projects"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mSprint Load (0.1ms)[0m  [1m[34mSELECT "sprints".* FROM "sprints" WHERE "sprints"."project_id" = ?[0m  [["project_id", 1]]
+  [1m[36mIssue Load (0.1ms)[0m  [1m[34mSELECT  "issues".* FROM "issues" WHERE "issues"."issue_list_id" = ? AND "issues"."id" = ? LIMIT ?[0m  [["issue_list_id", 4], ["id", 2], ["LIMIT", 1]]
+  ↳ app/controllers/projects_controller.rb:88
+  ↳ app/controllers/sprints_controller.rb:7
+  ↳ app/controllers/issues_controller.rb:20
+  Rendering sprints/index.json.jbuilder
+  Rendering projects/show.json.jbuilder
+  [1m[36mIssue Load (0.1ms)[0m  [1m[34mSELECT  "issues".* FROM "issues" WHERE "issues"."issue_list_id" = ? AND "issues"."id" = ? LIMIT ?[0m  [["issue_list_id", 4], ["id", 3], ["LIMIT", 1]]
+  Rendered sprints/_sprint.json.jbuilder (1.0ms)
+  Rendered projects/_project.json.jbuilder (0.9ms)
+  ↳ app/controllers/issues_controller.rb:20
+  Rendered projects/show.json.jbuilder (6.4ms)
+  Rendered sprints/_sprint.json.jbuilder (0.7ms)
+  [1m[36mIssue Load (0.1ms)[0m  [1m[34mSELECT  "issues".* FROM "issues" WHERE "issues"."issue_list_id" = ? AND "issues"."id" = ? LIMIT ?[0m  [["issue_list_id", 4], ["id", 5], ["LIMIT", 1]]
+broadcast_sync: []
+Completed 200 OK in 64ms (Views: 54.3ms | ActiveRecord: 0.2ms)
+
+
+  Rendered sprints/_sprint.json.jbuilder (0.5ms)
+  ↳ app/controllers/issues_controller.rb:20
+  Rendered sprints/_sprint.json.jbuilder (1.3ms)
+  [1m[36mIssue Load (0.1ms)[0m  [1m[34mSELECT "issues".* FROM "issues" WHERE "issues"."issue_list_id" = ?[0m  [["issue_list_id", 4]]
+  Rendered sprints/index.json.jbuilder (16.5ms)
+Started GET "/api/projects/1" for 127.0.0.1 at 2020-09-01 21:57:13 -0400
+broadcast_sync: []
+  ↳ app/controllers/issues_controller.rb:25
+Completed 200 OK in 74ms (Views: 58.7ms | ActiveRecord: 0.3ms)
+
+
+Processing by ProjectsController#show as JSON
+  Rendering issues/index.json.jbuilder
+  Parameters: {"id"=>"1"}
+Started GET "/api/projects/1/sprints" for 127.0.0.1 at 2020-09-01 21:57:13 -0400
+  [1m[36mProject Load (0.1ms)[0m  [1m[34mSELECT  "projects".* FROM "projects" WHERE "projects"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = ? ORDER BY "users"."id" ASC LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+Processing by SprintsController#index as JSON
+  ↳ app/views/issues/_issue.json.jbuilder:2
+  ↳ app/controllers/application_controller.rb:26
+  Parameters: {"project_id"=>"1"}
+  Rendered issues/_issue.json.jbuilder (4.5ms)
+  [1m[36mProject Load (0.1ms)[0m  [1m[34mSELECT  "projects".* FROM "projects" WHERE "projects"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = ? ORDER BY "users"."id" ASC LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mCACHE Project Load (0.0ms)[0m  [1m[34mSELECT  "projects".* FROM "projects" WHERE "projects"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/projects_controller.rb:88
+  ↳ app/controllers/application_controller.rb:26
+  ↳ app/views/issues/_issue.json.jbuilder:2
+  [1m[36mProject Load (0.1ms)[0m  [1m[34mSELECT  "projects".* FROM "projects" WHERE "projects"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  Rendering projects/show.json.jbuilder
+  Rendered issues/_issue.json.jbuilder (18.9ms)
+  ↳ app/controllers/sprints_controller.rb:5
+  Rendered projects/_project.json.jbuilder (0.8ms)
+  [1m[36mSprint Load (0.1ms)[0m  [1m[34mSELECT "sprints".* FROM "sprints" WHERE "sprints"."project_id" = ?[0m  [["project_id", 1]]
+  [1m[36mCACHE Project Load (0.0ms)[0m  [1m[34mSELECT  "projects".* FROM "projects" WHERE "projects"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  Rendered projects/show.json.jbuilder (3.5ms)
+  ↳ app/controllers/sprints_controller.rb:7
+  ↳ app/views/issues/_issue.json.jbuilder:2
+broadcast_sync: []
+Completed 200 OK in 30ms (Views: 20.1ms | ActiveRecord: 0.2ms)
+
+
+  Rendering sprints/index.json.jbuilder
+  Rendered issues/_issue.json.jbuilder (17.6ms)
+  [1m[36mCACHE Project Load (0.0ms)[0m  [1m[34mSELECT  "projects".* FROM "projects" WHERE "projects"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  Rendered sprints/_sprint.json.jbuilder (1.6ms)
+Started GET "/api/projects/1" for 127.0.0.1 at 2020-09-01 21:57:13 -0400
+  ↳ app/views/issues/_issue.json.jbuilder:2
+  Rendered sprints/_sprint.json.jbuilder (1.0ms)
+Processing by ProjectsController#show as JSON
+  Rendered issues/_issue.json.jbuilder (6.9ms)
+  Parameters: {"id"=>"1"}
+  Rendered sprints/_sprint.json.jbuilder (0.5ms)
+  [1m[36mCACHE Project Load (0.0ms)[0m  [1m[34mSELECT  "projects".* FROM "projects" WHERE "projects"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = ? ORDER BY "users"."id" ASC LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  Rendered sprints/_sprint.json.jbuilder (0.5ms)
+  ↳ app/views/issues/_issue.json.jbuilder:2
+  ↳ app/controllers/application_controller.rb:26
+  Rendered sprints/index.json.jbuilder (14.1ms)
+  Rendered issues/_issue.json.jbuilder (4.6ms)
+  [1m[36mProject Load (0.1ms)[0m  [1m[34mSELECT  "projects".* FROM "projects" WHERE "projects"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+broadcast_sync: []
+Completed 200 OK in 58ms (Views: 31.2ms | ActiveRecord: 0.3ms)
+
+
+  Rendered issues/index.json.jbuilder (66.0ms)
+  ↳ app/controllers/projects_controller.rb:88
+broadcast_sync: []
+Completed 200 OK in 173ms (Views: 82.7ms | ActiveRecord: 1.1ms)
+
+
+Started GET "/api/projects/1/sprints" for 127.0.0.1 at 2020-09-01 21:57:13 -0400
+  Rendering projects/show.json.jbuilder
+Processing by SprintsController#index as JSON
+Started GET "/api/projects/1/sprints/1/issues" for 127.0.0.1 at 2020-09-01 21:57:13 -0400
+  Rendered projects/_project.json.jbuilder (1.0ms)
+  Parameters: {"project_id"=>"1"}
+Processing by IssuesController#index as JSON
+  Rendered projects/show.json.jbuilder (3.8ms)
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = ? ORDER BY "users"."id" ASC LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  Parameters: {"project_id"=>"1", "sprint_id"=>"1"}
+broadcast_sync: []
+Completed 200 OK in 34ms (Views: 24.4ms | ActiveRecord: 0.2ms)
+
+
+  ↳ app/controllers/application_controller.rb:26
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = ? ORDER BY "users"."id" ASC LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mProject Load (0.1ms)[0m  [1m[34mSELECT  "projects".* FROM "projects" WHERE "projects"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/application_controller.rb:26
+  ↳ app/controllers/sprints_controller.rb:5
+  [1m[36mProject Load (0.1ms)[0m  [1m[34mSELECT  "projects".* FROM "projects" WHERE "projects"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mSprint Load (0.1ms)[0m  [1m[34mSELECT "sprints".* FROM "sprints" WHERE "sprints"."project_id" = ?[0m  [["project_id", 1]]
+  ↳ app/controllers/issues_controller.rb:9
+  ↳ app/controllers/sprints_controller.rb:7
+  [1m[36mSprint Load (0.1ms)[0m  [1m[34mSELECT  "sprints".* FROM "sprints" WHERE "sprints"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/issues_controller.rb:10
+  Rendering sprints/index.json.jbuilder
+  [1m[36mIssueList Load (0.1ms)[0m  [1m[34mSELECT  "issue_lists".* FROM "issue_lists" WHERE "issue_lists"."id" = ? LIMIT ?[0m  [["id", 4], ["LIMIT", 1]]
+  ↳ app/controllers/issues_controller.rb:14
+  Rendered sprints/_sprint.json.jbuilder (0.9ms)
+  [1m[36mIssue Load (0.1ms)[0m  [1m[34mSELECT  "issues".* FROM "issues" WHERE "issues"."issue_list_id" = ? AND "issues"."id" = ? LIMIT ?[0m  [["issue_list_id", 4], ["id", 4], ["LIMIT", 1]]
+  ↳ app/controllers/issues_controller.rb:20
+  [1m[36mIssue Load (0.1ms)[0m  [1m[34mSELECT  "issues".* FROM "issues" WHERE "issues"."issue_list_id" = ? AND "issues"."id" = ? LIMIT ?[0m  [["issue_list_id", 4], ["id", 7], ["LIMIT", 1]]
+  Rendered sprints/_sprint.json.jbuilder (0.6ms)
+  ↳ app/controllers/issues_controller.rb:20
+  Rendered sprints/_sprint.json.jbuilder (0.5ms)
+  [1m[36mIssue Load (0.1ms)[0m  [1m[34mSELECT  "issues".* FROM "issues" WHERE "issues"."issue_list_id" = ? AND "issues"."id" = ? LIMIT ?[0m  [["issue_list_id", 4], ["id", 2], ["LIMIT", 1]]
+  Rendered sprints/_sprint.json.jbuilder (0.5ms)
+  ↳ app/controllers/issues_controller.rb:20
+  Rendered sprints/index.json.jbuilder (8.4ms)
+  [1m[36mIssue Load (0.1ms)[0m  [1m[34mSELECT  "issues".* FROM "issues" WHERE "issues"."issue_list_id" = ? AND "issues"."id" = ? LIMIT ?[0m  [["issue_list_id", 4], ["id", 3], ["LIMIT", 1]]
+broadcast_sync: []
+Completed 200 OK in 33ms (Views: 24.8ms | ActiveRecord: 0.3ms)
+
+
+  ↳ app/controllers/issues_controller.rb:20
+  [1m[36mIssue Load (0.1ms)[0m  [1m[34mSELECT  "issues".* FROM "issues" WHERE "issues"."issue_list_id" = ? AND "issues"."id" = ? LIMIT ?[0m  [["issue_list_id", 4], ["id", 5], ["LIMIT", 1]]
+  ↳ app/controllers/issues_controller.rb:20
+  [1m[36mIssue Load (0.1ms)[0m  [1m[34mSELECT "issues".* FROM "issues" WHERE "issues"."issue_list_id" = ?[0m  [["issue_list_id", 4]]
+  ↳ app/controllers/issues_controller.rb:25
+SyncChannel#cancelsync({"type"=>"", "selector"=>"projects/1/sprints/1/issues"})
+SyncChannel stopped streaming from sync
+  Rendering issues/index.json.jbuilder
+SyncChannel stopped streaming from sync:projects/1
+SyncChannel#sync({"type"=>"", "selector"=>"projects/1/sprints/1/issues"})
+  [1m[36mProject Load (0.1ms)[0m  [1m[34mSELECT  "projects".* FROM "projects" WHERE "projects"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+SyncChannel stopped streaming from sync:projects/1/issues
+SyncChannel is streaming from sync:projects/1/sprints/1/issues
+  ↳ app/views/issues/_issue.json.jbuilder:2
+  Rendered issues/_issue.json.jbuilder (3.4ms)
+SyncChannel stopped streaming from sync:projects/1/sprints
+SyncChannel stopped streaming from sync:projects/1/sprints/1/issues
+  [1m[36mCACHE Project Load (0.0ms)[0m  [1m[34mSELECT  "projects".* FROM "projects" WHERE "projects"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+SyncChannel stopped streaming from sync:projects/1/sprints/1/issues
+  ↳ app/views/issues/_issue.json.jbuilder:2
+  Rendered issues/_issue.json.jbuilder (6.6ms)
+  [1m[36mCACHE Project Load (0.0ms)[0m  [1m[34mSELECT  "projects".* FROM "projects" WHERE "projects"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/views/issues/_issue.json.jbuilder:2
+  Rendered issues/_issue.json.jbuilder (1.1ms)
+  [1m[36mCACHE Project Load (0.0ms)[0m  [1m[34mSELECT  "projects".* FROM "projects" WHERE "projects"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/views/issues/_issue.json.jbuilder:2
+  Rendered issues/_issue.json.jbuilder (1.0ms)
+  [1m[36mCACHE Project Load (0.0ms)[0m  [1m[34mSELECT  "projects".* FROM "projects" WHERE "projects"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/views/issues/_issue.json.jbuilder:2
+  Rendered issues/_issue.json.jbuilder (0.9ms)
+  Rendered issues/index.json.jbuilder (18.0ms)
+broadcast_sync: []
+Completed 200 OK in 74ms (Views: 37.0ms | ActiveRecord: 1.1ms)
+
+
+Started GET "/api/projects/1/sprints/1/issues" for 127.0.0.1 at 2020-09-01 21:57:13 -0400
+Processing by IssuesController#index as JSON
+  Parameters: {"project_id"=>"1", "sprint_id"=>"1"}
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = ? ORDER BY "users"."id" ASC LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/application_controller.rb:26
+  [1m[36mProject Load (0.1ms)[0m  [1m[34mSELECT  "projects".* FROM "projects" WHERE "projects"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/issues_controller.rb:9
+  [1m[36mSprint Load (0.1ms)[0m  [1m[34mSELECT  "sprints".* FROM "sprints" WHERE "sprints"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/issues_controller.rb:10
+  [1m[36mIssueList Load (0.1ms)[0m  [1m[34mSELECT  "issue_lists".* FROM "issue_lists" WHERE "issue_lists"."id" = ? LIMIT ?[0m  [["id", 4], ["LIMIT", 1]]
+  ↳ app/controllers/issues_controller.rb:14
+  [1m[36mIssue Load (0.1ms)[0m  [1m[34mSELECT  "issues".* FROM "issues" WHERE "issues"."issue_list_id" = ? AND "issues"."id" = ? LIMIT ?[0m  [["issue_list_id", 4], ["id", 4], ["LIMIT", 1]]
+  ↳ app/controllers/issues_controller.rb:20
+  [1m[36mIssue Load (0.1ms)[0m  [1m[34mSELECT  "issues".* FROM "issues" WHERE "issues"."issue_list_id" = ? AND "issues"."id" = ? LIMIT ?[0m  [["issue_list_id", 4], ["id", 7], ["LIMIT", 1]]
+  ↳ app/controllers/issues_controller.rb:20
+  [1m[36mIssue Load (0.1ms)[0m  [1m[34mSELECT  "issues".* FROM "issues" WHERE "issues"."issue_list_id" = ? AND "issues"."id" = ? LIMIT ?[0m  [["issue_list_id", 4], ["id", 2], ["LIMIT", 1]]
+  ↳ app/controllers/issues_controller.rb:20
+  [1m[36mIssue Load (0.1ms)[0m  [1m[34mSELECT  "issues".* FROM "issues" WHERE "issues"."issue_list_id" = ? AND "issues"."id" = ? LIMIT ?[0m  [["issue_list_id", 4], ["id", 3], ["LIMIT", 1]]
+  ↳ app/controllers/issues_controller.rb:20
+  [1m[36mIssue Load (0.1ms)[0m  [1m[34mSELECT  "issues".* FROM "issues" WHERE "issues"."issue_list_id" = ? AND "issues"."id" = ? LIMIT ?[0m  [["issue_list_id", 4], ["id", 5], ["LIMIT", 1]]
+  ↳ app/controllers/issues_controller.rb:20
+  [1m[36mIssue Load (0.1ms)[0m  [1m[34mSELECT "issues".* FROM "issues" WHERE "issues"."issue_list_id" = ?[0m  [["issue_list_id", 4]]
+  ↳ app/controllers/issues_controller.rb:25
+  Rendering issues/index.json.jbuilder
+  [1m[36mProject Load (0.1ms)[0m  [1m[34mSELECT  "projects".* FROM "projects" WHERE "projects"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/views/issues/_issue.json.jbuilder:2
+  Rendered issues/_issue.json.jbuilder (1.7ms)
+  [1m[36mCACHE Project Load (0.0ms)[0m  [1m[34mSELECT  "projects".* FROM "projects" WHERE "projects"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/views/issues/_issue.json.jbuilder:2
+  Rendered issues/_issue.json.jbuilder (1.0ms)
+  [1m[36mCACHE Project Load (0.0ms)[0m  [1m[34mSELECT  "projects".* FROM "projects" WHERE "projects"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/views/issues/_issue.json.jbuilder:2
+  Rendered issues/_issue.json.jbuilder (0.9ms)
+  [1m[36mCACHE Project Load (0.0ms)[0m  [1m[34mSELECT  "projects".* FROM "projects" WHERE "projects"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/views/issues/_issue.json.jbuilder:2
+  Rendered issues/_issue.json.jbuilder (0.9ms)
+  [1m[36mCACHE Project Load (0.0ms)[0m  [1m[34mSELECT  "projects".* FROM "projects" WHERE "projects"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/views/issues/_issue.json.jbuilder:2
+  Rendered issues/_issue.json.jbuilder (0.9ms)
+  Rendered issues/index.json.jbuilder (9.1ms)
+broadcast_sync: []
+Completed 200 OK in 31ms (Views: 23.2ms | ActiveRecord: 0.8ms)
+
+
+Started GET "/api/projects/1/sprints/1/issues" for 127.0.0.1 at 2020-09-01 21:57:13 -0400
+Processing by IssuesController#index as JSON
+  Parameters: {"project_id"=>"1", "sprint_id"=>"1"}
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = ? ORDER BY "users"."id" ASC LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/application_controller.rb:26
+  [1m[36mProject Load (0.1ms)[0m  [1m[34mSELECT  "projects".* FROM "projects" WHERE "projects"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/issues_controller.rb:9
+  [1m[36mSprint Load (0.1ms)[0m  [1m[34mSELECT  "sprints".* FROM "sprints" WHERE "sprints"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/issues_controller.rb:10
+  [1m[36mIssueList Load (0.1ms)[0m  [1m[34mSELECT  "issue_lists".* FROM "issue_lists" WHERE "issue_lists"."id" = ? LIMIT ?[0m  [["id", 4], ["LIMIT", 1]]
+  ↳ app/controllers/issues_controller.rb:14
+  [1m[36mIssue Load (0.1ms)[0m  [1m[34mSELECT  "issues".* FROM "issues" WHERE "issues"."issue_list_id" = ? AND "issues"."id" = ? LIMIT ?[0m  [["issue_list_id", 4], ["id", 4], ["LIMIT", 1]]
+  ↳ app/controllers/issues_controller.rb:20
+  [1m[36mIssue Load (0.1ms)[0m  [1m[34mSELECT  "issues".* FROM "issues" WHERE "issues"."issue_list_id" = ? AND "issues"."id" = ? LIMIT ?[0m  [["issue_list_id", 4], ["id", 7], ["LIMIT", 1]]
+  ↳ app/controllers/issues_controller.rb:20
+  [1m[36mIssue Load (0.1ms)[0m  [1m[34mSELECT  "issues".* FROM "issues" WHERE "issues"."issue_list_id" = ? AND "issues"."id" = ? LIMIT ?[0m  [["issue_list_id", 4], ["id", 2], ["LIMIT", 1]]
+  ↳ app/controllers/issues_controller.rb:20
+  [1m[36mIssue Load (0.1ms)[0m  [1m[34mSELECT  "issues".* FROM "issues" WHERE "issues"."issue_list_id" = ? AND "issues"."id" = ? LIMIT ?[0m  [["issue_list_id", 4], ["id", 3], ["LIMIT", 1]]
+  ↳ app/controllers/issues_controller.rb:20
+  [1m[36mIssue Load (0.1ms)[0m  [1m[34mSELECT  "issues".* FROM "issues" WHERE "issues"."issue_list_id" = ? AND "issues"."id" = ? LIMIT ?[0m  [["issue_list_id", 4], ["id", 5], ["LIMIT", 1]]
+  ↳ app/controllers/issues_controller.rb:20
+  [1m[36mIssue Load (0.1ms)[0m  [1m[34mSELECT "issues".* FROM "issues" WHERE "issues"."issue_list_id" = ?[0m  [["issue_list_id", 4]]
+  ↳ app/controllers/issues_controller.rb:25
+  Rendering issues/index.json.jbuilder
+  [1m[36mProject Load (0.1ms)[0m  [1m[34mSELECT  "projects".* FROM "projects" WHERE "projects"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/views/issues/_issue.json.jbuilder:2
+  Rendered issues/_issue.json.jbuilder (2.0ms)
+  [1m[36mCACHE Project Load (0.0ms)[0m  [1m[34mSELECT  "projects".* FROM "projects" WHERE "projects"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/views/issues/_issue.json.jbuilder:2
+  Rendered issues/_issue.json.jbuilder (1.1ms)
+  [1m[36mCACHE Project Load (0.0ms)[0m  [1m[34mSELECT  "projects".* FROM "projects" WHERE "projects"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/views/issues/_issue.json.jbuilder:2
+  Rendered issues/_issue.json.jbuilder (1.0ms)
+  [1m[36mCACHE Project Load (0.0ms)[0m  [1m[34mSELECT  "projects".* FROM "projects" WHERE "projects"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/views/issues/_issue.json.jbuilder:2
+  Rendered issues/_issue.json.jbuilder (1.0ms)
+  [1m[36mCACHE Project Load (0.0ms)[0m  [1m[34mSELECT  "projects".* FROM "projects" WHERE "projects"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/views/issues/_issue.json.jbuilder:2
+  Rendered issues/_issue.json.jbuilder (1.0ms)
+  Rendered issues/index.json.jbuilder (10.0ms)
+broadcast_sync: []
+Completed 200 OK in 32ms (Views: 24.1ms | ActiveRecord: 0.8ms)
+
+
+Started GET "/api/projects/1/sprints/1/issues" for 127.0.0.1 at 2020-09-01 21:57:13 -0400
+Processing by IssuesController#index as JSON
+  Parameters: {"project_id"=>"1", "sprint_id"=>"1"}
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = ? ORDER BY "users"."id" ASC LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/application_controller.rb:26
+  [1m[36mProject Load (0.1ms)[0m  [1m[34mSELECT  "projects".* FROM "projects" WHERE "projects"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/issues_controller.rb:9
+  [1m[36mSprint Load (0.1ms)[0m  [1m[34mSELECT  "sprints".* FROM "sprints" WHERE "sprints"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/issues_controller.rb:10
+  [1m[36mIssueList Load (0.1ms)[0m  [1m[34mSELECT  "issue_lists".* FROM "issue_lists" WHERE "issue_lists"."id" = ? LIMIT ?[0m  [["id", 4], ["LIMIT", 1]]
+  ↳ app/controllers/issues_controller.rb:14
+  [1m[36mIssue Load (0.1ms)[0m  [1m[34mSELECT  "issues".* FROM "issues" WHERE "issues"."issue_list_id" = ? AND "issues"."id" = ? LIMIT ?[0m  [["issue_list_id", 4], ["id", 4], ["LIMIT", 1]]
+  ↳ app/controllers/issues_controller.rb:20
+  [1m[36mIssue Load (0.1ms)[0m  [1m[34mSELECT  "issues".* FROM "issues" WHERE "issues"."issue_list_id" = ? AND "issues"."id" = ? LIMIT ?[0m  [["issue_list_id", 4], ["id", 7], ["LIMIT", 1]]
+  ↳ app/controllers/issues_controller.rb:20
+  [1m[36mIssue Load (0.1ms)[0m  [1m[34mSELECT  "issues".* FROM "issues" WHERE "issues"."issue_list_id" = ? AND "issues"."id" = ? LIMIT ?[0m  [["issue_list_id", 4], ["id", 2], ["LIMIT", 1]]
+  ↳ app/controllers/issues_controller.rb:20
+  [1m[36mIssue Load (0.1ms)[0m  [1m[34mSELECT  "issues".* FROM "issues" WHERE "issues"."issue_list_id" = ? AND "issues"."id" = ? LIMIT ?[0m  [["issue_list_id", 4], ["id", 3], ["LIMIT", 1]]
+  ↳ app/controllers/issues_controller.rb:20
+  [1m[36mIssue Load (0.1ms)[0m  [1m[34mSELECT  "issues".* FROM "issues" WHERE "issues"."issue_list_id" = ? AND "issues"."id" = ? LIMIT ?[0m  [["issue_list_id", 4], ["id", 5], ["LIMIT", 1]]
+  ↳ app/controllers/issues_controller.rb:20
+  [1m[36mIssue Load (0.1ms)[0m  [1m[34mSELECT "issues".* FROM "issues" WHERE "issues"."issue_list_id" = ?[0m  [["issue_list_id", 4]]
+  ↳ app/controllers/issues_controller.rb:25
+  Rendering issues/index.json.jbuilder
+  [1m[36mProject Load (0.1ms)[0m  [1m[34mSELECT  "projects".* FROM "projects" WHERE "projects"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/views/issues/_issue.json.jbuilder:2
+  Rendered issues/_issue.json.jbuilder (2.0ms)
+  [1m[36mCACHE Project Load (0.0ms)[0m  [1m[34mSELECT  "projects".* FROM "projects" WHERE "projects"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/views/issues/_issue.json.jbuilder:2
+  Rendered issues/_issue.json.jbuilder (1.9ms)
+  [1m[36mCACHE Project Load (0.0ms)[0m  [1m[34mSELECT  "projects".* FROM "projects" WHERE "projects"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/views/issues/_issue.json.jbuilder:2
+  Rendered issues/_issue.json.jbuilder (1.2ms)
+  [1m[36mCACHE Project Load (0.0ms)[0m  [1m[34mSELECT  "projects".* FROM "projects" WHERE "projects"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/views/issues/_issue.json.jbuilder:2
+  Rendered issues/_issue.json.jbuilder (1.0ms)
+  [1m[36mCACHE Project Load (0.0ms)[0m  [1m[34mSELECT  "projects".* FROM "projects" WHERE "projects"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/views/issues/_issue.json.jbuilder:2
+  Rendered issues/_issue.json.jbuilder (1.0ms)
+  Rendered issues/index.json.jbuilder (11.6ms)
+broadcast_sync: []
+Completed 200 OK in 35ms (Views: 26.3ms | ActiveRecord: 0.8ms)
+
+
+Started PATCH "/api/projects/1/sprints/1" for 127.0.0.1 at 2020-09-01 21:57:18 -0400
+Processing by SprintsController#update as JSON
+  Parameters: {"sprint"=>{"order"=>"7,4,2,3,5"}, "project_id"=>"1", "id"=>"1"}
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = ? ORDER BY "users"."id" ASC LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/application_controller.rb:26
+  [1m[36mProject Load (0.1ms)[0m  [1m[34mSELECT  "projects".* FROM "projects" WHERE "projects"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/sprints_controller.rb:44
+  [1m[36mSprint Load (0.2ms)[0m  [1m[34mSELECT  "sprints".* FROM "sprints" WHERE "sprints"."project_id" = ? AND "sprints"."id" = ? LIMIT ?[0m  [["project_id", 1], ["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/sprints_controller.rb:45
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  ↳ app/controllers/sprints_controller.rb:20
+  [1m[36mIssueList Load (0.1ms)[0m  [1m[34mSELECT  "issue_lists".* FROM "issue_lists" WHERE "issue_lists"."id" = ? LIMIT ?[0m  [["id", 4], ["LIMIT", 1]]
+  ↳ app/controllers/sprints_controller.rb:26
+  [1m[36mIssueList Update (0.3ms)[0m  [1m[33mUPDATE "issue_lists" SET "order" = ?, "updated_at" = ? WHERE "issue_lists"."id" = ?[0m  [["order", "7,4,2,3,5"], ["updated_at", "2020-09-02 01:57:18.712535"], ["id", 4]]
+  ↳ app/controllers/sprints_controller.rb:26
+  Rendering sprints/show.json.jbuilder
+  Rendered sprints/_sprint.json.jbuilder (0.9ms)
+  Rendered sprints/show.json.jbuilder (2.0ms)
+  [1m[35m (2.4ms)[0m  [1m[36mcommit transaction[0m
+  ↳ app/controllers/sprints_controller.rb:20
+broadcast_sync: ["projects/1/sprints/1/issues", "projects/1/sprints/1", "projects/1/sprints", "projects/1", "projects"]
+BROADCAST projects/1/sprints/1/issues
+[ActionCable] Broadcasting to sync:projects/1/sprints/1/issues: {:action=>"sync", :selector=>"projects/1/sprints/1/issues"}
+BROADCAST projects/1/sprints/1
+[ActionCable] Broadcasting to sync:projects/1/sprints/1: {:action=>"sync", :selector=>"projects/1/sprints/1"}
+BROADCAST projects/1/sprints
+[ActionCable] Broadcasting to sync:projects/1/sprints: {:action=>"sync", :selector=>"projects/1/sprints"}
+BROADCAST projects/1
+[ActionCable] Broadcasting to sync:projects/1: {:action=>"sync", :selector=>"projects/1"}
+BROADCAST projects
+[ActionCable] Broadcasting to sync:projects: {:action=>"sync", :selector=>"projects"}
+Completed 200 OK in 29ms (Views: 17.4ms | ActiveRecord: 3.2ms)
+
+
+- Gracefully stopping, waiting for requests to finish
+=== puma shutdown: 2020-09-01 21:57:20 -0400 ===
+- Goodbye!
+Exiting
