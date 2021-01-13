@@ -79,3 +79,5 @@ gem 'rails_admin', '~> 2.0'
 gem 'rack-cors'
 
 gem 'seed_dump'
+
+gem 'postgresql'
