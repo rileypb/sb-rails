@@ -80,4 +80,4 @@ gem 'rack-cors'
 
 gem 'seed_dump'
 
-gem 'mysql2'
+gem 'pg'
