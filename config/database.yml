@@ -23,3 +23,8 @@ test:
 production:
   adapter: mysql2
   encoding: utf8
+  database: sb-api-db2
+  username: <%= ENV.fetch("DB_USER") %>
+  password: <%= ENV.fetch("DB_PASSWORD") %>
+  host: <%= ENV.fetch("DB_HOST") %>
+  port: 3306
