@@ -19,7 +19,3 @@ development:
 test:
   <<: *default
   database: db/test.sqlite3
-
-production:
-  adapter: mysql2
-  encoding: utf8
