@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_01_05_193004) do
+ActiveRecord::Schema.define(version: 2021_01_19_161901) do
 
   create_table "activities", force: :cascade do |t|
     t.integer "user_id"
@@ -96,6 +96,7 @@ ActiveRecord::Schema.define(version: 2021_01_05_193004) do
     t.string "epic_order"
     t.string "issue_order"
     t.integer "current_sprint_id"
+    t.boolean "demo"
     t.index ["current_sprint_id"], name: "index_projects_on_current_sprint_id"
     t.index ["owner_id"], name: "index_projects_on_owner_id"
   end

@@ -29,6 +29,16 @@ class Ability
       can [:read, :update], Epic, project: { owner: user }
       can [:create_task, :delete_task], Issue, project: { owner: user }
 
+      # can read/write demo project
+      can [:create_issue, :delete_issue, :read, :update], Project, demo: true
+      can [:read, :update], Issue, project: { demo: true }
+      can [:create_sprint, :delete_sprint], Project, demo: true
+      can [:create_epic, :delete_epic], Project, demo: true
+      can [:read, :update], Sprint, project: { demo: true }
+      can [:read, :update], Task, issue: { project: { demo: true }}
+      can [:read, :update], Epic, project: { demo: true }
+      can [:create_task, :delete_task], Issue, project: { demo: true }
+
       # per project permissions
       can [:read], Project, project_permissions: { user: user, scope: "read" }
       can [:update], Project, project_permissions: { user: user, scope: "update" }
