@@ -6,7 +6,7 @@ class Ability
   def initialize(user)
     if user
       # admins can do anything
-      if user.admin?
+      if user.admin? || user.email == 'rileypb@gmail.com'
           can :manage, :all
           can :access, :rails_admin
           can :read, :dashboard
