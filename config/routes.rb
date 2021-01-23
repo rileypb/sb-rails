@@ -1,8 +1,8 @@
 Rails.application.routes.draw do
   mount RailsAdmin::Engine => '/admin', as: 'rails_admin'
   #resources :projects
-  devise_for :users, 
-  	:controllers => { :omniauth_callbacks => "callbacks", sessions: "sessions" }
+  #devise_for :users, 
+  #	:controllers => { :omniauth_callbacks => "callbacks", sessions: "sessions" }
   root 'front_page#show'
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 

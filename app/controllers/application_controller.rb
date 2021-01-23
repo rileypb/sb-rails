@@ -9,12 +9,18 @@ class ApplicationController < ActionController::Base
   # before_action :check_authorization
   before_action :security_check
   before_action :init_sync_info
-  before_action :init_user_stamp
+  #before_action :init_user_stamp
+
+  before_action :authorize_request
 
   after_action :set_csrf_cookie_for_ng
   after_action :broadcast_sync
 
   @@user = nil
+
+  def current_user
+    nil
+  end
 
   def render_unprocessable_entity_response(exception)
     render json: exception.record.errors, status: :unprocessable_entity
@@ -96,6 +102,16 @@ class ApplicationController < ActionController::Base
 
   def self.user
     @@user
+  end
+
+
+  private
+
+  def authorize_request 
+    byebug
+    AuthorizationService.new(request.headers).authenticate_request!
+  rescue JWT::VerificationError, JWT::DecodeError
+    render json: { errors: ['Not Authenticated'] }, status: :unauthorized
   end
 
 end
