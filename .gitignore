@@ -44,3 +44,5 @@ yarn-debug.log*
 !.elasticbeanstalk/*.global.yml
 
 /config/credentials/development.key
+
+/config/credentials/production.key
