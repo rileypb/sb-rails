@@ -9,6 +9,7 @@ class ApplicationController < ActionController::Base
 
   # protect_from_forgery with: :exception
   # before_action :check_authorization
+  before_action :set_user
   before_action :authorize_request
   before_action :security_check
   before_action :init_sync_info
@@ -107,14 +108,23 @@ class ApplicationController < ActionController::Base
   end
 
 
-  private
+  private  
+  def http_token
+    if request.headers['Authorization'].present?
+      request.headers['Authorization'].split(' ').last
+    end
+  end
 
-  def authorize_request 
-    user_info = AuthorizationService.new(request.headers).authenticate_request!
-    id = user_info[0]["sub"]
-    @current_user = User.where(oauthsub: id).first
+  def set_user 
+    # user_info = AuthorizationService.new(request.headers).authenticate_request!
+    # id = user_info[0]["sub"]
+    @current_user = User.find_user_for_jwt(http_token)
   rescue JWT::VerificationError, JWT::DecodeError
     render json: { errors: ['Not Authenticated'] }, status: :unauthorized
+  end
+
+  def authorize_request
+    raise CanCan::AccessDenied unless @current_user
   end
 
 end
