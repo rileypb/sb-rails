@@ -9,30 +9,6 @@ class User < ApplicationRecord
     has_many :issues, inverse_of: 'last_changed_by', foreign_key: :last_changed_by_id
     has_many :tasks, inverse_of: 'last_changed_by', foreign_key: :last_changed_by_id
 
-	def self.from_omniauth(auth)
-		pp auth.info
-	  u = User.where(email: auth.info.email).first
-	  if !u
-	  	u = User.create do |user|
-	  		user.email = auth.info.email
-		    user.provider = auth.provider
-		    user.uid = auth.uid
-		    user.first_name = auth.info.first_name
-		    user.last_name = auth.info.last_name
-		    user.picture = auth.info.image
-		    user.password = Devise.friendly_token[0,20]
-		end
-	  else
-	    u.provider = auth.provider
-	    u.uid = auth.uid
-	    u.first_name = auth.info.first_name
-	    u.last_name = auth.info.last_name
-	    u.picture = auth.info.image
-	    u.save
-	  end
-
-	  return u
-	end
 
 	def self.find_user_for_jwt(token)
 		info = JsonWebToken.verify(token)
