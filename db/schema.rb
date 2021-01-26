@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_01_19_161901) do
+ActiveRecord::Schema.define(version: 2021_01_25_220718) do
 
   create_table "activities", force: :cascade do |t|
     t.integer "user_id"
@@ -144,6 +144,7 @@ ActiveRecord::Schema.define(version: 2021_01_19_161901) do
     t.string "picture"
     t.string "permission_scope"
     t.string "displayName"
+    t.string "oauthsub"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end

@@ -1,6 +1,6 @@
 class UsersController < ApplicationController
 	skip_before_action :security_check, only: [:me]
-	skip_before_action :authorize_request, only: [:me]
+	# skip_before_action :authorize_request, only: [:me]
 
 	def index
 		render json: User.all

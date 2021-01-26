@@ -1,25 +1,27 @@
 class ApplicationController < ActionController::Base
   include ApplicationHelper
 
+  skip_before_action :verify_authenticity_token
+
   rescue_from CanCan::AccessDenied, with: :render_not_found_response_no_message
   rescue_from ActiveRecord::RecordInvalid, with: :render_unprocessable_entity_response
   rescue_from ActiveRecord::RecordNotFound, with: :render_not_found_response
 
-  protect_from_forgery with: :exception
+  # protect_from_forgery with: :exception
   # before_action :check_authorization
+  before_action :authorize_request
   before_action :security_check
   before_action :init_sync_info
   #before_action :init_user_stamp
 
-  before_action :authorize_request
 
-  after_action :set_csrf_cookie_for_ng
+  #after_action :set_csrf_cookie_for_ng
   after_action :broadcast_sync
 
-  @@user = nil
+  @current_user = nil
 
   def current_user
-    nil
+    @current_user
   end
 
   def render_unprocessable_entity_response(exception)
@@ -35,9 +37,9 @@ class ApplicationController < ActionController::Base
   end
 
 
-  def set_csrf_cookie_for_ng
-    cookies['XSRF-TOKEN'] = form_authenticity_token if protect_against_forgery?
-  end
+  # def set_csrf_cookie_for_ng
+  #   cookies['XSRF-TOKEN'] = form_authenticity_token if protect_against_forgery?
+  # end
   
   protected
 
@@ -108,8 +110,9 @@ class ApplicationController < ActionController::Base
   private
 
   def authorize_request 
-    byebug
-    AuthorizationService.new(request.headers).authenticate_request!
+    user_info = AuthorizationService.new(request.headers).authenticate_request!
+    id = user_info[0]["sub"]
+    @current_user = User.where(oauthsub: id).first
   rescue JWT::VerificationError, JWT::DecodeError
     render json: { errors: ['Not Authenticated'] }, status: :unauthorized
   end

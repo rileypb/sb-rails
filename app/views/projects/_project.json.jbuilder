@@ -1,6 +1,6 @@
 json.extract! project, :id, :name, :created_at, :updated_at
 json.path project_path(project, format: :json)
-json.permissions project.permissions(current_user)
+json.permissions project.permissions(@current_user)
 json.owner do
 	json.id project.owner.id
 	json.first_name project.owner.first_name

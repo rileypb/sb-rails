@@ -9,11 +9,11 @@ else
 end
 json.project_id issue.project.id
 json.path issues_path(id: issue.id, format: :json)
-json.permissions issue.permissions(current_user)
+json.permissions issue.permissions(@current_user)
 json.project do
 	json.id issue.project.id
 	json.name issue.project.name
-	json.permissions issue.project.permissions(current_user)
+	json.permissions issue.project.permissions(@current_user)
 end
 
 if issue.sprint

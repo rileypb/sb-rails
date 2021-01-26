@@ -23,11 +23,19 @@ class SyncChannel < ApplicationCable::Channel
     puts "********** stop streaming"
   end
 
+  def auth(auth_info) 
+    puts "*********************** AUTH"
+  
+    user = User.find_user_for_jwt(auth_info['token'])
+    connection.current_user = user
+  end
+
   def self.broadcast_sync(sync_info) 
     sync_info.each do |info|
       self.broadcast_to info, { action: 'sync', selector: info }
     end
   end
+
 
 
 end

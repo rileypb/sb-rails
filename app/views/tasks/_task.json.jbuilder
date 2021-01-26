@@ -8,8 +8,8 @@ else
 end
 json.issue_id task.issue_id
 json.path task_path(id: task.id, format: :json)
-json.permissions task.permissions(current_user)
+json.permissions task.permissions(@current_user)
 json.issue do
 	json.partial! "issues/issue_brief", issue: task.issue
-	json.permissions task.issue.permissions(current_user)
+	json.permissions task.issue.permissions(@current_user)
 end
