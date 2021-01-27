@@ -13,23 +13,7 @@ class ActiveSupport::TestCase
   # Setup all fixtures in test/fixtures/*.yml for all tests in alphabetical order.
   fixtures :all
 
-  include Devise::Test::IntegrationHelpers
-  include Warden::Test::Helpers
   include FactoryBot::Syntax::Methods
-
-  # def log_in(user)
-  # 	if integration_test?
-  # 		login_as(user, :scope => :user)
-  # 	else
-  # 		sign_in(user)
-  # 	end
-  # end
-
-  def login(user)
-    get '/users/sign_in'
-    sign_in user
-    post user_session_url
-  end
 
   
   def can?(user, action, obj)
@@ -46,5 +30,15 @@ class ActiveSupport::TestCase
     else
       Ability.new(user).cannot?(action, obj)
     end
+  end
+end
+
+class ActionDispatch::IntegrationTest 
+  def set_token_for(user)
+    @token = user.oauthsub
+  end
+
+  def token
+    @token
   end
 end

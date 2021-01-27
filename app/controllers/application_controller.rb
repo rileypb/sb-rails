@@ -116,8 +116,6 @@ class ApplicationController < ActionController::Base
   end
 
   def set_user 
-    # user_info = AuthorizationService.new(request.headers).authenticate_request!
-    # id = user_info[0]["sub"]
     @current_user = User.find_user_for_jwt(http_token)
   rescue JWT::VerificationError, JWT::DecodeError
     render json: { errors: ['Not Authenticated'] }, status: :unauthorized

@@ -1,6 +1,10 @@
 require 'test_helper'
 
 class SprintControllerTest < ActionDispatch::IntegrationTest
+  setup do
+    set_token_for(create(:admin))
+  end
+
   def admin
   	if !@admin 
   	  @admin = create(:admin)
@@ -9,12 +13,12 @@ class SprintControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "index for admin" do
-  	login(admin)
     sprint1 = create(:sprint)
     sprint2 = create(:sprint, project: sprint1.project)
     project = sprint1.project
 
-    get project_sprints_url project_id: sprint1.project.id
+    get project_sprints_url(project_id: sprint1.project.id), 
+      headers: { 'Authorization': "Bearer #{token}"}
     assert_response :ok
 
     body = JSON.parse(response.body)
@@ -40,14 +44,14 @@ class SprintControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "start_sprint" do
-    login(admin)
     sprint = create(:sprint)
     sprint2 = create(:sprint, project: sprint.project)
     sprint3 = create(:sprint)
     assert_nil sprint.project.current_sprint
     assert_nil sprint3.project.current_sprint
 
-    post sprint_start_url sprint_id: sprint.id
+    post sprint_start_url(sprint_id: sprint.id),
+      headers: { 'Authorization': "Bearer #{token}"}
     assert_response :ok
 
     sprint.reload
@@ -56,7 +60,6 @@ class SprintControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "start_sprint_current_sprint_exists" do
-    login(admin)
     sprint = create(:sprint)
     sprint2 = create(:sprint, project: sprint.project)
     sprint3 = create(:sprint)
@@ -68,7 +71,8 @@ class SprintControllerTest < ActionDispatch::IntegrationTest
     sprint2.reload
     sprint3.reload
 
-    post sprint_start_url sprint_id: sprint.id
+    post sprint_start_url(sprint_id: sprint.id), 
+      headers: { 'Authorization': "Bearer #{token}"}
     assert_response :bad_request
 
     sprint.reload

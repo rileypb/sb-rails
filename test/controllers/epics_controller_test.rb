@@ -4,16 +4,15 @@ class EpicsControllerTest < ActionDispatch::IntegrationTest
   setup do
     @project = projects(:owned_by_admin)
 
-    get '/users/sign_in'
-    sign_in users(:admin)
-    post user_session_url
+    set_token_for(create(:admin))
   end
 
   test "should get project epics index" do
     epic1 = create(:epic, project: @project)
     epic2 = create(:epic, project: @project)
     epic3 = create(:epic) # different project
-  	get project_epics_url(@project)
+  	get project_epics_url(@project), 
+        headers: { 'Authorization': "Bearer #{token}"}
   	assert_response :success
 
     body = JSON.parse(response.body)
@@ -26,7 +25,8 @@ class EpicsControllerTest < ActionDispatch::IntegrationTest
     epic2 = create(:epic, project: @project)
     epic3 = create(:epic, project: @project)
     @project.update(epic_order: "#{epic2.id},#{epic3.id},#{epic1.id}")
-    get project_epics_url(@project)
+    get project_epics_url(@project), 
+        headers: { 'Authorization': "Bearer #{token}"}
     assert_response :success
 
     body = JSON.parse(response.body)
@@ -39,7 +39,8 @@ class EpicsControllerTest < ActionDispatch::IntegrationTest
 
   test "should show epic" do
   	epic = create(:epic, size: 2, color: '#FF00FF')
-  	get epic_url(epic.id)
+  	get epic_url(epic.id), 
+        headers: { 'Authorization': "Bearer #{token}"}
   	assert_response :success
 
   	json_body = JSON.parse(response.body)
@@ -52,14 +53,16 @@ class EpicsControllerTest < ActionDispatch::IntegrationTest
 
   test "don't show unknown epic" do
     epic = create(:epic)
-    get epic_url(id: 1)
+    get epic_url(id: 1), 
+        headers: { 'Authorization': "Bearer #{token}"}
     assert_response :not_found
   end
 
   test "should create epic" do
   	project = create(:project)
     assert_difference('Epic.count', 1) do
-  		post project_epics_url(project, epic: { title: "my title", description: "my description", size: 3, color: '#FFF' })
+  		post project_epics_url(project, epic: { title: "my title", description: "my description", size: 3, color: '#FFF' }), 
+        headers: { 'Authorization': "Bearer #{token}"}
   	end
 
   	assert_response :success
@@ -81,7 +84,8 @@ class EpicsControllerTest < ActionDispatch::IntegrationTest
   	project.update(epic_order: "1,2,3")
   	project.reload
     assert_difference('Epic.count', 1) do
-  		post project_epics_url(project, epic: { title: "my title", description: "my description", size: 3, color: '#FFF' })
+  		post project_epics_url(project, epic: { title: "my title", description: "my description", size: 3, color: '#FFF' }), 
+        headers: { 'Authorization': "Bearer #{token}"}
   	end
 
   	assert_response :success
@@ -101,7 +105,8 @@ class EpicsControllerTest < ActionDispatch::IntegrationTest
   test "should update epic" do
   	epic = create(:epic, title: "my title", description: "my description", size: 3, color: '#FFF')
 
-  	patch epic_url(epic, epic: { title: "new title", description: "new description", size: 5, color: '#444' })
+  	patch epic_url(epic, epic: { title: "new title", description: "new description", size: 5, color: '#444' }), 
+        headers: { 'Authorization': "Bearer #{token}"}
   	assert_response :success
 
   	epic.reload
@@ -120,7 +125,8 @@ class EpicsControllerTest < ActionDispatch::IntegrationTest
   	project.update(epic_order: "#{epic.id},2,3")
 
     assert_difference('Epic.count', -1) do
-    	delete epic_url(epic)
+    	delete epic_url(epic), 
+        headers: { 'Authorization': "Bearer #{token}"}
     end
 
     project.reload
@@ -134,7 +140,8 @@ class EpicsControllerTest < ActionDispatch::IntegrationTest
     assert_equal epic, issue.epic
 
     assert_difference('Epic.count', -1) do
-      delete epic_url(epic)
+      delete epic_url(epic), 
+        headers: { 'Authorization': "Bearer #{token}"}
     end
 
     issue.reload
@@ -149,7 +156,8 @@ class EpicsControllerTest < ActionDispatch::IntegrationTest
 
   	epic.reload
 
-  	patch epic_remove_issue_url(epic, issue: { id: issue.id })
+  	patch epic_remove_issue_url(epic, issue: { id: issue.id }), 
+        headers: { 'Authorization': "Bearer #{token}"}
 
   	epic.reload
   	issue.reload
@@ -167,7 +175,8 @@ class EpicsControllerTest < ActionDispatch::IntegrationTest
 
   	epic.reload
 
-  	patch epic_add_issue_url(epic, data: { issue_id: issue.id })
+  	patch epic_add_issue_url(epic, data: { issue_id: issue.id }), 
+        headers: { 'Authorization': "Bearer #{token}"}
 
   	epic.reload
   	issue.reload
@@ -185,7 +194,8 @@ class EpicsControllerTest < ActionDispatch::IntegrationTest
 
     epic.reload
 
-    patch epic_add_issue_url(epic, data: { issue_id: issue.id })
+    patch epic_add_issue_url(epic, data: { issue_id: issue.id }), 
+        headers: { 'Authorization': "Bearer #{token}"}
 
     epic.reload
     epic2.reload
@@ -200,7 +210,8 @@ class EpicsControllerTest < ActionDispatch::IntegrationTest
 
   test "reorder_issues" do
   	epic = create(:epic, issue_order: "1,2,3,4")
-  	patch epic_reorder_issues_url(epic, data: { fromIndex: 3, toIndex: 1 })
+  	patch epic_reorder_issues_url(epic, data: { fromIndex: 3, toIndex: 1 }), 
+        headers: { 'Authorization': "Bearer #{token}"}
   	epic.reload
   	assert_equal "1,4,2,3", epic.issue_order
   end
@@ -212,7 +223,8 @@ class EpicsControllerTest < ActionDispatch::IntegrationTest
   	issue3 = create(:issue, epic: epic)
   	assert_equal "", epic.issue_order
 
-  	patch epic_reorder_issues_url(epic, data: { fromIndex: 2, toIndex: 1 })
+  	patch epic_reorder_issues_url(epic, data: { fromIndex: 2, toIndex: 1 }), 
+        headers: { 'Authorization': "Bearer #{token}"}
   	epic.reload
   	assert_equal "#{issue1.id},#{issue3.id},#{issue2.id}", epic.issue_order
   end

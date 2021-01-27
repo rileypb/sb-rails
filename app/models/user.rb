@@ -11,20 +11,15 @@ class User < ApplicationRecord
 
 
 	def self.find_user_for_jwt(token)
-		info = JsonWebToken.verify(token)
+		info = Rails.application.config.token_verifier.verify(token)
 		id = info[0]["sub"]
 
-		user = User.where(oauthsub: id).first
-puts ">>>>>>>>>> #{user}"
-		if !user
-    		uri = URI.parse("#{Rails.application.credentials.auth0[:domain]}userinfo")
-    		req = Net::HTTP::Get.new(uri.to_s)
-    		req['Authorization'] = "Bearer #{token}"
-    		res = Net::HTTP.start(uri.host, uri.port, use_ssl: true) do |http|
-    			http.request(req)
-    		end
-    		user_info = JSON.parse(res.body)
+		return nil unless id
 
+		user = User.where(oauthsub: id).first
+
+		if !user
+			user_info = Rails.application.config.token_verifier.get_user_info(token)
     		email = user_info["email"]
     		user = User.where(email: email).first
     		if !user

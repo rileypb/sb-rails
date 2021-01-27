@@ -46,4 +46,21 @@ Rails.application.configure do
 
   # Raises error for missing translations.
   # config.action_view.raise_on_missing_translations = true
+
+
+  config.token_verifier = Class.new do
+    def verify(token)
+      [{"sub" => token}]
+    end
+
+    def get_user_info(token)
+      user = User.where(oauthsub: token).first
+      user_info = {
+        "email" => user.email,
+        "given_name" => user.first_name,
+        "family_name" => user.last_name,
+        "picture" => user.picture
+      }
+    end
+  end.new
 end

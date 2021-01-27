@@ -4,21 +4,25 @@ class ProjectsControllerTest < ActionDispatch::IntegrationTest
   setup do
     @project = projects(:owned_by_admin)
 
-    get '/users/sign_in'
-    sign_in users(:admin)
-    post user_session_url
+    # get '/users/sign_in'
+    # sign_in users(:admin)
+    # post user_session_url
+
+    set_token_for(create(:admin))
   end
 
 
   test "should get index" do
-    get projects_url
+    get projects_url, 
+      headers: { 'Authorization': "Bearer #{token}"}
     assert_response :success
   end
 
 
   test "should create project" do
     assert_difference('Project.count', 1) do
-      post projects_url, params: { project: { name: 'test project', owner_id: users(:admin).id } }
+      post projects_url, params: { project: { name: 'test project', owner_id: users(:admin).id } }, 
+        headers: { 'Authorization': "Bearer #{token}"}
     end
 
     new_project = Project.last
@@ -29,13 +33,15 @@ class ProjectsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should show project" do
-    get project_url(@project)
+    get project_url(@project), 
+        headers: { 'Authorization': "Bearer #{token}"}
     assert_response :success
   end
 
 
   test "should update project" do
-    patch project_url(@project), params: { project: { name: 'foo' } }
+    patch project_url(@project), params: { project: { name: 'foo' } }, 
+      headers: { 'Authorization': "Bearer #{token}"}
     @project.reload
     assert_equal 'foo', @project.name
     assert_response :success
@@ -43,7 +49,8 @@ class ProjectsControllerTest < ActionDispatch::IntegrationTest
 
   test "should destroy project" do
     assert_difference('Project.count', -1) do
-      delete project_url(@project)
+      delete project_url(@project), 
+      headers: { 'Authorization': "Bearer #{token}"}
     end
 
     assert_response :no_content
@@ -57,7 +64,8 @@ class ProjectsControllerTest < ActionDispatch::IntegrationTest
     project.update(issue_order: "#{issue3.id},#{issue2.id},#{issue1.id}")
     project.reload
 
-    patch project_reorder_issues_url(project), params: { data: { fromIndex: 0, toIndex: 2 }}
+    patch project_reorder_issues_url(project), params: { data: { fromIndex: 0, toIndex: 2 }}, 
+      headers: { 'Authorization': "Bearer #{token}"}
 
     project.reload
     assert_response :no_content
@@ -70,7 +78,8 @@ class ProjectsControllerTest < ActionDispatch::IntegrationTest
     issue2 = create(:issue, project: project)
     issue3 = create(:issue, project: project)
 
-    patch project_reorder_issues_url(project), params: { data: { fromIndex: 0, toIndex: 2 }}
+    patch project_reorder_issues_url(project), params: { data: { fromIndex: 0, toIndex: 2 }}, 
+      headers: { 'Authorization': "Bearer #{token}"}
 
     project.reload
     assert_response :no_content
@@ -84,7 +93,8 @@ class ProjectsControllerTest < ActionDispatch::IntegrationTest
     @project.update(epic_order: "#{epic2.id},#{epic1.id},#{epic3.id}")
     @project.reload
 
-    patch project_reorder_epics_url(@project), params: { data: { fromIndex: 0, toIndex: 2 }}
+    patch project_reorder_epics_url(@project), params: { data: { fromIndex: 0, toIndex: 2 }}, 
+      headers: { 'Authorization': "Bearer #{token}"}
 
     @project.reload
     assert_response :no_content
@@ -96,7 +106,8 @@ class ProjectsControllerTest < ActionDispatch::IntegrationTest
     epic2 = create(:epic, project: @project)
     epic3 = create(:epic, project: @project)
 
-    patch project_reorder_epics_url(@project), params: { data: { fromIndex: 0, toIndex: 2 }}
+    patch project_reorder_epics_url(@project), params: { data: { fromIndex: 0, toIndex: 2 }}, 
+      headers: { 'Authorization': "Bearer #{token}"}
 
     @project.reload
     assert_response :no_content

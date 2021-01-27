@@ -3,12 +3,8 @@ require 'test_helper'
 class TransferControllerTest < ActionDispatch::IntegrationTest
 
 	setup do
-		@project = create(:project)
-		@admin = create(:admin)
-
-		get '/users/sign_in'
-		sign_in @admin
-		post user_session_url
+  	  @project = create(:project)
+      set_token_for(create(:admin))
 	end
 
 	test "transfer between epics" do
@@ -23,7 +19,8 @@ class TransferControllerTest < ActionDispatch::IntegrationTest
 		epic1.update(issue_order: "#{i1.id},#{i2.id},#{i3.id}")
 		epic2.update(issue_order: "#{i4.id},#{i5.id},#{i6.id}")
 
-		patch transfer_issues_url, params: { transfer: { epicId1: epic1.id, epicId2: epic2.id, fromIndex: 0, toIndex: 1 } }
+		patch transfer_issues_url, params: { transfer: { epicId1: epic1.id, epicId2: epic2.id, fromIndex: 0, toIndex: 1 } }, 
+          headers: { 'Authorization': "Bearer #{token}"}
 		
 		epic1.reload
 		epic2.reload

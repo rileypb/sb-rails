@@ -2,7 +2,7 @@ require 'net/http'
 require 'uri'
 
 class JsonWebToken
-  def self.verify(token)
+  def verify(token)
     JWT.decode(token, nil,
                true, # Verify the signature of this token
                algorithm: 'RS256',
@@ -14,7 +14,7 @@ class JsonWebToken
     end
   end
 
-  def self.jwks_hash
+  def jwks_hash
     jwks_raw = Net::HTTP.get URI("#{Rails.application.credentials.auth0[:domain]}.well-known/jwks.json")
     jwks_keys = Array(JSON.parse(jwks_raw)['keys'])
     Hash[
@@ -29,4 +29,16 @@ class JsonWebToken
       end
     ]
   end
+
+  def get_user_info(token)
+    uri = URI.parse("#{Rails.application.credentials.auth0[:domain]}userinfo")
+    req = Net::HTTP::Get.new(uri.to_s)
+    req['Authorization'] = "Bearer #{token}"
+    res = Net::HTTP.start(uri.host, uri.port, use_ssl: true) do |http|
+      http.request(req)
+    end
+    user_info = JSON.parse(res.body)
+    return user_info
+  end
+
 end

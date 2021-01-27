@@ -7,6 +7,10 @@ class ApplicationHelperTest < ActiveSupport::TestCase
 		assert_equal("1,2,3,5", remove_from_order('1,2,3,4,5', '4'))		
 	end
 
+	test "remove_from_order_at_only" do
+		assert_equal("", remove_from_order_at('1',0))
+	end
+
 	test "remove_from_order_end" do
 		assert_equal "1,2,3,4", remove_from_order('1,2,3,4,5', '5')		
 	end
