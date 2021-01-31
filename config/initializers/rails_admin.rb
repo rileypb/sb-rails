@@ -2,7 +2,7 @@ RailsAdmin.config do |config|
 
   ### Popular gems integration
 
-  config.parent_controller = 'ApplicationController'
+  config.parent_controller = 'AdminParentController'
 
   ## == Devise ==
   config.authenticate_with do
