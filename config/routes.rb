@@ -11,6 +11,7 @@ Rails.application.routes.draw do
   		resources :sprints
   		resources :issues
       resources :epics
+      get 'activity', defaults: {format: :json}, to: 'projects#activity'
       get 'all_issues', defaults: {format: :json}, to: 'issues#all_issues'
       patch 'reorder_epics', defaults: {format: :json}, to: 'projects#reorder_epics'
       patch 'reorder_issues', defaults: {format: :json}, to: 'projects#reorder_issues'

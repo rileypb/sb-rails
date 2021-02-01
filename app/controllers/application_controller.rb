@@ -107,6 +107,10 @@ class ApplicationController < ActionController::Base
     @@user
   end
 
+  def sync_on_activities(project)
+    sync_on("projects/#{project.id}/activity")
+  end
+
 
   private  
   def http_token

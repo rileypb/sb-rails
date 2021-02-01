@@ -36,6 +36,7 @@ class EpicsController < ApplicationController
 
       @epic = Epic.create(params)
       Activity.create(user: current_user, action: "created_epic", epic: @epic, project_context: @epic.project)
+      sync_on_activities(@epic.project)
       @epic.project.update(epic_order: append_to_order(@epic.project.epic_order, @epic.id))
     end
   end
@@ -48,6 +49,7 @@ class EpicsController < ApplicationController
         Activity.create(user: current_user, action: "updated_epic", epic: @epic, project_context: @epic.project)
         sync_on path
         sync_on "epics/#{@epic.id}/issues/*"
+        sync_on_activities(@epic.project)
         render json: @epic, status: :ok, location: @project
       else
         render json: @epic.errors, status: :unprocessable_entity
@@ -71,6 +73,7 @@ class EpicsController < ApplicationController
         if @project.update(epic_order: remove_from_order(@project.epic_order || default_epic_order(@project), @epic.id))
           Activity.create(user: current_user, action: "deleted_epic", modifier: "\##{@epic.id} - #{@epic.title}", project: @project, project_context: @project)
           sync_on path
+          sync_on_activities(@project)
           render json: { result: "success" }, status: :ok, location: @project
         else
           render json: @project.errors, status: :unprocessable_entity
@@ -96,11 +99,12 @@ class EpicsController < ApplicationController
       @epic.update(issue_order: remove_from_order(@epic.issue_order, issue_id))
       issue.update(epic: nil)
 
-      Activity.create(user: current_user, action: "removed_issue_from_epic", issue: issue, epic: @epic)
+      Activity.create(user: current_user, action: "removed_issue_from_epic", issue: issue, epic: @epic, project_context: @epic.project)
       sync_on "issues/#{issue_id}"
       sync_on "issues/*"
       sync_on "epics/#{epic_id}/issues"
       sync_on "epics/#{epic_id}/issues/*"
+      sync_on_activities(@epic.project)
     end
   end
 
@@ -122,9 +126,9 @@ class EpicsController < ApplicationController
       issue.update(epic: @epic)
 
       if !original_epic
-        Activity.create(user: current_user, action: "added_issue_to_epic", issue: issue, epic: @epic)
+        Activity.create(user: current_user, action: "added_issue_to_epic", issue: issue, epic: @epic, project_context: @epic.project)
       else
-        Activity.create(user: current_user, action: "moved_issue_between_epics", issue: issue, epic: original_epic, epic2: @epic)
+        Activity.create(user: current_user, action: "moved_issue_between_epics", issue: issue, epic: original_epic, epic2: @epic, project_context: @epic.project)
       end
 
       sync_on "issues/#{issue_id}"
@@ -138,6 +142,8 @@ class EpicsController < ApplicationController
         sync_on "epics/#{original_epic.id}"
         sync_on "epics/#{original_epic.id}/issues"
       end
+        
+      sync_on_activities(@epic.project)
     end
   end
 
@@ -154,6 +160,10 @@ class EpicsController < ApplicationController
       @epic.update(issue_order: order_split.join(','))
       sync_on "epics/#{epic_id}/issues"
       sync_on "epics/#{epic_id}"
+
+      Activity.create(user: current_user, action: "reorded_issues_within_epic", epic: @epic, project_context: @epic.project)
+
+      sync_on_activities(@epic.project)
     end
   end
 

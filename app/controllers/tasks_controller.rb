@@ -98,7 +98,6 @@ class TasksController < ApplicationController
   def set_complete
     Task.transaction do
       @task = Task.find(params[:task_id])
-      @issue = @task.issue
       if !@task
         raise ActionController::RoutingError, "Not Found"
       end
@@ -113,6 +112,7 @@ class TasksController < ApplicationController
           Activity.create(user: current_user, action: "set_task_incomplete", task: @task, project_context: @task.issue.project)
         end
         sync_on path
+        sync_on_activities(@issue.project)
         render json: { result: "success"}, status: :ok, location: @task
       else
         render json: @task.errors, status: :unprocessable_entity
