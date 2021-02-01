@@ -37,24 +37,32 @@ class TransferController < ApplicationController
 				moved_issue.update(sprint: nil)
 			end
 
+			projects = []
 			if sprint1
 				sync_on "sprints/#{sprint1.id}/issues"
 				sync_on "sprints/#{sprint1.id}"
+				projects << sprint1.project
 			end
 			if sprint2
 				sync_on "sprints/#{sprint2.id}/issues"
 				sync_on "sprints/#{sprint2.id}"
+				projects << sprint2.project
 			end
 			if project1
 				sync_on "projects/#{project1.id}/issues"
 				sync_on "projects/#{project1.id}"
+				projects << project1
 			end
 			if project2
 				sync_on "projects/#{project2.id}/issues"
 				sync_on "projects/#{project2.id}"
+				projects << project2
 			end
 
-			sync_on "issues/#{moved_element}"
+			projects.uniq! 
+			projects.each do |p|
+				sync_on_activities(p)
+			end
 
 			create_transfer_activity_for(moved_issue)
 		end
@@ -94,7 +102,7 @@ class TransferController < ApplicationController
 			epic1.update(issue_order: old_order1_split.join(','))
 			epic2.update(issue_order: old_order2_split.join(','))
 
-			Activity.create(user: current_user, action: "moved_issue_between_epics", issue: moved_issue, epic: epic1, epic2: epic2)
+			Activity.create(user: current_user, action: "moved_issue_between_epics", issue: moved_issue, epic: epic1, epic2: epic2, project_context: epic1.project)
 			sync_on "issues/#{moved_id}"
 			sync_on "projects/#{moved_issue.project.id}/issues/*"
 			sync_on "projects/#{moved_issue.project.id}"
@@ -106,6 +114,8 @@ class TransferController < ApplicationController
 			sync_on "epics/#{epic1.id}/issues/*"
 			sync_on "epics/#{epic2.id}/issues"
 			sync_on "epics/#{epic2.id}/issues/*"
+
+			sync_on_activities(moved_issue.project)
 		end
 	end
 end

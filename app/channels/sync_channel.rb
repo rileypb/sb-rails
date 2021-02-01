@@ -14,10 +14,11 @@ class SyncChannel < ApplicationCable::Channel
 
 
   def sync(data)
-    if (self.connection.current_user)
-      puts "********** streaming from #{data['selector']}"
+    # need to fix client timing before this will work
+    #if (self.connection.current_user)
+      puts "********** streaming from #{data['selector']} : #{self.connection.current_user}"
       stream_from "sync:#{data['selector']}"
-    end
+    #end
   end
 
   def cancelsync(data)

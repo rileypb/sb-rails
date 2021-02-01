@@ -46,6 +46,7 @@ class ProjectsController < ApplicationController
           Activity.create(user: current_user, action: "updated_project", project: @project, project_context: @project)
           format.json { render :show, status: :ok, location: @project }
           sync_on "projects/#{@project.id}"
+          sync_on_activities(@project)
         else
           format.json { render json: @project.errors, status: :unprocessable_entity }
         end
@@ -63,8 +64,12 @@ class ProjectsController < ApplicationController
       order_split.insert(Integer(safe_params[:toIndex]), order_split.delete_at(Integer(safe_params[:fromIndex])))
 
       @project.update(epic_order: order_split.join(','))
+
+      Activity.create(user: current_user, action: "reordered_epics", project: @project, project_context: @project)
+
       sync_on "projects/#{project_id}/epics"
       sync_on "projects/#{project_id}"
+      sync_on_activities(@project)
     end
   end
 
@@ -77,9 +82,12 @@ class ProjectsController < ApplicationController
       order_split = order.split(',')
       order_split.insert(Integer(safe_params[:toIndex]), order_split.delete_at(Integer(safe_params[:fromIndex])))
 
+      Activity.create(user: current_user, action: "reordered_issues", project: @project, project_context: @project)
+
       @project.update(issue_order: order_split.join(','))
       sync_on "projects/#{project_id}/issues"
       sync_on "projects/#{project_id}"
+      sync_on_activities(@project)
     end
   end
 

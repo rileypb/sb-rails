@@ -58,6 +58,7 @@ class TasksController < ApplicationController
       end
 
       @issue.add_task(@task)
+      sync_on_activities(@issue.project)
     end
   end
 
@@ -88,6 +89,7 @@ class TasksController < ApplicationController
       if @task.delete
         Activity.create(user: current_user, action: "deleted_task", issue: @issue, modifier: @task.title, project_context: @issue.project)
         sync_on path
+        sync_on_activities(@issue.project)
         render json: { result: "success"}, status: :ok, location: @issue
       else
         render json: @task.errors, status: :unprocessable_entity

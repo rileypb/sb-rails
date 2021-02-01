@@ -161,7 +161,7 @@ class EpicsController < ApplicationController
       sync_on "epics/#{epic_id}/issues"
       sync_on "epics/#{epic_id}"
 
-      Activity.create(user: current_user, action: "reorded_issues_within_epic", epic: @epic, project_context: @epic.project)
+      Activity.create(user: current_user, action: "reordered_issues_within_epic", epic: @epic, project_context: @epic.project)
 
       sync_on_activities(@epic.project)
     end

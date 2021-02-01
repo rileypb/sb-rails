@@ -76,6 +76,8 @@ class IssuesController < ApplicationController
       else
         project.add_issue(@issue)
       end
+
+      sync_on_activities(project)
     end
   end
 
@@ -129,6 +131,7 @@ class IssuesController < ApplicationController
         end
 
         sync_on path
+        sync_on_activities(@issue.project)
         render json: @issue, status: :ok, location: @project
       else
         render json: @issue.errors, status: :unprocessable_entity
@@ -161,6 +164,7 @@ class IssuesController < ApplicationController
 
       Activity.create(user: current_user, action: "deleted_issue", modifier: "\##{@issue.id} - #{@issue.title}", project: @project, sprint: @sprint, project_context: @project)
       sync_on path
+      sync_on_activities(@project)
       render json: { result: "success" }, status: :ok, location: @project
     else
       render json: @issue.errors, status: :unprocessable_entity
@@ -177,8 +181,12 @@ class IssuesController < ApplicationController
       order_split.insert(safe_params[:toIndex], order_split.delete_at(safe_params[:fromIndex]))
 
       @issue.update(task_order: order_split.join(','))
+
+      Activity.create(user: current_user, action: "reordered_tasks", issue: @issue, project_context: @issue.project)
+
       sync_on "issues/#{issue_id}/tasks"
       sync_on "issues/#{issue_id}"
+      sync_on_activities(@issue.project)
     end
   end
 
@@ -209,6 +217,11 @@ class IssuesController < ApplicationController
         parent2 = project2
         sync_on "projects/#{project2.id}/issues"
         sync_on "projects/#{project2.id}/issues/*"
+      end
+
+      sync_on_activities(project1)
+      if project1 != project2
+        sync_on_activities(project2)
       end
 
       order1 = transfer_params[:order1]

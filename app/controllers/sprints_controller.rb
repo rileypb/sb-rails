@@ -25,12 +25,16 @@ class SprintsController < ApplicationController
       if order
         @sprint.update(issue_order: order)
         sync_on "sprints/#{@sprint.id}/issues"
+        Activity.create(user: current_user, action: "reordered_issues", sprint: @sprint, project_context: @sprint.project)
       end
 
       respond_to do |format|
         if @sprint.update(params)
           format.json { render :show, status: :ok}
           sync_on "sprints/#{@sprint.id}"
+
+          sync_on_activities(@sprint.project)
+          Activity.create(user: current_user, action: "updated_sprint", sprint: @sprint, project_context: @sprint.project)
         else
           format.json { render json: @sprint.errors, status: :unprocessable_entity }
         end
@@ -43,6 +47,8 @@ class SprintsController < ApplicationController
       @project = Project.find(request.params[:project_id])
       @sprint = Sprint.create(sprint_params.merge(project: @project))
       sync_on "projects/#{@sprint.project_id}/sprints"
+      sync_on_activities(@project)
+      Activity.create(user: current_user, action: "created_sprint", sprint: @sprint, project_context: @sprint.project)
     end
   end
 
@@ -61,6 +67,8 @@ class SprintsController < ApplicationController
       if @sprint.delete
         sync_on "projects/#{@project.id}/sprints"
         render json: { result: "success" }, status: :ok, location: @project
+        sync_on_activities(@project)
+        Activity.create(user: current_user, action: "deleted_sprint", modifier: "#{@sprint.id} - #{sprint.title}", project_context: @sprint.project)
       else
         render json: @sprint.errors, status: :unprocessable_entity
       end
@@ -89,6 +97,7 @@ class SprintsController < ApplicationController
       sync_on "sprints/#{sprint_id}/issues/*"
       sync_on "projects/#{issue.project.id}/issues"
       sync_on "projects/#{issue.project.id}/issues/*"
+      sync_on_activities(@issue.project)
     end
   end
 
@@ -104,6 +113,9 @@ class SprintsController < ApplicationController
       @sprint.update(issue_order: order_split.join(','))
       sync_on "sprints/#{sprint_id}/issues"
       sync_on "sprints/#{sprint_id}"
+      sync_on_activities(@sprint.project)
+
+      Activity.create(user: current_user, action: "reordered_issues", sprint: @sprint, project_context: @sprint.project)
     end
   end
 
@@ -114,6 +126,7 @@ class SprintsController < ApplicationController
         sync_on "sprints/#{@sprint.id}"
         sync_on "projects/#{@project.id}"
         sync_on "projects/#{@project.id}/sprints"
+        sync_on_activities(@project)
         render json: { message: "Current sprint set" }, status: :ok
       else
         render json: @project.errors, status: :unprocessable_entity
@@ -130,6 +143,7 @@ class SprintsController < ApplicationController
         sync_on "sprints/#{@sprint.id}"
         sync_on "projects/#{@project.id}"
         sync_on "projects/#{@project.id}/sprints"
+        sync_on_activities(@project)
         render json: { message: "Current sprint suspended" }, status: :ok
       else
         render json: @project.errors, status: :unprocessable_entity
