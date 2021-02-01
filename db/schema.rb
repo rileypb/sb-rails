@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_01_25_220718) do
+ActiveRecord::Schema.define(version: 2021_02_01_164639) do
 
   create_table "activities", force: :cascade do |t|
     t.integer "user_id"
@@ -113,6 +113,7 @@ ActiveRecord::Schema.define(version: 2021_01_25_220718) do
     t.date "start_date"
     t.date "end_date"
     t.integer "starting_work"
+    t.string "goal"
     t.index ["project_id"], name: "index_sprints_on_project_id"
   end
 
