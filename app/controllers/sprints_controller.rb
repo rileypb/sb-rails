@@ -28,6 +28,8 @@ class SprintsController < ApplicationController
         Activity.create(user: current_user, action: "reordered_issues", sprint: @sprint, project_context: @sprint.project)
       end
 
+      @sprint.project.update_burndown_data!
+
       respond_to do |format|
         if @sprint.update(params)
           format.json { render :show, status: :ok}
@@ -89,15 +91,18 @@ class SprintsController < ApplicationController
       issue.update(sprint: nil)
 
       issue.project.update(issue_order: append_to_order(issue.project.issue_order, issue_id))
+      
+      @sprint.project.update_burndown_data!
 
       Activity.create(user: current_user, action: "removed_issue_from_sprint", issue: issue, sprint: @sprint, project_context: @sprint.project)
       sync_on "issues/#{issue_id}"
       sync_on "issues/*"
+      sync_on "sprints/#{sprint_id}"
       sync_on "sprints/#{sprint_id}/issues"
       sync_on "sprints/#{sprint_id}/issues/*"
       sync_on "projects/#{issue.project.id}/issues"
       sync_on "projects/#{issue.project.id}/issues/*"
-      sync_on_activities(@issue.project)
+      sync_on_activities(issue.project)
     end
   end
 
@@ -120,20 +125,34 @@ class SprintsController < ApplicationController
   end
 
   def start
-    unless @project.current_sprint
-      if @project.update(current_sprint: @sprint)
-        Activity.create(user: current_user, action: "started_sprint", sprint: @sprint, project: @project, project_context: @project)
-        sync_on "sprints/#{@sprint.id}"
-        sync_on "projects/#{@project.id}"
-        sync_on "projects/#{@project.id}/sprints"
-        sync_on_activities(@project)
-        render json: { message: "Current sprint set" }, status: :ok
+    Sprint.transaction do
+      unless @project.current_sprint
+        start_params = params.require(:data).permit(:startDate, :endDate, :reset)
+        if @project.update(current_sprint: @sprint)
+
+          if start_params[:reset] || (@sprint.start_date != start_params[:startDate])
+            clear_burndown_data(@sprint)
+            points_remaining = @sprint.issues.where('state <> ?', 'Closed').sum(:estimate)
+            @sprint.update!(starting_work: points_remaining)
+          end
+
+          @sprint.update!(started: true, start_date: start_params[:startDate], end_date: start_params[:endDate])
+
+          @project.update_burndown_data!
+
+          Activity.create(user: current_user, action: "started_sprint", sprint: @sprint, project: @project, project_context: @project)
+          sync_on "sprints/#{@sprint.id}"
+          sync_on "projects/#{@project.id}"
+          sync_on "projects/#{@project.id}/sprints"
+          sync_on_activities(@project)
+          render json: { message: "Current sprint set" }, status: :ok
+        else
+          render json: @project.errors, status: :unprocessable_entity
+        end
       else
-        render json: @project.errors, status: :unprocessable_entity
-      end
-    else
-      render json: { message: "Current sprint already set" }, status: :bad_request
-    end 
+        render json: { message: "Current sprint already set" }, status: :bad_request
+      end 
+    end
   end
 
   def suspend
@@ -164,5 +183,9 @@ class SprintsController < ApplicationController
     # Only allow a list of trusted parameters through.
     def sprint_params
       params.require(:sprint).permit(:title, :goal, :description)
+    end
+
+    def clear_burndown_data(sprint)
+      sprint.clear_burndown_data!
     end
 end

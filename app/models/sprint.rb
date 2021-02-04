@@ -40,6 +40,11 @@ class Sprint < ApplicationRecord
     	end
     end
 
+    def clear_burndown_data!
+        sql = "delete from burndown_data where sprint_id=#{self.id}"
+        ActiveRecord::Base.connection.execute(sql)
+    end
+
     def burndown_data
     	sql = "select day, value from burndown_data where sprint_id=#{self.id} order by day"
     	ActiveRecord::Base.connection.execute(sql)
@@ -54,12 +59,33 @@ class Sprint < ApplicationRecord
     end
 
     def burndown_graph
-    	{
-    		xAxisData: ['10/1', '10/2', '10/3', '10/4', '10/5', '10/6'],
-    		ideal: [50,40,30,20,10,0],
-    		actual: [50,42,36],
-    		projected: [nil,nil,36,24,12,0]
-    	}
+        if self.start_date && self.end_date
+            start_day = self.start_date.midnight.to_i/(24*3600)
+            end_day = self.end_date.midnight.to_i/(24*3600)
+            xAxisData = (start_day..end_day).map do |day|
+                Time.at(day*24*3600).getutc.strftime("%m/%d")
+            end
+            xAxisData.unshift "Start"
+            ideal = (start_day..end_day).map do |day|
+                (self.starting_work || 0).to_f * (1.0 - (day.to_f - start_day.to_f + 1)/(end_day.to_f - start_day.to_f + 1))
+            end
+            ideal.unshift self.starting_work
+
+            actual = burndown_data.map { |entry| entry['value'] }
+            actual.unshift self.starting_work
+
+        	{
+        		xAxisData: xAxisData,
+        		ideal: ideal,
+        		actual: actual
+        		#projected: [nil,nil,36,24,12,0]
+        	}
+        end
     end
+
+    #
+    # day number = Time.now.to_i / (24*3600)
+    # day number -> string: Time.at(a*24*3600).getutc.strftime("%m/%d")
+    #
 end
 	

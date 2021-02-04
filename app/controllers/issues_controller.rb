@@ -77,6 +77,8 @@ class IssuesController < ApplicationController
         project.add_issue(@issue)
       end
 
+      project.update_burndown_data!
+
       sync_on_activities(project)
     end
   end
@@ -130,6 +132,11 @@ class IssuesController < ApplicationController
           end
         end
 
+        @project.update_burndown_data!
+        if @issue.sprint
+          sync_on "sprints/#{@issue.sprint_id}"
+        end
+
         sync_on path
         sync_on_activities(@issue.project)
         render json: @issue, status: :ok, location: @project
@@ -163,6 +170,12 @@ class IssuesController < ApplicationController
       end
 
       Activity.create(user: current_user, action: "deleted_issue", modifier: "\##{@issue.id} - #{@issue.title}", project: @project, sprint: @sprint, project_context: @project)
+
+      project.update_burndown_data!
+      if @issue.sprint
+        sync_on "sprints/#{@issue.sprint_id}"
+      end
+
       sync_on path
       sync_on_activities(@project)
       render json: { result: "success" }, status: :ok, location: @project
@@ -198,11 +211,14 @@ class IssuesController < ApplicationController
       if sprintId1
         sprint1 = Sprint.find(sprintId1)
         parent1 = sprint1
-        selectors1 << "sprints/#{sprintId1}/issues"
+        sync_on "sprints/#{sprintId1}"
+        sync_on "sprints/#{sprintId1}/issues"
+        sync_on "sprints/#{sprintId1}/issues/*"
       else
         sprint1 = nil
         parent1 = project1
-        selectors1 << "projects/#{project1.id}/issues"
+        sync_on "projects/#{project1.id}/issues"
+        sync_on "projects/#{project1.id}/issues/*"
       end
       
       project2 = Project.find(transfer_params[:projectId2])
@@ -210,6 +226,7 @@ class IssuesController < ApplicationController
       if sprintId2
         sprint2 = Sprint.find(sprintId2)
         parent2 = sprint2
+        sync_on "sprints/#{sprintId2}"
         sync_on "sprints/#{sprintId2}/issues"
         sync_on "sprints/#{sprintId2}/issues/*"
       else
@@ -238,6 +255,11 @@ class IssuesController < ApplicationController
         issue.update(project: project2, sprint: sprint2)
         create_transfer_activity_for(issue)
         sync_on "issues/#{issue_id}"
+      end
+
+      project1.update_burndown_data!
+      if project2 != project1
+        project2.update_burndown_data!
       end
 
       parent1.update(issue_order: order1)

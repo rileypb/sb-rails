@@ -61,6 +61,7 @@ class TransferController < ApplicationController
 
 			projects.uniq! 
 			projects.each do |p|
+		        p.update_burndown_data!
 				sync_on_activities(p)
 			end
 
@@ -81,6 +82,7 @@ class TransferController < ApplicationController
 
 	def transfer_between_epics(transfer_params)
 		Epic.transaction do
+			puts "transfer_between_epics"
 			epic1 = Epic.find(transfer_params[:epicId1])
 			epic2 = Epic.find(transfer_params[:epicId2])
 

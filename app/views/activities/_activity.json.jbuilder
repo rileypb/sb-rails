@@ -21,6 +21,11 @@ if activity.epic
 		json.partial! "epics/epic_brief", epic: activity.epic
 	end
 end
+if activity.epic2
+	json.epic2 do
+		json.partial! "epics/epic_brief", epic: activity.epic2
+	end
+end
 if activity.sprint
 	json.sprint do
 		json.partial! "sprints/sprint", sprint: activity.sprint

@@ -46,4 +46,14 @@ class Project < ApplicationRecord
 	    self.save
 	end
 
+	def update_burndown_data!
+		if current_sprint
+			points_remaining = current_sprint.issues.where('state <> ?', 'Closed').sum(:estimate)
+
+			day = Time.now.midnight.to_i/(24*3600)
+
+			current_sprint.set_burndown_data!(day, points_remaining)
+		end
+	end
+
 end
