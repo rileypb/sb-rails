@@ -71,8 +71,19 @@ class Sprint < ApplicationRecord
             end
             ideal.unshift self.starting_work
 
-            actual = burndown_data.map { |entry| entry['value'] }
-            actual.unshift self.starting_work
+            actual = [self.starting_work]
+            bdata = burndown_data
+            data_array = bdata.map { |x| {x["day"] => x["value"] }}.reduce({}, :merge)
+            today = Time.now.midnight.to_i/(24*3600)
+            (start_day..[today, end_day].min).each do |day|
+                this_value = data_array[day]
+                if this_value
+                    actual << this_value
+                else
+                    actual << actual[-1]
+                end
+            end
+
 
         	{
         		xAxisData: xAxisData,
