@@ -9,4 +9,5 @@ json.project do
 	  json.current_sprint_id sprint.project.current_sprint_id
   end
 end
+json.total_estimate sprint.total_estimate
 json.burndownData sprint.burndown_graph

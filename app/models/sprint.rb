@@ -94,6 +94,11 @@ class Sprint < ApplicationRecord
         end
     end
 
+    def total_estimate
+        sum = self.issues.sum(:estimate)
+        [(self.starting_work || 0), sum].max
+    end
+
     #
     # day number = Time.now.to_i / (24*3600)
     # day number -> string: Time.at(a*24*3600).getutc.strftime("%m/%d")
