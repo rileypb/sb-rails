@@ -28,6 +28,7 @@ class Sprint < ApplicationRecord
     def set_burndown_data!(day, value)
     	sql = "select count(*) from burndown_data where day=#{day} and sprint_id=#{self.id}"
     	result = ActiveRecord::Base.connection.execute(sql)
+        puts result
     	count = result[0]["count(*)"]
     	if count > 0
     		sql = "update burndown_data set value = #{value} where day=#{day} and sprint_id=#{self.id}"
