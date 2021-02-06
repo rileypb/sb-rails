@@ -9,7 +9,7 @@ module ApplicationHelper
 
 		return split[1..-1].join(',') if index == 0
 
-		return (split[0..(index-1)] + split[(index+1)..-1]).join(',')
+		return (split[0..(index-1)] + (split[(index+1)..-1] || [])).join(',')
 	end
 
 	def append_to_order(order_string, to_append)
