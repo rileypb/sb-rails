@@ -132,8 +132,8 @@ class SprintsController < ApplicationController
 
           if start_params[:reset] || (@sprint.start_date != start_params[:startDate])
             clear_burndown_data(@sprint)
-            points_remaining = @sprint.issues.where('state <> ?', 'Closed').sum(:estimate)
-            @sprint.update!(starting_work: points_remaining)
+            starting_work = @sprint.issues.sum(:estimate)
+            @sprint.update!(starting_work: starting_work)
           end
 
           @sprint.update!(started: true, start_date: start_params[:startDate], end_date: start_params[:endDate])
