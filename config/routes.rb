@@ -22,6 +22,7 @@ Rails.application.routes.draw do
       patch 'remove_issue', defaults: {format: :json}, to: 'sprints#remove_issue'
       post 'start', defaults: {format: :json}, to: 'sprints#start'
       post 'suspend', defaults: {format: :json}, to: 'sprints#suspend'
+      post 'finish', defaults: {format: :json}, to: 'sprints#finish'
     end
     resources :issues, defaults: {format: :json} do
       resources :tasks

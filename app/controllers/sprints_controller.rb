@@ -1,5 +1,5 @@
 class SprintsController < ApplicationController
-  before_action :set_sprint, only: [:show, :edit, :update, :destroy, :start, :suspend]
+  before_action :set_sprint, only: [:show, :edit, :update, :destroy, :start, :suspend, :finish]
 
   def index
   	@project = Project.find(params[:project_id])
@@ -7,6 +7,11 @@ class SprintsController < ApplicationController
   	@sprints = sprints.select do |sprint|
   		can? :read, sprint
   	end
+    if params["current"] == "true"
+      @sprints = @sprints.select do |sprint|
+        !sprint.completed
+      end
+    end
   end
 
   def show
@@ -172,6 +177,22 @@ class SprintsController < ApplicationController
     end 
   end
 
+  def finish
+    Sprint.transaction do
+      if @project.current_sprint
+        @project.update!(current_sprint: nil)
+        @sprint.update!(completed: true, actual_end_date: Date.today)
+        Activity.create(user: current_user, action: "finished_sprint", sprint: @sprint, project: @project, project_context: @project)
+        sync_on "sprints/#{@sprint.id}"
+        sync_on "projects/#{@project.id}"
+        sync_on "projects/#{@project.id}/sprints"
+        sync_on_activities(@project)
+        render json: { message: "Current sprint finished" }, status: :ok
+      else
+        render json: { message: "Current sprint not set" }, status: :bad_request
+      end
+    end
+  end
 
   private
     # Use callbacks to share common setup or constraints between actions.
