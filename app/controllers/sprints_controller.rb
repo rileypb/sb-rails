@@ -11,6 +11,10 @@ class SprintsController < ApplicationController
       @sprints = @sprints.select do |sprint|
         !sprint.completed
       end
+    elsif params["completed"] == "true"
+      @sprints = @sprints.select do |sprint|
+        sprint.completed
+      end
     end
   end
 
