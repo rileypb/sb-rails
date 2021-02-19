@@ -207,7 +207,7 @@ class SprintsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def sprint_params
-      params.require(:sprint).permit(:title, :goal, :description)
+      params.require(:sprint).permit(:title, :goal, :description, :retrospective)
     end
 
     def clear_burndown_data(sprint)
