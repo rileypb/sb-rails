@@ -4,7 +4,9 @@ if activity.user
 		json.partial! "users/user", user: activity.user
 	end
 else
-	json.user do json.partial! "users/nulluser", user: nil
+	json.user do 
+		json.partial! "users/nulluser", user: nil
+	end
 end
 json.project_context do
 	json.id activity.project_context.id
