@@ -1,6 +1,10 @@
 json.extract! activity, :id, :action, :modifier, :created_at
-json.user do
-	json.partial! "users/user", user: activity.user
+if activity.user
+	json.user do
+		json.partial! "users/user", user: activity.user
+	end
+else
+	json.user do json.partial! "users/nulluser", user: nil
 end
 json.project_context do
 	json.id activity.project_context.id

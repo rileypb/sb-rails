@@ -47,22 +47,23 @@ class User < ApplicationRecord
     		email = user_info["email"]
     		user = User.where(email: email).first
     		if !user
-			  	user = User.create do |user|
+			  	user = User.create! do |user|
 			  		user.email = user_info["email"]
 			  		user.oauthsub = id
 				    user.first_name = user_info["given_name"]
 				    user.last_name = user_info["family_name"]
 				    user.picture = user_info["picture"]
+				    user.password = "passwordnotrequired"
 				end
 			else
-				user.update(oauthsub: id)
+				user.update!(oauthsub: id)
 			end
 		else
-			# user.email = user_info["email"]
-	  # 		user.oauthsub = id
-		 #    user.first_name = user_info["given_name"]
-		 #    user.last_name = user_info["family_name"]
-		 #    user.picture = user_info["picture"]
+			user.email = user_info["email"]
+		    user.first_name = user_info["given_name"]
+		    user.last_name = user_info["family_name"]
+		    user.picture = user_info["picture"]
+		    user.save!
 		end
 
 		return user
