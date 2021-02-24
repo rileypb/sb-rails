@@ -59,12 +59,12 @@ class User < ApplicationRecord
 				user.update!(oauthsub: id)
 			end
 		else
-			user_info = Rails.application.config.token_verifier.get_user_info(token)
-			user.email = user_info["email"]
-		    user.first_name = user_info["given_name"]
-		    user.last_name = user_info["family_name"]
-		    user.picture = user_info["picture"]
-		    user.save!
+			# user_info = Rails.application.config.token_verifier.get_user_info(token)
+			# user.email = user_info["email"]
+		 #    user.first_name = user_info["given_name"]
+		 #    user.last_name = user_info["family_name"]
+		 #    user.picture = user_info["picture"]
+		 #    user.save!
 		end
 
 		return user
