@@ -20,7 +20,7 @@ class Ability
       can :access, Task
 
       # # project owner can do anything with the project
-      can [:create_issue, :delete_issue, :read, :update], Project, owner: user
+      can [:create_issue, :delete_issue, :read, :update, :configure], Project, owner: user
       can [:read, :update], Issue, project: { owner: user }
       can [:create_sprint, :delete_sprint], Project, owner: user
       can [:create_epic, :delete_epic], Project, owner: user
@@ -42,6 +42,7 @@ class Ability
       # per project permissions
       can [:read], Project, project_permissions: { user: user, scope: "read" }
       can [:update], Project, project_permissions: { user: user, scope: "update" }
+      can [:configure], Project, project_permissions: { user: user, scope: "configure" }
       can [:read], Sprint, project: { project_permissions: { user: user, scope: "read"}}
       can [:update], Sprint, project: { project_permissions: { user: user, scope: "update"}}
       can [:read], Epic, project: { project_permissions: { user: user, scope: "read"}}
