@@ -107,6 +107,12 @@ class ProjectsController < ApplicationController
     check { can? :read, @project }
   end
 
+  def team
+    @project = Project.find(params[:project_id])
+    check { can? :read, @project }
+  end
+
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_project

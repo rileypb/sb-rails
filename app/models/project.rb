@@ -28,6 +28,7 @@ class Project < ApplicationRecord
 	def permissions(user)
 		perms = super
   		ability = Ability.new(user)
+  		perms << 'configure' if ability.can? :configure, self
 		perms << 'create-issue' if ability.can? :create_issue, self
 		perms << 'delete-issue' if ability.can? :delete_issue, self
 	    perms << 'create-sprint' if ability.can? :create_sprint, self
@@ -54,6 +55,16 @@ class Project < ApplicationRecord
 
 			current_sprint.set_burndown_data!(day, points_remaining)
 		end
+	end
+
+	def team_members
+		result = [ self.owner ]
+		result.concat(self.project_permissions.map { |pp| pp.user })
+		if self.demo
+			result.concat(User.all.limit(10)) # if this is a demo project, everyone's on the team!
+		end
+		result.uniq!
+		return result
 	end
 
 end

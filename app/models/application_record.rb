@@ -7,6 +7,9 @@ class ApplicationRecord < ActiveRecord::Base
 
   def permissions(user)
   	ability = Ability.new(user)
+
+    a = user.project_permissions.map { |x| { scope: x.scope }}
+
     perms = []
     perms << 'read' if ability.can? :read, self
     perms << 'update' if ability.can? :update, self
