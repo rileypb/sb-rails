@@ -267,6 +267,26 @@ class IssuesController < ApplicationController
     end
   end
 
+  def assign_issue
+    Issue.transaction do
+      issue_id = params[:issue_id]
+      @issue = Issue.find(issue_id)
+      aparams = params.require(:data).permit(:userId)
+      user_id = aparams[:userId]
+      user = user_id == -1 ? nil : User.find(user_id)
+      @issue.update!(assignee: user)
+      sync_on "issues/#{issue_id}"
+
+      if user
+        Activity.create(user: current_user, action: "assigned_issue", issue: @issue, project_context: @issue.project, user2: user)
+      else
+        Activity.create(user: current_user, action: "unassigned_issue", issue: @issue, project_context: @issue.project)
+      end
+      
+      sync_on_activities(@issue.project)
+    end
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_issue

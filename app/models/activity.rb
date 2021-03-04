@@ -8,6 +8,7 @@ class Activity < ApplicationRecord
 	belongs_to :epic2, class_name: 'Epic', optional: true
 
 	belongs_to :user
+	belongs_to :user2, class_name: 'User', optional: true
 	belongs_to :project_context, class_name: 'Project'
 
 end

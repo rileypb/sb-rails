@@ -8,6 +8,11 @@ else
 		json.partial! "users/nulluser", user: nil
 	end
 end
+if activity.user2
+	json.user2 do
+		json.partial! "users/user", user: activity.user2
+	end
+end
 json.project_context do
 	json.id activity.project_context.id
 	json.name activity.project_context.name

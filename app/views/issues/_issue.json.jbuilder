@@ -40,3 +40,9 @@ json.activities do
 		json.partial! "activities/activity", activity: activity
 	end
 end
+
+if issue.assignee
+	json.assignee do
+		json.partial! "users/user", user: issue.assignee
+	end
+end

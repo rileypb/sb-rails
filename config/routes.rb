@@ -28,6 +28,7 @@ Rails.application.routes.draw do
     resources :issues, defaults: {format: :json} do
       resources :tasks
       patch 'reorder_tasks', defaults: {format: :json}, to: 'issues#reorder_tasks'
+      patch 'assign_issue', defaults: {format: :json}, to: 'issues#assign_issue'
     end
     # patch 'issues/:id', to: 'issues#update'
     # delete 'issues/:id', to: 'issues#destroy'

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_02_18_212446) do
+ActiveRecord::Schema.define(version: 2021_03_04_210209) do
 
   create_table "activities", force: :cascade do |t|
     t.integer "user_id"
@@ -26,6 +26,7 @@ ActiveRecord::Schema.define(version: 2021_02_18_212446) do
     t.datetime "updated_at", precision: 6, null: false
     t.integer "sprint2_id"
     t.integer "epic2_id"
+    t.integer "user2_id"
     t.index ["epic2_id"], name: "index_activities_on_epic2_id"
     t.index ["epic_id"], name: "index_activities_on_epic_id"
     t.index ["issue_id"], name: "index_activities_on_issue_id"
@@ -34,6 +35,7 @@ ActiveRecord::Schema.define(version: 2021_02_18_212446) do
     t.index ["sprint2_id"], name: "index_activities_on_sprint2_id"
     t.index ["sprint_id"], name: "index_activities_on_sprint_id"
     t.index ["task_id"], name: "index_activities_on_task_id"
+    t.index ["user2_id"], name: "index_activities_on_user2_id"
     t.index ["user_id"], name: "index_activities_on_user_id"
   end
 
@@ -153,6 +155,7 @@ ActiveRecord::Schema.define(version: 2021_02_18_212446) do
   end
 
   add_foreign_key "activities", "projects", column: "project_context_id"
+  add_foreign_key "activities", "users", column: "user2_id"
   add_foreign_key "burndown_data", "sprints"
   add_foreign_key "issues", "epics"
   add_foreign_key "issues", "issues", column: "parent_id"
