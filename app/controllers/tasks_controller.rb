@@ -70,6 +70,8 @@ class TasksController < ApplicationController
 
     if @task.update(task_params)
       sync_on path
+      Activity.create(user: current_user, action: "updated_task", task: @task, project_context: @task.issue.project)
+      sync_on_activities(@task.issue.project)
       render json: @task, status: :ok, location: @issue
     else
       render json: @task.errors, status: :unprocessable_entity

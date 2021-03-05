@@ -79,7 +79,7 @@ class SprintsController < ApplicationController
         sync_on "projects/#{@project.id}/sprints"
         render json: { result: "success" }, status: :ok, location: @project
         sync_on_activities(@project)
-        Activity.create(user: current_user, action: "deleted_sprint", modifier: "#{@sprint.id} - #{sprint.title}", project_context: @sprint.project)
+        Activity.create(user: current_user, action: "deleted_sprint", modifier: "#{@sprint.id} - #{@sprint.title}", project_context: @sprint.project)
       else
         render json: @sprint.errors, status: :unprocessable_entity
       end
