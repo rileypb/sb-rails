@@ -124,6 +124,28 @@ class TasksController < ApplicationController
     end
   end
 
+  def assign_task
+    Task.transaction do
+      task_id = params[:task_id]
+      @task = Task.find(task_id)
+      aparams = params.require(:data).permit(:userId)
+      user_id = aparams[:userId]
+      user = user_id == -1 ? nil : User.find(user_id)
+      @task.update!(assignee: user)
+      sync_on "tasks/#{task_id}"
+      sync_on "issues/#{@task.issue.id}"
+      sync_on "issues/#{@task.issue.id}/tasks"
+
+      if user
+        Activity.create(user: current_user, action: "assigned_task", task: @task, project_context: @task.issue.project, user2: user)
+      else
+        Activity.create(user: current_user, action: "unassigned_task", task: @task, project_context: @task.issue.project)
+      end
+      
+      sync_on_activities(@task.issue.project)
+    end
+  end
+
 
   private
 

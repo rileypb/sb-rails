@@ -35,6 +35,7 @@ Rails.application.routes.draw do
     patch 'transfer_issues', to: 'transfer#transfer_issues'
     resources :tasks, defaults: {format: :json} do
       patch 'set_complete', defaults: {format: :json}, to: 'tasks#set_complete'
+      patch 'assign_task', defaults: {format: :json}, to: 'tasks#assign_task'
     end
     resources :epics, defaults: {format: :json} do
       resources :issues

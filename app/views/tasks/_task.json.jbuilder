@@ -13,3 +13,9 @@ json.issue do
 	json.partial! "issues/issue_brief", issue: task.issue
 	json.permissions task.issue.permissions(@current_user)
 end
+
+if task.assignee
+	json.assignee do
+		json.partial! "users/user", user: task.assignee
+	end
+end
