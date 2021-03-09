@@ -9,8 +9,9 @@ class User < ApplicationRecord
     has_many :issues, inverse_of: 'last_changed_by', foreign_key: :last_changed_by_id
     has_many :tasks, inverse_of: 'last_changed_by', foreign_key: :last_changed_by_id
 
+    has_many :assigned_tasks, class_name: 'Task', inverse_of: 'assignee', foreign_key: :assignee_id
+
 	def self.from_omniauth(auth)
-		pp auth.info
 	  u = User.where(email: auth.info.email).first
 	  if !u
 	  	u = User.create do |user|
@@ -68,6 +69,10 @@ class User < ApplicationRecord
 		end
 
 		return user
+	end
+
+	def assigned_issues
+		self.assigned_tasks.map { |t| t.issue }.uniq
 	end
 
 	def admin?

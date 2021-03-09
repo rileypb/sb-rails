@@ -24,6 +24,7 @@ Rails.application.routes.draw do
       post 'start', defaults: {format: :json}, to: 'sprints#start'
       post 'suspend', defaults: {format: :json}, to: 'sprints#suspend'
       post 'finish', defaults: {format: :json}, to: 'sprints#finish'
+      get 'team_summary', defaults: {format: :json}, to: 'sprints#team_summary'
     end
     resources :issues, defaults: {format: :json} do
       resources :tasks

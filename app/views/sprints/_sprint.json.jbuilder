@@ -10,4 +10,5 @@ json.project do
   end
 end
 json.total_estimate sprint.total_estimate
+json.total_work sprint.total_work
 json.burndownData sprint.burndown_graph

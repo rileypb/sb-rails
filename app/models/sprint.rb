@@ -99,6 +99,14 @@ class Sprint < ApplicationRecord
         [(self.starting_work || 0), sum].max
     end
 
+    def total_work
+        self.issues.flat_map {|i| i.tasks}.sum {|t| t.estimate || 0} 
+    end
+
+    def unassigned_issues
+        self.issues.flat_map {|i| i.tasks.filter {|t| !t.assignee}}.map { |t| t.issue }.uniq
+    end
+
     #
     # day number = Time.now.to_i / (24*3600)
     # day number -> string: Time.at(a*24*3600).getutc.strftime("%m/%d")

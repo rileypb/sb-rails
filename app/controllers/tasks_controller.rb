@@ -135,6 +135,7 @@ class TasksController < ApplicationController
       sync_on "tasks/#{task_id}"
       sync_on "issues/#{@task.issue.id}"
       sync_on "issues/#{@task.issue.id}/tasks"
+      sync_on "sprints/#{@task.issue.sprint.id}/team_summary" if @task.issue.sprint
 
       if user
         Activity.create(user: current_user, action: "assigned_task", task: @task, project_context: @task.issue.project, user2: user)
