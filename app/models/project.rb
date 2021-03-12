@@ -13,6 +13,8 @@ class Project < ApplicationRecord
 	validates :owner_id, presence: true
 	validate :orders_are_valid
 	validate :current_sprint_from_same_project
+	validate :issue_order_length
+	validate :epic_order_length
 
 	def current_sprint_from_same_project
 		if self.current_sprint && self.current_sprint.project != self
@@ -44,7 +46,7 @@ class Project < ApplicationRecord
 	    else
 	    	self.issue_order = "#{issue.id}"
 	    end
-	    self.save
+	    self.save!
 	end
 
 	def update_burndown_data!
@@ -67,4 +69,15 @@ class Project < ApplicationRecord
 		return result
 	end
 
+
+	private
+
+	def issue_order_length
+		project_issues = self.issues.where('sprint_id is NULL')
+		validate_order_length(project_issues, :issue_order)
+	end
+
+	def epic_order_length
+		validate_order_length(self.epics, :epic_order)
+	end
 end

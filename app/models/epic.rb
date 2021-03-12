@@ -4,6 +4,7 @@ class Epic < ApplicationRecord
 	has_many :activities
 
 	validate :orders_are_valid
+	validate :issue_order_length
 
 	def issues_in_order
 		order = (issue_order || '').split(',')
@@ -36,5 +37,12 @@ class Epic < ApplicationRecord
     def append_issue(issue)
     	issue.update!(epic: self)
     	self.update!(issue_order: append_to_order(self.issue_order, issue.id))
+    end
+
+
+    private
+
+    def issue_order_length
+    	validate_order_length(self.issues, :issue_order)
     end
 end

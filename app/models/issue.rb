@@ -9,6 +9,7 @@ class Issue < ApplicationRecord
 	belongs_to :assignee, class_name: 'User', optional: true
 
 	validate :orders_are_valid
+	validate :task_order_length
 
 	def progress
 		totalEstimate = tasks.sum("estimate")
@@ -37,5 +38,9 @@ class Issue < ApplicationRecord
 
     def orders_are_valid
     	validate_order(:task_order)
+    end
+
+    def task_order_length
+    	validate_order_length(self.tasks, :task_order)
     end
 end

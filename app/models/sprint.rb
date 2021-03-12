@@ -3,6 +3,7 @@ class Sprint < ApplicationRecord
 	has_many :issues
 
 	validate :orders_are_valid
+    validate :issue_order_length
 
 	def permissions(user)
 		perms = super
@@ -111,5 +112,12 @@ class Sprint < ApplicationRecord
     # day number = Time.now.to_i / (24*3600)
     # day number -> string: Time.at(a*24*3600).getutc.strftime("%m/%d")
     #
+
+    
+    private
+
+    def issue_order_length
+        validate_order_length(self.issues, :issue_order)
+    end
 end
 	

@@ -82,9 +82,9 @@ class ProjectsController < ApplicationController
       order_split = order.split(',')
       order_split.insert(Integer(safe_params[:toIndex]), order_split.delete_at(Integer(safe_params[:fromIndex])))
 
-      Activity.create(user: current_user, action: "reordered_issues", project: @project, project_context: @project)
+      Activity.create!(user: current_user, action: "reordered_issues", project: @project, project_context: @project)
 
-      @project.update(issue_order: order_split.join(','))
+      @project.update!(issue_order: order_split.join(','))
       sync_on "projects/#{project_id}/issues"
       sync_on "projects/#{project_id}"
       sync_on_activities(@project)
