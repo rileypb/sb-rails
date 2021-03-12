@@ -22,4 +22,19 @@ class Epic < ApplicationRecord
     def orders_are_valid
     	validate_order(:issue_order)
     end
+
+	def append_to_order(order_string, to_append)
+		order_string ||= ''
+		split = order_string.split(',')
+		if !split.include? to_append
+			split << to_append
+			return split.join(',')
+		end
+		return order_string
+	end
+
+    def append_issue(issue)
+    	issue.update!(epic: self)
+    	self.update!(issue_order: append_to_order(self.issue_order, issue.id))
+    end
 end

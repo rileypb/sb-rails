@@ -54,6 +54,11 @@ class IssuesController < ApplicationController
     Issue.transaction do
       project_id = request.params[:project_id]
       sprint_id = request.params[:sprint_id]
+
+      params = issue_params.merge(project_id: project_id, sprint_id: sprint_id)
+      epic_id = params["add_to_epic"]
+      params.delete :add_to_epic
+
       sprint = nil
       project = Project.find(project_id)
 
@@ -62,8 +67,6 @@ class IssuesController < ApplicationController
       else
         sync_on "projects/#{project_id}/issues"
       end
-
-      params = issue_params.merge(project_id: project_id, sprint_id: sprint_id)
 
       params.delete :id if params[:id] == -1
       params[:state] = 'Open'
@@ -75,6 +78,16 @@ class IssuesController < ApplicationController
         sprint.add_issue(@issue)
       else
         project.add_issue(@issue)
+      end
+
+      if epic_id
+        epic = Epic.find(epic_id)
+        if epic
+          epic.append_issue(@issue) 
+          Activity.create(user: current_user, action: "added_issue_to_epic", issue: @issue, epic: epic, project_context: @issue.project)
+          sync_on "epics/#{epic_id}"
+          sync_on "epics/#{epic_id}/issues"
+        end
       end
 
       project.update_burndown_data!
@@ -297,7 +310,7 @@ class IssuesController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def issue_params
-      params.require(:issue).permit(:title, :description, :estimate, :state)
+      params.require(:issue).permit(:title, :description, :estimate, :state, :add_to_epic)
     end
 
     def path
