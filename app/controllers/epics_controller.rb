@@ -29,6 +29,8 @@ class EpicsController < ApplicationController
   def create
     Epic.transaction do
       project_id = request.params[:project_id]
+      project = Project.find(project_id)
+      check { can? :create_epic, project }
 
       sync_on "projects/#{project_id}/epics"
 
@@ -94,6 +96,8 @@ class EpicsController < ApplicationController
 
       issue = Issue.find(issue_id)
       @epic = Epic.find(epic_id)
+      check { can? :update, @epic }
+      check { can? :update, issue }
       _assert(ArgumentError, "issue does not belong to epic") { issue.epic == @epic }
 
       @epic.update(issue_order: remove_from_order(@epic.issue_order, issue_id))
@@ -116,10 +120,13 @@ class EpicsController < ApplicationController
 
       issue = Issue.find(issue_id)
       @epic = Epic.find(epic_id)
+      check { can? :update, @epic }
+      check { can? :update, issue }
       _assert(ArgumentError, "issue already belongs to epic") { issue.epic != @epic }
 
       original_epic = issue.epic
       if original_epic
+        check { can? :update, original_epic }
         original_epic.update(issue_order: remove_from_order(original_epic.issue_order, issue_id))
       end
       @epic.update(issue_order: append_to_order(@epic.issue_order, issue_id))
@@ -151,6 +158,7 @@ class EpicsController < ApplicationController
     Epic.transaction do
       epic_id = params[:epic_id]
       @epic = Epic.find(epic_id)
+      check { can? :update, @epic }
       safe_params = params.require(:data).permit(:fromIndex, :toIndex)
       order = @epic.issue_order
       order = default_issue_order(@epic) unless order.present?

@@ -43,6 +43,8 @@ class Ability
       can [:read], Project, project_permissions: { user: user, scope: "read" }
       can [:update], Project, project_permissions: { user: user, scope: "update" }
       can [:configure], Project, project_permissions: { user: user, scope: "configure" }
+      can [:create_epic, :delete_epic], Project, project_permissions: { user: user, scope: "update"}
+      can [:create_issue, :delete_issue], Project, project_permissions: { user: user, scope: "update"}
       can [:read], Sprint, project: { project_permissions: { user: user, scope: "read"}}
       can [:update], Sprint, project: { project_permissions: { user: user, scope: "update"}}
       can [:read], Epic, project: { project_permissions: { user: user, scope: "read"}}
@@ -50,7 +52,7 @@ class Ability
       can [:read], Issue, project: { project_permissions: { user: user, scope: "read"}}
       can [:update], Issue, project: { project_permissions: { user: user, scope: "update"}}
       can [:read], Task, issue: { project: { project_permissions: { user: user, scope: "read"}}}
-      can [:update], Task, issue: {project: { project_permissions: { user: user, scope: "update"}}}
+      can [:update], Task, issue: { project: { project_permissions: { user: user, scope: "update"}}}
 
       can [:create_task, :delete_task], Issue, project: { project_permissions: { user: user, scope: "update" }}
     end
