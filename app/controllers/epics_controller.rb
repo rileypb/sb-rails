@@ -128,10 +128,10 @@ class EpicsController < ApplicationController
       original_epic = issue.epic
       if original_epic
         check { can? :update, original_epic }
-        original_epic.update(issue_order: remove_from_order(original_epic.issue_order, issue_id))
+        original_epic.update!(issue_order: remove_from_order(original_epic.issue_order, issue_id))
       end
-      @epic.update(issue_order: append_to_order(@epic.issue_order, issue_id))
-      issue.update(epic: @epic)
+      issue.update!(epic: @epic)
+      @epic.update!(issue_order: append_to_order(@epic.issue_order, issue_id))
 
       if !original_epic
         Activity.create(user: current_user, action: "added_issue_to_epic", issue: issue, epic: @epic, project_context: @epic.project)

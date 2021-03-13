@@ -58,6 +58,7 @@ class ProjectsController < ApplicationController
     Project.transaction do
       project_id = params[:project_id]
       @project = Project.find(project_id)
+      check { can? :update, @project }
       safe_params = params.require(:data).permit(:fromIndex, :toIndex)
       order = @project.epic_order || default_epic_order(@project)
       order_split = order.split(',')
@@ -77,6 +78,7 @@ class ProjectsController < ApplicationController
     Project.transaction do
       project_id = params[:project_id]
       @project = Project.find(project_id)
+      check { can? :update, @project }
       safe_params = params.require(:data).permit(:fromIndex, :toIndex)
       order = @project.issue_order || default_issue_order(@project)
       order_split = order.split(',')
