@@ -5,6 +5,7 @@ class EpicsController < ApplicationController
  
   def index
   	@project = Project.find(params[:project_id])
+    check { can? :read, @project }
   	epics = @project.epics
     order = (@project.epic_order || '').split(',')
     @epics = []

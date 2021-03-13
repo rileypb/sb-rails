@@ -16,9 +16,7 @@ class IssuesController < ApplicationController
   		@parent = @project
   	end
 
-    check { can? :read, @project }
-    check { can? :read, @sprint } if @sprint
-    check { can? :read, @epic } if @epic
+    check { can? :read, @parent }
 
   	iss = @parent.issues
     order = (@parent.issue_order || '').split(',')
@@ -32,6 +30,9 @@ class IssuesController < ApplicationController
     iss.each do |i|
       @issues << i if !@issues.include?(i)
     end
+    @issues = @issues.select do |issue|
+      can? :read, issue
+    end 
   end
 
   def all_issues
@@ -61,6 +62,7 @@ class IssuesController < ApplicationController
 
       sprint = nil
       project = Project.find(project_id)
+      check { can? :create_issue, project }
 
       if sprint_id
         sync_on "sprints/#{sprint_id}/issues"
@@ -75,6 +77,7 @@ class IssuesController < ApplicationController
       Activity.create(user: current_user, action: "created_issue", issue: @issue, project_context: @issue.project)
 
       if sprint
+        check { can? :update, sprint }
         sprint.add_issue(@issue)
       else
         project.add_issue(@issue)
@@ -83,6 +86,7 @@ class IssuesController < ApplicationController
       if epic_id
         epic = Epic.find(epic_id)
         if epic
+          check { can? :update, epic }
           epic.append_issue(@issue) 
           Activity.create(user: current_user, action: "added_issue_to_epic", issue: @issue, epic: epic, project_context: @issue.project)
           sync_on "epics/#{epic_id}"
@@ -119,6 +123,7 @@ class IssuesController < ApplicationController
           sync_on "epics/#{iparams["epic_id"]}"
           sync_on "epics/#{iparams["epic_id"]}/issues"
           epic = Epic.find(iparams["epic_id"])
+          check { can? :update, epic }
           epic.add_issue(@issue)
 
           if old_epic_id
@@ -135,13 +140,15 @@ class IssuesController < ApplicationController
           sync_on "epics/#{iparams["sprint_id"]}"
           sync_on "epics/#{iparams["sprint_id"]}/issues"
           sprint = Sprint.find(iparams["sprint_id"])
+          check { can? :update, sprint }
           sprint.add_issue(@issue)
           
           if old_sprint_id
             sync_on "epics/#{old_sprint_id}"
             sync_on "epics/#{old_sprint_id}/issues"
-            sprint = Sprint.find(old_sprint_id)
-            sprint.remove_issue(@issue)
+            old_sprint = Sprint.find(old_sprint_id)
+            check { can? :update, old_sprint }
+            old_sprint.remove_issue(@issue)
           end
         end
 
@@ -171,6 +178,7 @@ class IssuesController < ApplicationController
     check { can? :delete, @issue }
     check { can? :delete_issue, @project }
     check { can? :delete_issue, @sprint } if @sprint
+    check { can? :update, @epic } if @epic
 
     if @issue.delete
       if @sprint
@@ -201,6 +209,7 @@ class IssuesController < ApplicationController
     Issue.transaction do
       issue_id = params[:issue_id]
       @issue = Issue.find(issue_id)
+      check { can? :update, @issue }
       safe_params = params.require(:data).permit(:fromIndex, :toIndex)
       order = @issue.task_order || default_task_order(@issue)
       order_split = order.split(',')
@@ -275,6 +284,8 @@ class IssuesController < ApplicationController
         project2.update_burndown_data!
       end
 
+      check { can? :update, parent1 }
+      check { can? :update, parent2 }
       parent1.update(issue_order: order1)
       parent2.update(issue_order: order2)
     end
@@ -284,6 +295,7 @@ class IssuesController < ApplicationController
     Issue.transaction do
       issue_id = params[:issue_id]
       @issue = Issue.find(issue_id)
+      check { can? :update, @issue }
       aparams = params.require(:data).permit(:userId)
       user_id = aparams[:userId]
       user = user_id == -1 ? nil : User.find(user_id)
