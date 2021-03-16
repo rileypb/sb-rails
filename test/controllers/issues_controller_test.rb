@@ -8,7 +8,7 @@ class IssuesControllerTest < ActionDispatch::IntegrationTest
 
   ### IssuesController.index ###
 
-  test "project index for admin lists all issues" do
+  test "project index for admin lists all issues without a sprint" do
   	issue1 = create(:issue)
     project = issue1.project
     issue2 = create(:issue, project: project)
@@ -22,7 +22,7 @@ class IssuesControllerTest < ActionDispatch::IntegrationTest
     body = JSON.load(body_s)
     issues = body["issues"]
     issues_list = issues["list"]
-    assert_equal 3, issues_list.length
+    assert_equal 2, issues_list.length
   end
 
   test "sprint index for admin lists all issues" do

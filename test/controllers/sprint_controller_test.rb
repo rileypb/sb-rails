@@ -30,17 +30,12 @@ class SprintControllerTest < ActionDispatch::IntegrationTest
     assert_equal sprint2.id, list[1]["id"]
     assert_equal sprint1.title, list[0]["title"]
     assert_equal sprint2.title, list[1]["title"]
-    assert_equal ["read", "update", "delete", "create-issue", "delete-issue", "start", "suspend", "finish"], list[0]["permissions"]
-    assert_equal ["read", "update", "delete", "create-issue", "delete-issue", "start", "suspend", "finish"], list[1]["permissions"]
     project0 = list[0]["project"]
     assert_equal project.id, project0["id"]
     assert_equal project.name, project0["name"]
     project1 = list[1]["project"]
     assert_equal project.id, project1["id"]
     assert_equal project.name, project1["name"]
-
-    assert_equal ["read", "update", "delete", "configure", "create-issue", "delete-issue", "create-sprint", "delete-sprint", "create-epic", "delete-epic"], project0["permissions"]
-    assert_equal ["read", "update", "delete", "configure", "create-issue", "delete-issue", "create-sprint", "delete-sprint", "create-epic", "delete-epic"], project1["permissions"]
   end
 
   test "start_sprint" do

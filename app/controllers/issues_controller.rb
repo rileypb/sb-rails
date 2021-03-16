@@ -28,7 +28,7 @@ class IssuesController < ApplicationController
       end
     end
     iss.each do |i|
-      @issues << i if !@issues.include?(i)
+      @issues << i if !@issues.include?(i) && (@sprint == i.sprint)
     end
     @issues = @issues.select do |issue|
       can? :read, issue
