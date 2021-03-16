@@ -40,12 +40,12 @@ class TasksController < ApplicationController
       project_id = @issue.project_id
 
       if sprint_id
-        sync_on "issues/#{issue_id}/tasks"
-        sync_on "issues/#{issue_id}"
-      else
-        sync_on "issues/#{issue_id}/tasks"
-        sync_on "issues/#{issue_id}"
+        sync_on "sprints/#{sprint_id}"
+        sync_on "sprints/#{sprint_id}/team_summary"
       end
+      sync_on "issues/#{issue_id}/tasks"
+      sync_on "issues/#{issue_id}"
+      
 
       params = task_params.merge(issue_id: issue_id)
 
@@ -68,14 +68,17 @@ class TasksController < ApplicationController
     end
     check { can? :update, @task }
 
-    if @task.update(task_params)
-      sync_on path
-      Activity.create(user: current_user, action: "updated_task", task: @task, project_context: @task.issue.project)
-      sync_on_activities(@task.issue.project)
-      render json: @task, status: :ok, location: @issue
-    else
-      render json: @task.errors, status: :unprocessable_entity
+    @task.update!(task_params)
+    sync_on path
+    if @task.issue.sprint
+      sync_on "sprints/#{@task.issue.sprint.id}"
+      sync_on "sprints/#{@task.issue.sprint.id}/team_summary"
     end
+    sync_on "issues/#{@task.issue.id}/tasks"
+    sync_on "issues/#{@task.issue.id}"
+    Activity.create(user: current_user, action: "updated_task", task: @task, project_context: @task.issue.project)
+    sync_on_activities(@task.issue.project)
+    render json: @task, status: :ok, location: @issue
   end
 
   def destroy
@@ -88,14 +91,17 @@ class TasksController < ApplicationController
       check { can? :delete, @task }
       check { can? :delete_task, @issue }
 
-      if @task.delete
-        Activity.create(user: current_user, action: "deleted_task", issue: @issue, modifier: @task.title, project_context: @issue.project)
-        sync_on path
-        sync_on_activities(@issue.project)
-        render json: { result: "success"}, status: :ok, location: @issue
-      else
-        render json: @task.errors, status: :unprocessable_entity
+      @task.delete
+      Activity.create(user: current_user, action: "deleted_task", issue: @issue, modifier: @task.title, project_context: @issue.project)
+      sync_on path
+      if @task.issue.sprint
+        sync_on "sprints/#{@task.issue.sprint.id}"
+        sync_on "sprints/#{@task.issue.sprint.id}/team_summary"
       end
+      sync_on "issues/#{@task.issue.id}/tasks"
+      sync_on "issues/#{@task.issue.id}"
+      sync_on_activities(@issue.project)
+      render json: { result: "success"}, status: :ok, location: @issue
     end
   end
 
