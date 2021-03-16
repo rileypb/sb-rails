@@ -19,31 +19,31 @@ json.project_context do
 end
 if activity.task
 	json.task do
-		json.partial! "tasks/task", task: activity.task
+		json.extract! activity.task, :id, :title
 	end
 end
 if activity.issue
 	json.issue do
-		json.partial! "issues/issue_brief", issue: activity.issue
+		json.extract! activity.issue, :id, :title
 	end
 end
 if activity.epic
 	json.epic do
-		json.partial! "epics/epic_brief", epic: activity.epic
+		json.extract! activity.epic, :id, :title
 	end
 end
 if activity.epic2
 	json.epic2 do
-		json.partial! "epics/epic_brief", epic: activity.epic2
+		json.extract! activity.epic2, :id, :title
 	end
 end
 if activity.sprint
 	json.sprint do
-		json.partial! "sprints/sprint", sprint: activity.sprint
+		json.extract! activity.sprint, :id, :title
 	end
 end
 if activity.sprint2
 	json.sprint2 do
-		json.partial! "sprints/sprint", sprint: activity.sprint2
+		json.extract! activity.sprint2, :id, :title
 	end
 end
