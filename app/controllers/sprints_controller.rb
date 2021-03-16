@@ -20,7 +20,9 @@ class SprintsController < ApplicationController
 
   def show
   	check { can? :read, @sprint }
-  	@sprint
+    Sprint.transaction do
+  	  render @sprint
+    end
   end
 
   def update
@@ -96,10 +98,9 @@ class SprintsController < ApplicationController
       @sprint = Sprint.find(sprint_id)
       _assert(ArgumentError, "issue does not belong to sprint") { issue.sprint == @sprint }
 
-      @sprint.update(issue_order: remove_from_order(@sprint.issue_order, issue_id))
-      issue.update(sprint: nil)
-
-      issue.project.update(issue_order: append_to_order(issue.project.issue_order, issue_id))
+      issue.update!(sprint: nil)
+      @sprint.update!(issue_order: remove_from_order(@sprint.issue_order, issue_id))
+      issue.project.update!(issue_order: append_to_order(issue.project.issue_order, issue_id))
       
       @sprint.project.update_burndown_data!
 
@@ -120,9 +121,9 @@ class SprintsController < ApplicationController
       sprint_id = params[:sprint_id]
       @sprint = Sprint.find(sprint_id)
       safe_params = params.require(:data).permit(:fromIndex, :toIndex)
-      order = @sprint.issue_order
+      order = @sprint.issue_order || default_issue_order(@sprint)
       order_split = order.split(',')
-      order_split.insert(safe_params[:toIndex], order_split.delete_at(safe_params[:fromIndex]))
+      order_split.insert(safe_params[:toIndex].to_i, order_split.delete_at(safe_params[:fromIndex].to_i))
 
       @sprint.update(issue_order: order_split.join(','))
       sync_on "sprints/#{sprint_id}/issues"
@@ -137,6 +138,7 @@ class SprintsController < ApplicationController
     Sprint.transaction do
       unless @project.current_sprint
         start_params = params.require(:data).permit(:startDate, :endDate, :reset)
+        check { can? :start, @sprint }
         if @project.update(current_sprint: @sprint)
 
           if start_params[:reset] || (@sprint.start_date != start_params[:startDate])
@@ -166,6 +168,7 @@ class SprintsController < ApplicationController
 
   def suspend
     if @project.current_sprint
+      check { can? :suspend, @project.current_sprint }
       if @project.update(current_sprint: nil)
         Activity.create(user: current_user, action: "suspended_sprint", sprint: @sprint, project: @project, project_context: @project)
         sync_on "sprints/#{@sprint.id}"
@@ -184,6 +187,7 @@ class SprintsController < ApplicationController
   def finish
     Sprint.transaction do
       if @project.current_sprint
+        check { can? :finish, @project.current_sprint }
         @project.update!(current_sprint: nil)
         @sprint.update!(completed: true, actual_end_date: Date.today)
         Activity.create(user: current_user, action: "finished_sprint", sprint: @sprint, project: @project, project_context: @project)

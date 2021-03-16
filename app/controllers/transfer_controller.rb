@@ -26,16 +26,17 @@ class TransferController < ApplicationController
 			issue_order1 = container1.issue_order || default_issue_order(container1)
 			issue_order2 = container2.issue_order || default_issue_order(container2)
 
-			moved_element = issue_order1.split(',')[transfer_params[:fromIndex]]
-			container1.update(issue_order: remove_from_order_at(issue_order1, transfer_params[:fromIndex]))
-			container2.update(issue_order: insert_into_order(issue_order2, moved_element, transfer_params[:toIndex]))
-
+			moved_element = issue_order1.split(',')[transfer_params[:fromIndex].to_i]
 			moved_issue = Issue.find(moved_element)
 			if sprint2
-				moved_issue.update(sprint: sprint2)
+				moved_issue.update!(sprint: sprint2)
 			else
-				moved_issue.update(sprint: nil)
+				moved_issue.update!(sprint: nil)
 			end
+			container1.update!(issue_order: remove_from_order_at(issue_order1, transfer_params[:fromIndex].to_i))
+			container2.update!(issue_order: insert_into_order(issue_order2, moved_element, transfer_params[:toIndex].to_i))
+
+
 
 			projects = []
 			if sprint1
@@ -82,7 +83,6 @@ class TransferController < ApplicationController
 
 	def transfer_between_epics(transfer_params)
 		Epic.transaction do
-			puts "transfer_between_epics"
 			epic1 = Epic.find(transfer_params[:epicId1])
 			epic2 = Epic.find(transfer_params[:epicId2])
 

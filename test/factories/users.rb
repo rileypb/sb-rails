@@ -9,6 +9,7 @@ FactoryBot.define do
   	last_name { "Bobson" }
   	permission_scope { "member" }
   	email { random_email }
+    password { "randompassword" }
 
   	factory :admin do 
   	  permission_scope { "admin" }

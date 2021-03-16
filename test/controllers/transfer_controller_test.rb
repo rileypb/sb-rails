@@ -31,4 +31,54 @@ class TransferControllerTest < ActionDispatch::IntegrationTest
 		assert_equal epic2, i1.epic
 	end
 
+	test "transfer from backlog to sprint" do
+		sprint = create(:sprint, project: @project)
+		i1 = create(:issue, project: @project)
+		i2 = create(:issue, project: @project)
+		i3 = create(:issue, project: @project)
+		i4 = create(:issue, project: @project, sprint: sprint)
+		i5 = create(:issue, project: @project, sprint: sprint)
+		i6 = create(:issue, project: @project, sprint: sprint)
+
+		@project.update!(issue_order: "#{i1.id},#{i2.id},#{i3.id}")
+		sprint.update!(issue_order: "#{i4.id},#{i5.id},#{i6.id}")
+
+		patch transfer_issues_url, params: { transfer: { projectId1: @project.id, sprintId2: sprint.id, fromIndex: 2, toIndex: 1 }}, 
+          headers: { 'Authorization': "Bearer #{token}"}
+
+        sprint.reload
+        @project.reload
+
+        assert_response :no_content
+        i6.reload
+        assert_equal sprint, i6.sprint
+        assert_equal "#{i4.id},#{i3.id},#{i5.id},#{i6.id}", sprint.issue_order
+        assert_equal "#{i1.id},#{i2.id}", @project.issue_order
+	end
+
+	test "transfer from backlog end to sprint end" do
+		sprint = create(:sprint, project: @project)
+		i1 = create(:issue, project: @project)
+		i2 = create(:issue, project: @project)
+		i3 = create(:issue, project: @project)
+		i4 = create(:issue, project: @project, sprint: sprint)
+		i5 = create(:issue, project: @project, sprint: sprint)
+		i6 = create(:issue, project: @project, sprint: sprint)
+
+		@project.update!(issue_order: "#{i1.id},#{i2.id},#{i3.id}")
+		sprint.update!(issue_order: "#{i4.id},#{i5.id},#{i6.id}")
+
+		patch transfer_issues_url, params: { transfer: { projectId1: @project.id, sprintId2: sprint.id, fromIndex: 2, toIndex: 3 }}, 
+          headers: { 'Authorization': "Bearer #{token}"}
+
+        sprint.reload
+        @project.reload
+
+        assert_response :no_content
+        i6.reload
+        assert_equal sprint, i6.sprint
+        assert_equal "#{i4.id},#{i5.id},#{i6.id},#{i3.id}", sprint.issue_order
+        assert_equal "#{i1.id},#{i2.id}", @project.issue_order
+	end
+
 end

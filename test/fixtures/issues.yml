@@ -4,14 +4,14 @@
 # model remove the '{}' from the fixture names and add the columns immediately
 # below each fixture, per the syntax in the comments below
 #
-one:
-  title: "issue one"
-  description: "The first issue."
-  project: :owned_by_admin
-# column: value
-#
-two:
-  title: "issue two"
-  description: "The second issue."
-  project: :owned_by_admin
+# one:
+#   title: "issue one"
+#   description: "The first issue."
+#   project: :owned_by_admin
+# # column: value
+# #
+# two:
+#   title: "issue two"
+#   description: "The second issue."
+#   project: :owned_by_admin
 # column: value

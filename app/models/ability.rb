@@ -24,7 +24,7 @@ class Ability
       can [:read, :update], Issue, project: { owner: user }
       can [:create_sprint, :delete_sprint], Project, owner: user
       can [:create_epic, :delete_epic], Project, owner: user
-      can [:read, :update], Sprint, project: { owner: user }
+      can [:read, :update, :start, :suspend, :finish], Sprint, project: { owner: user }
       can [:read, :update], Task, issue: { project: { owner: user }}
       can [:read, :update], Epic, project: { owner: user }
       can [:create_task, :delete_task], Issue, project: { owner: user }
@@ -34,7 +34,7 @@ class Ability
       can [:read, :update], Issue, project: { demo: true }
       can [:create_sprint, :delete_sprint], Project, demo: true
       can [:create_epic, :delete_epic], Project, demo: true
-      can [:read, :update], Sprint, project: { demo: true }
+      can [:read, :update, :start, :suspend, :finish], Sprint, project: { demo: true }
       can [:read, :update], Task, issue: { project: { demo: true }}
       can [:read, :update], Epic, project: { demo: true }
       can [:create_task, :delete_task], Issue, project: { demo: true }
@@ -46,7 +46,7 @@ class Ability
       can [:create_epic, :delete_epic], Project, project_permissions: { user: user, scope: "update"}
       can [:create_issue, :delete_issue], Project, project_permissions: { user: user, scope: "update"}
       can [:read], Sprint, project: { project_permissions: { user: user, scope: "read"}}
-      can [:update], Sprint, project: { project_permissions: { user: user, scope: "update"}}
+      can [:update, :start, :suspend, :finish], Sprint, project: { project_permissions: { user: user, scope: "update"}}
       can [:read], Epic, project: { project_permissions: { user: user, scope: "read"}}
       can [:update], Epic, project: { project_permissions: { user: user, scope: "update"}}
       can [:read], Issue, project: { project_permissions: { user: user, scope: "read"}}

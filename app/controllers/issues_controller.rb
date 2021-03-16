@@ -182,17 +182,17 @@ class IssuesController < ApplicationController
 
     if @issue.delete
       if @sprint
-        @sprint.update(issue_order: remove_from_order(@sprint.issue_order || default_issue_order(@sprint), @issue.id))
+        @sprint.update!(issue_order: remove_from_order(@sprint.issue_order || default_issue_order(@sprint), @issue.id))
       else 
-        @project.update(issue_order: remove_from_order(@project.issue_order || default_issue_order(@project), @issue.id))
+        @project.update!(issue_order: remove_from_order(@project.issue_order || default_issue_order(@project), @issue.id))
       end
       if @epic
-        @epic.update(issue_order: remove_from_order(@epic.issue_order || default_issue_order(@epic), @issue.id))
+        @epic.update!(issue_order: remove_from_order(@epic.issue_order || default_issue_order(@epic), @issue.id))
       end
 
       Activity.create(user: current_user, action: "deleted_issue", modifier: "\##{@issue.id} - #{@issue.title}", project: @project, sprint: @sprint, project_context: @project)
 
-      project.update_burndown_data!
+      @project.update_burndown_data!
       if @issue.sprint
         sync_on "sprints/#{@issue.sprint_id}"
       end

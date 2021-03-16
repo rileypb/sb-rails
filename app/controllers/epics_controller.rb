@@ -37,10 +37,10 @@ class EpicsController < ApplicationController
 
       params = epic_params.merge(project_id: project_id)
 
-      @epic = Epic.create(params)
+      @epic = Epic.create!(params)
       Activity.create(user: current_user, action: "created_epic", epic: @epic, project_context: @epic.project)
       sync_on_activities(@epic.project)
-      @epic.project.update(epic_order: append_to_order(@epic.project.epic_order, @epic.id))
+      @epic.project.update!(epic_order: append_to_order(@epic.project.epic_order, @epic.id))
     end
   end
 
@@ -67,25 +67,23 @@ class EpicsController < ApplicationController
       check { can? :delete, @epic }
       check { can? :delete_epic, @project }
 
+      new_issue_order = @project.issue_order || ""
       @epic.issues.each do |issue| 
-        issue.update(epic: nil)
+        issue.update!(epic: nil)
+        if new_issue_order.present?
+          new_issue_order += ",#{issue.id}"
+        else
+          new_issue_order += issue.id.to_s
+        end
         sync_on "issues/#{issue.id}"
       end
 
-      if @epic.delete
-        if @project.update(epic_order: remove_from_order(@project.epic_order || default_epic_order(@project), @epic.id))
-          Activity.create(user: current_user, action: "deleted_epic", modifier: "\##{@epic.id} - #{@epic.title}", project: @project, project_context: @project)
-          sync_on path
-          sync_on_activities(@project)
-          render json: { result: "success" }, status: :ok, location: @project
-        else
-          render json: @project.errors, status: :unprocessable_entity
-          raise ActiveRecord::Rollback
-        end
-      else
-        render json: @epic.errors, status: :unprocessable_entity
-        raise ActiveRecord::Rollback
-      end
+      @epic.delete
+      @project.update!(issue_order: new_issue_order, epic_order: remove_from_order(@project.epic_order || default_epic_order(@project), @epic.id))
+      Activity.create(user: current_user, action: "deleted_epic", modifier: "\##{@epic.id} - #{@epic.title}", project: @project, project_context: @project)
+      sync_on path
+      sync_on_activities(@project)
+      render json: { result: "success" }, status: :ok, location: @project
     end
   end
 
@@ -101,8 +99,8 @@ class EpicsController < ApplicationController
       check { can? :update, issue }
       _assert(ArgumentError, "issue does not belong to epic") { issue.epic == @epic }
 
-      @epic.update(issue_order: remove_from_order(@epic.issue_order, issue_id))
-      issue.update(epic: nil)
+      issue.update!(epic: nil)
+      @epic.update!(issue_order: remove_from_order(@epic.issue_order, issue_id))
 
       Activity.create(user: current_user, action: "removed_issue_from_epic", issue: issue, epic: @epic, project_context: @epic.project)
       sync_on "issues/#{issue_id}"
@@ -126,11 +124,11 @@ class EpicsController < ApplicationController
       _assert(ArgumentError, "issue already belongs to epic") { issue.epic != @epic }
 
       original_epic = issue.epic
+      issue.update!(epic: @epic)
       if original_epic
         check { can? :update, original_epic }
         original_epic.update!(issue_order: remove_from_order(original_epic.issue_order, issue_id))
       end
-      issue.update!(epic: @epic)
       @epic.update!(issue_order: append_to_order(@epic.issue_order, issue_id))
 
       if !original_epic

@@ -70,6 +70,23 @@ class Project < ApplicationRecord
 	end
 
 
+
+    def create_valid_order(children, order_field)
+      order = self.attributes[order_field.to_s] || ''
+      order_split = order.split(',').map { |x| x.to_i }
+      if order_field == :issue_order
+	      child_ids = children.where('sprint_id is NULL').map { |child| child.id }
+	  else
+	      child_ids = children.map { |child| child.id }
+	  end
+      extras = order_split - child_ids
+      leftovers = child_ids - order_split
+      new_order_split = order_split - extras + leftovers
+      new_order = new_order_split.join(',')
+      return new_order
+    end
+
+
 	private
 
 	def issue_order_length

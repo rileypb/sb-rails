@@ -10,6 +10,9 @@ class Sprint < ApplicationRecord
   		ability = Ability.new(user)
 		perms << 'create-issue' if ability.can? :create_issue, self
 		perms << 'delete-issue' if ability.can? :delete_issue, self
+        perms << 'start' if ability.can? :start, self
+        perms << 'suspend' if ability.can? :suspend, self
+        perms << 'finish' if ability.can? :finish, self
 		return perms
 	end
 
@@ -113,7 +116,7 @@ class Sprint < ApplicationRecord
     # day number -> string: Time.at(a*24*3600).getutc.strftime("%m/%d")
     #
 
-    
+
     private
 
     def issue_order_length

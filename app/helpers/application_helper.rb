@@ -1,6 +1,6 @@
 module ApplicationHelper
 	def remove_from_order(order_string, to_remove) 
-		(order_string.split(',') - [to_remove.to_s]).join(',')
+		((order_string || '').split(',') - [to_remove.to_s]).join(',')
 	end
 
 	def remove_from_order_at(order_string, index)
@@ -26,7 +26,7 @@ module ApplicationHelper
 		order_string ||= ''
 		split = order_string.split(',')
 		if index > 0
-			new_split = split[0..(index-1)] + [to_append] + split[index..-1]
+			new_split = split[0..(index-1)] + [to_append] + (split[index..-1] || [])
 		else
 			new_split = [to_append] + split
 		end
