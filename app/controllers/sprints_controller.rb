@@ -20,9 +20,6 @@ class SprintsController < ApplicationController
 
   def show
   	check { can? :read, @sprint }
-    Sprint.transaction do
-  	  render @sprint
-    end
   end
 
   def update
