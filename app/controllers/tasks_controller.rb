@@ -128,6 +128,7 @@ class TasksController < ApplicationController
     Task.transaction do
       task_id = params[:task_id]
       @task = Task.find(task_id)
+      check { can? :update, @task }
       aparams = params.require(:data).permit(:userId)
       user_id = aparams[:userId]
       user = user_id == -1 ? nil : User.find(user_id)
