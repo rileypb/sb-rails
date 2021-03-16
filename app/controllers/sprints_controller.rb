@@ -107,6 +107,7 @@ class SprintsController < ApplicationController
       sync_on "sprints/#{sprint_id}"
       sync_on "sprints/#{sprint_id}/issues"
       sync_on "sprints/#{sprint_id}/issues/*"
+      sync_on "sprints/#{sprint_id}/team_summary"
       sync_on "projects/#{issue.project.id}/issues"
       sync_on "projects/#{issue.project.id}/issues/*"
       sync_on_activities(issue.project)

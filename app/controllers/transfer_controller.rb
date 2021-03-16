@@ -42,11 +42,13 @@ class TransferController < ApplicationController
 			if sprint1
 				sync_on "sprints/#{sprint1.id}/issues"
 				sync_on "sprints/#{sprint1.id}"
+				sync_on "sprints/#{sprint1.id}/team_summary"
 				projects << sprint1.project
 			end
 			if sprint2
 				sync_on "sprints/#{sprint2.id}/issues"
 				sync_on "sprints/#{sprint2.id}"
+				sync_on "sprints/#{sprint2.id}/team_summary"
 				projects << sprint2.project
 			end
 			if project1
