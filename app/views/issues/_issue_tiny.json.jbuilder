@@ -1,4 +1,4 @@
-json.extract! issue, :id, :title
+json.extract! issue, :id, :title, :state
 
 if (issue.epic)
 	json.epic do
@@ -6,4 +6,8 @@ if (issue.epic)
 		json.title issue.epic.title
 		json.color issue.epic.color
 	end
+end
+
+json.project do
+	json.id issue.project.id
 end
