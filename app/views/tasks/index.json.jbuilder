@@ -5,4 +5,10 @@ end
 json.issue do
 	json.extract! @issue, :id, :title
 end
-json.percentComplete @tasks.sum { |task| task.state == "complete" ? task.estimate : 0}.to_f / [@tasks.sum(&:estimate), 1].max
+
+totalEstimate = @tasks.sum(&:estimate)
+if totalEstimate == 0
+	json.percentComplete -1
+else
+	json.percentComplete @tasks.sum { |task| task.state == "complete" ? task.estimate : 0}.to_f / totalEstimate
+end
