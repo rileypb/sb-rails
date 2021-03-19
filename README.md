@@ -30,3 +30,9 @@ auth0:
 ```
 
 Remember not to commit your keys to git if you've forked this repo!
+
+## Licensing
+
+Scrumboard is licensed under GPLv3. This means that you can use this software for any purpose you want, and you can create derivative works, but you must license those derivative works under GPLv3 as well, and share the source code.
+
+We've chosen this license because we want Scrumboard to be a tool for educators, and not the kernel of a proprietary project management product. 
