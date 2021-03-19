@@ -21,3 +21,12 @@ To set up Auth0 authentication, create an account at auth0.com. Use the free pla
 Next create an API, which essentially is just a universally unique string identifier naming your API, i.e., the service that needs to authenticate users - the back end. This could be, for instance, https://<my.domain.com>/scrumboard. 
 
 Then create an application. The name doesn't matter, but it must be in your domain (I believe this is your only choice on the free plan). It will come with its own Client ID and Client Secret. The Client ID will be necessary for setting up the back and front ends.
+
+You then need to add an auth0 section to your encrypted credentials:
+```
+auth0:
+  api_identifier: https://<my.domain.com>/scrumboard
+  domain: https://<my-domain-name>.us.auth0.com/
+```
+
+Remember not to commit your keys to git if you've forked this repo!
