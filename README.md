@@ -1,24 +1,14 @@
-# README
+# Scrumboard API 
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+This is the back end for Scrumboard. Good to see you!
 
-Things you may want to cover:
+You'll also need to clone and run https://github.com/rileypb/sb-angular.
 
-* Ruby version
+## Setting Up
 
-* System dependencies
+After cloning the repository, install the dependencies with `bundle install`. 
 
-* Configuration
+## Development server
 
-* Database creation
+Run `rails s`. This will start the server at `http://localhost:3000`. Navigating there will yield a "not authenticated" message since you must supply a token for access.
 
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
