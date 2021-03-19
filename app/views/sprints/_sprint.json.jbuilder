@@ -4,3 +4,4 @@ json.project do
   json.id sprint.project.id
   json.name sprint.project.name
 end
+json.permissions sprint.permissions(@current_user)
