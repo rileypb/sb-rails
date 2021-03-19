@@ -15,3 +15,9 @@ Run `rails s`. This will start the server at `http://localhost:3000`. Navigating
 ## Setting up Authentication
 
 At this time, Scrumboard only supports authentication through [Auth0](https://auth0.com/), although it should work with any of the login methods available there.
+
+To set up Auth0 authentication, create an account at auth0.com. Use the free plan for now. You'll get your own "domain" which will most likely be some random string. 
+
+Next create an API, which essentially is just a universally unique string identifier naming your API, i.e., the service that needs to authenticate users - the back end. This could be, for instance, https://<my.domain.com>/scrumboard. 
+
+Then create an application. The name doesn't matter, but it must be in your domain (I believe this is your only choice on the free plan). It will come with its own Client ID and Client Secret. The Client ID will be necessary for setting up the back and front ends.
