@@ -1,8 +1,8 @@
 # Scrumboard API 
 
-This is the back end for Scrumboard. Good to see you!
+This is the back end for Scrumboard. Good to see you! See [sb-angular](https://github.com/rileypb/sb-angular) for a description of this project.
 
-You'll also need to clone and run https://github.com/rileypb/sb-angular.
+You'll also need to clone and run https://github.com/rileypb/sb-angular. 
 
 ## Setting Up
 
