@@ -47,6 +47,7 @@ class User < ApplicationRecord
 			user_info = Rails.application.config.token_verifier.get_user_info(token)
     		email = user_info["email"]
     		user = User.where(email: email).first
+
     		if !user
 			  	user = User.create! do |user|
 			  		user.email = user_info["email"]
@@ -70,6 +71,10 @@ class User < ApplicationRecord
 		 #    user.last_name = user_info["family_name"]
 		 #    user.picture = user_info["picture"]
 		 #    user.save!
+		end
+		
+		if user && user.blocked 
+			return nil
 		end
 
 		return user
