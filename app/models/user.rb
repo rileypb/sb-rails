@@ -13,24 +13,24 @@ class User < ApplicationRecord
 
 	def self.from_omniauth(auth)
 	  u = User.where(email: auth.info.email).first
-	  if !u
-	  	u = User.create do |user|
-	  		user.email = auth.info.email
-		    user.provider = auth.provider
-		    user.uid = auth.uid
-		    user.first_name = auth.info.first_name
-		    user.last_name = auth.info.last_name
-		    user.picture = auth.info.image
-		    user.password = Devise.friendly_token[0,20]
-		end
-	  else
-	    u.provider = auth.provider
-	    u.uid = auth.uid
-	    u.first_name = auth.info.first_name
-	    u.last_name = auth.info.last_name
-	    u.picture = auth.info.image
-	    u.save
-	  end
+	 #  if !u
+	 #  	u = User.create do |user|
+	 #  		user.email = auth.info.email
+		#     user.provider = auth.provider
+		#     user.uid = auth.uid
+		#     user.first_name = auth.info.first_name
+		#     user.last_name = auth.info.last_name
+		#     user.picture = auth.info.image
+		#     user.password = Devise.friendly_token[0,20]
+		# end
+	 #  else
+	 #    u.provider = auth.provider
+	 #    u.uid = auth.uid
+	 #    u.first_name = auth.info.first_name
+	 #    u.last_name = auth.info.last_name
+	 #    u.picture = auth.info.image
+	 #    u.save
+	 #  end
 
 	  return u
 	end
@@ -55,6 +55,10 @@ class User < ApplicationRecord
 				    user.last_name = user_info["family_name"]
 				    user.picture = user_info["picture"]
 				    user.password = "passwordnotrequired"
+				end
+				project = Project.create! do |p|
+					p.name = "#{user.first_name}'s Project"
+					p.owner = user
 				end
 			else
 				user.update!(oauthsub: id)
