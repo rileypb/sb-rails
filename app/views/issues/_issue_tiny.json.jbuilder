@@ -1,4 +1,4 @@
-json.extract! issue, :id, :title, :state, :estimate
+json.extract! issue, :id, :title, :state, :estimate, :completed
 
 if (issue.epic)
 	json.epic do

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_03_20_040440) do
+ActiveRecord::Schema.define(version: 2021_03_21_192725) do
 
   create_table "activities", force: :cascade do |t|
     t.integer "user_id"
@@ -72,6 +72,7 @@ ActiveRecord::Schema.define(version: 2021_03_20_040440) do
     t.integer "epic_id"
     t.integer "parent_id"
     t.integer "assignee_id"
+    t.boolean "completed", default: false, null: false
     t.index ["assignee_id"], name: "index_issues_on_assignee_id"
     t.index ["epic_id"], name: "index_issues_on_epic_id"
     t.index ["last_changed_by_id"], name: "index_issues_on_last_changed_by_id"

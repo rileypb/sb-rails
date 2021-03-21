@@ -1,4 +1,4 @@
-json.extract! issue, :id, :title
+json.extract! issue, :id, :title, :completed
 json.project do
 	json.partial! "projects/project_brief", project: issue.project
 end
