@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_03_21_192725) do
+ActiveRecord::Schema.define(version: 2021_03_22_171309) do
 
   create_table "activities", force: :cascade do |t|
     t.integer "user_id"
@@ -100,6 +100,8 @@ ActiveRecord::Schema.define(version: 2021_03_21_192725) do
     t.string "issue_order"
     t.integer "current_sprint_id"
     t.boolean "demo"
+    t.boolean "setting_auto_close_issues", default: false, null: false
+    t.string "picture"
     t.index ["current_sprint_id"], name: "index_projects_on_current_sprint_id"
     t.index ["owner_id"], name: "index_projects_on_owner_id"
   end
