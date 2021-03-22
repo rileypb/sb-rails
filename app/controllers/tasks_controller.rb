@@ -124,9 +124,9 @@ class TasksController < ApplicationController
               @issue.update!(state: 'Closed')
               sync_on "issues/#{@issue.id}"
               if (@issue.sprint)
-                sync_on "sprint/#{@issue.sprint_id}"
-                sync_on "sprint/#{@issue.sprint_id}/issues"
-                sync_on "sprint/#{@issue.sprint_id}/issues/*"
+                sync_on "sprints/#{@issue.sprint_id}"
+                sync_on "sprints/#{@issue.sprint_id}/issues"
+                sync_on "sprints/#{@issue.sprint_id}/issues/*"
               end
               Activity.create(user: current_user, action: "set_state", issue: @issue, modifier: "Closed", project_context: @issue.project)
             end
