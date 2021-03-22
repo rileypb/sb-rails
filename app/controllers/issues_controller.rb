@@ -332,6 +332,7 @@ class IssuesController < ApplicationController
     Issue.transaction do
       issue_id = params[:issue_id]
       @issue = Issue.find(issue_id)
+      sprint_id = @issue.sprint_id
 
       _assert(ArgumentError, "Issue must belong to a sprint") { |issue| @issue.sprint }
       check { can? :update, @issue }
@@ -348,7 +349,7 @@ class IssuesController < ApplicationController
       create_transfer_activity_for(@issue)
 
       sync_on "issues/#{issue_id}"
-      sync_on "sprints/#{@issue.sprint_id}/issues"
+      sync_on "sprints/#{sprint_id}/issues"
       sync_on "project/#{@issue.project_id}/issues"
       sync_on_activities(@issue.project)
     end
