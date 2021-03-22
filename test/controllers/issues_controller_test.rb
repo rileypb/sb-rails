@@ -245,5 +245,30 @@ class IssuesControllerTest < ActionDispatch::IntegrationTest
     assert ids.include? issue3.id
   end
 
+  test "move_to_backlog" do
+    project1 = create(:project)
+    sprint1 = create(:sprint, project: project1)
+    issue1 = create(:issue, project: project1)
+    issue2 = create(:issue, project: project1)
+    issue3 = create(:issue, project: project1)
+    issue4 = create(:issue, project: project1, sprint: sprint1)
+    issue5 = create(:issue, project: project1, sprint: sprint1)
+    issue6 = create(:issue, project: project1, sprint: sprint1)
+    project1.update!(issue_order: "#{issue1.id},#{issue2.id},#{issue3.id}")
+    sprint1.update!(issue_order: "#{issue4.id},#{issue5.id},#{issue6.id}")
+
+    patch issue_move_to_backlog_url(issue_id: issue5.id), 
+        headers: { 'Authorization': "Bearer #{token}"}
+
+    assert_response :no_content
+
+    project1.reload
+    sprint1.reload
+
+    assert_equal "#{issue1.id},#{issue2.id},#{issue3.id},#{issue5.id}", project1.issue_order
+    assert_equal "#{issue4.id},#{issue6.id}", sprint1.issue_order
+    assert_nil issue1.sprint
+  end
+
 
 end

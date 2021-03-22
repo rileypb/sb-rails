@@ -312,6 +312,48 @@ class IssuesController < ApplicationController
     end
   end
 
+  def mark_complete
+    Issue.transaction do
+      issue_id = params[:issue_id]
+      @issue = Issue.find(issue_id)
+      check { can? :update, @issue }
+
+      @issue.update!(state: 'Closed', completed: true)
+
+      Activity.create(user: current_user, action: "marked_issue_complete", issue: @issue, project_context: @issue.project)
+
+      sync_on_activities(@issue.project)
+      sync_on "issues/#{issue_id}"
+      sync_on "sprints/#{@issue.sprint_id}/issues"
+    end
+  end
+
+  def move_to_backlog
+    Issue.transaction do
+      issue_id = params[:issue_id]
+      @issue = Issue.find(issue_id)
+
+      _assert(ArgumentError, "Issue must belong to a sprint") { |issue| @issue.sprint }
+      check { can? :update, @issue }
+      check { can? :update, @issue.sprint }
+
+      @sprint = @issue.sprint
+      @project = @issue.project
+
+      @issue.update!(sprint: nil)
+      new_order = remove_from_order(@sprint.issue_order, @issue.id)
+      @sprint.update!(issue_order: new_order)
+      @project.update!(issue_order: append_to_order(@project.issue_order, @issue.id.to_s))
+
+      create_transfer_activity_for(@issue)
+
+      sync_on "issues/#{issue_id}"
+      sync_on "sprints/#{@issue.sprint_id}/issues"
+      sync_on "project/#{@issue.project_id}/issues"
+      sync_on_activities(@issue.project)
+    end
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_issue
