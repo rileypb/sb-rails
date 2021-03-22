@@ -15,6 +15,7 @@ class SprintsController < ApplicationController
       @sprints = @sprints.select do |sprint|
         sprint.completed
       end
+      @sprints = @sprints.sort_by { |s| s.actual_end_date }.reverse
     end
   end
 
