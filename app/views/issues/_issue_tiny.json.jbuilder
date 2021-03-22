@@ -11,3 +11,9 @@ end
 json.project do
 	json.id issue.project.id
 end
+
+if issue.sprint
+	json.sprint do
+		json.extract! issue.sprint, :id, :title, :completed
+	end
+end
