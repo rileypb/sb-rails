@@ -8,7 +8,7 @@ class CS345
 		end
 
 		project = Project.find_by_name("CS345 Sp21 Team #{team_number}")
-		if !team
+		if !project
 			puts "No such project"
 			return
 		end
