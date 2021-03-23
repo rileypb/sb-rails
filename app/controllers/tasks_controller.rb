@@ -118,6 +118,8 @@ class TasksController < ApplicationController
       update_params = {state: params[:complete] ? "complete" : "incomplete"}
       if (params[:complete]) 
         update_params[:completed_at] = Time.now
+      else
+        update_params[:completed_at] = nil
       end
 
       @task.update!(update_params)
