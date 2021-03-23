@@ -126,7 +126,7 @@ class TasksController < ApplicationController
       if params[:complete]
         Activity.create(user: current_user, action: "set_task_complete", task: @task, project_context: @task.issue.project)
         if @issue.project.setting_auto_close_issues
-          incomplete_tasks = Task.where("issue_id = #{@issue.id} AND state <> 'complete'")
+          incomplete_tasks = Task.where("issue_id = #{@issue.id} AND state <> 'complete' AND state is not NULL")
           if incomplete_tasks.count == 0
             @issue.update!(state: 'Closed')
             sync_on "issues/#{@issue.id}"
