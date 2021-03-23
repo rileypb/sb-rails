@@ -189,8 +189,14 @@ class SprintsController < ApplicationController
         check { can? :finish, @project.current_sprint }
         @project.update!(current_sprint: nil)
         @sprint.update!(completed: true, actual_end_date: Date.today)
+
+        closed_issues = @sprint.issues.where("state == 'Closed'")
+        closed_issues.each { |issue| issue.update!(completed: true) }
+
         Activity.create(user: current_user, action: "finished_sprint", sprint: @sprint, project: @project, project_context: @project)
         sync_on "sprints/#{@sprint.id}"
+        sync_on "sprints/#{@sprint.id}/issues"
+        sync_on "sprints/#{@sprint.id}/issues/*"
         sync_on "projects/#{@project.id}"
         sync_on "projects/#{@project.id}/sprints"
         sync_on_activities(@project)
