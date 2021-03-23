@@ -1,6 +1,6 @@
 json.team do
 	json.members do
-		json.array!(@sprint.project.team_members) do |member|
+		json.array!(@sprint.project.team_members(current_user)) do |member|
 			json.partial! "users/user", user: member
 			json.work do
 				work = 0
