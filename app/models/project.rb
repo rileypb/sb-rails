@@ -59,12 +59,13 @@ class Project < ApplicationRecord
 		end
 	end
 
-	def team_members
+	def team_members(current_user = nil)
 		result = [ self.owner ]
 		result.concat(self.project_permissions.map { |pp| pp.user })
 		if self.demo
 			result.concat(User.all.limit(10)) # if this is a demo project, everyone's on the team!
 		end
+		result << current_user if current_user
 		result.uniq!
 		return result
 	end
