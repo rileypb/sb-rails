@@ -25,25 +25,40 @@ end
 if activity.issue
 	json.issue do
 		json.extract! activity.issue, :id, :title
+		json.project do 
+			json.id activity.issue.project.id
+		end
 	end
 end
 if activity.epic
 	json.epic do
 		json.extract! activity.epic, :id, :title
+		json.project do 
+			json.id activity.epic.project.id
+		end
 	end
 end
 if activity.epic2
 	json.epic2 do
 		json.extract! activity.epic2, :id, :title
+		json.project do 
+			json.id activity.epic2.project.id
+		end
 	end
 end
 if activity.sprint
 	json.sprint do
 		json.extract! activity.sprint, :id, :title
+		json.project do 
+			json.id activity.sprint.project.id
+		end
 	end
 end
 if activity.sprint2
 	json.sprint2 do
 		json.extract! activity.sprint2, :id, :title
+		json.project do 
+			json.id activity.sprint2.project.id
+		end
 	end
 end
