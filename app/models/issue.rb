@@ -15,7 +15,7 @@ class Issue < ApplicationRecord
 		totalEstimate = tasks.sum("estimate")
 		return 0 if totalEstimate == 0
 
-		totalFinished = tasks.where(state: "Done").sum("estimate")
+		totalFinished = tasks.where(state: "Closed").sum("estimate")
 		return (100 * totalFinished / totalEstimate).round
 	end
 
