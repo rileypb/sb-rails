@@ -115,31 +115,33 @@ class TasksController < ApplicationController
 
       check { can? :update, @task }
 
-      if @task.update(state: params[:complete] ? "complete" : "incomplete")
-        if params[:complete]
-          Activity.create(user: current_user, action: "set_task_complete", task: @task, project_context: @task.issue.project)
-          if @issue.project.setting_auto_close_issues
-            incomplete_tasks = Task.where("issue_id = #{@issue.id} AND state <> 'complete'")
-            if incomplete_tasks.count == 0
-              @issue.update!(state: 'Closed')
-              sync_on "issues/#{@issue.id}"
-              if (@issue.sprint)
-                sync_on "sprints/#{@issue.sprint_id}"
-                sync_on "sprints/#{@issue.sprint_id}/issues"
-                sync_on "sprints/#{@issue.sprint_id}/issues/*"
-              end
-              Activity.create(user: current_user, action: "set_state", issue: @issue, modifier: "Closed", project_context: @issue.project)
-            end
-          end
-        else
-          Activity.create(user: current_user, action: "set_task_incomplete", task: @task, project_context: @task.issue.project)
-        end
-        sync_on path
-        sync_on_activities(@issue.project)
-        render json: { result: "success"}, status: :ok, location: @task
-      else
-        render json: @task.errors, status: :unprocessable_entity
+      update_params = {state: params[:complete] ? "complete" : "incomplete"}
+      if (params[:complete]) 
+        update_params[:completed_at] = Time.now
       end
+
+      @task.update!(update_params)
+      if params[:complete]
+        Activity.create(user: current_user, action: "set_task_complete", task: @task, project_context: @task.issue.project)
+        if @issue.project.setting_auto_close_issues
+          incomplete_tasks = Task.where("issue_id = #{@issue.id} AND state <> 'complete'")
+          if incomplete_tasks.count == 0
+            @issue.update!(state: 'Closed')
+            sync_on "issues/#{@issue.id}"
+            if (@issue.sprint)
+              sync_on "sprints/#{@issue.sprint_id}"
+              sync_on "sprints/#{@issue.sprint_id}/issues"
+              sync_on "sprints/#{@issue.sprint_id}/issues/*"
+            end
+            Activity.create(user: current_user, action: "set_state", issue: @issue, modifier: "Closed", project_context: @issue.project)
+          end
+        end
+      else
+        Activity.create(user: current_user, action: "set_task_incomplete", task: @task, project_context: @task.issue.project)
+      end
+      sync_on path
+      sync_on_activities(@issue.project)
+      render json: { result: "success"}, status: :ok, location: @task
     end
   end
 

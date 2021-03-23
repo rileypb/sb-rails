@@ -1,4 +1,4 @@
-json.extract! task, :id, :title, :description, :estimate, :state, :created_at, :updated_at
+json.extract! task, :id, :title, :description, :estimate, :state, :created_at, :updated_at, :completed_at
 if task.last_changed_by
 	json.last_changed_by do
 		json.partial! "users/user", user: task.last_changed_by

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_03_22_171309) do
+ActiveRecord::Schema.define(version: 2021_03_23_014317) do
 
   create_table "activities", force: :cascade do |t|
     t.integer "user_id"
@@ -134,6 +134,7 @@ ActiveRecord::Schema.define(version: 2021_03_22_171309) do
     t.datetime "updated_at", precision: 6, null: false
     t.string "state"
     t.integer "assignee_id"
+    t.datetime "completed_at"
     t.index ["assignee_id"], name: "index_tasks_on_assignee_id"
     t.index ["issue_id"], name: "index_tasks_on_issue_id"
     t.index ["last_changed_by_id"], name: "index_tasks_on_last_changed_by_id"
