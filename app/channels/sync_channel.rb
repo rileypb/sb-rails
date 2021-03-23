@@ -16,19 +16,15 @@ class SyncChannel < ApplicationCable::Channel
   def sync(data)
     # need to fix client timing before this will work
     #if (self.connection.current_user)
-      puts "********** streaming from #{data['selector']} : #{self.connection.current_user}"
       stream_from "sync:#{data['selector']}"
     #end
   end
 
   def cancelsync(data)
     stop_stream_from "sync:#{data['selector']}"
-    puts "********** stop streaming"
   end
 
   def auth(auth_info) 
-    puts "*********************** AUTH"
-  
     user = User.find_user_for_jwt(auth_info['token'])
     connection.current_user = user
   end

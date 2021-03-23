@@ -11,7 +11,6 @@ class TransferController < ApplicationController
 	end
 
 	def transferBetweenProjectsAndSprints(transfer_params)
-		puts "transfer: #{transfer_params}"
 		Issue.transaction do
 			project1 = transfer_params[:projectId1] && Project.find(transfer_params[:projectId1])
 			sprint1 = transfer_params[:sprintId1] && Sprint.find(transfer_params[:sprintId1])

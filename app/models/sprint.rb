@@ -36,11 +36,9 @@ class Sprint < ApplicationRecord
     	if count > 0
     		sql = "update burndown_data set value = #{value} where day=#{day} and sprint_id=#{self.id}"
     		result = ActiveRecord::Base.connection.execute(sql)
-    		puts result
     	else
     		sql = "insert into burndown_data (day, value, sprint_id) values (#{day}, #{value}, #{self.id})"
     		result = ActiveRecord::Base.connection.execute(sql)
-    		puts result
     	end
     end
 

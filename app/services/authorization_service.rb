@@ -17,7 +17,6 @@ class AuthorizationService
   end
 
   def verify_token
-    puts ">>>>>>>>>>>>> #{http_token}"
     JsonWebToken.verify(http_token)
   end
 
