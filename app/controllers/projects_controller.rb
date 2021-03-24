@@ -5,9 +5,9 @@ class ProjectsController < ApplicationController
   # GET /projects
   # GET /projects.json
   def index
-    @projects = Project.select do |project|
+    @projects = Project.all.sort_by(&:id).select do |project|
       can? :read, project
-    end 
+    end
   end
 
   # GET /projects/1
