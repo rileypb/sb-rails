@@ -1,5 +1,5 @@
 class SprintsController < ApplicationController
-  before_action :set_sprint, only: [:show, :edit, :update, :destroy, :start, :suspend, :finish, :team_summary]
+  before_action :set_sprint, only: [:show, :edit, :update, :destroy, :start, :suspend, :finish, :team_summary, :retrospective_report]
 
   def index
   	@project = Project.find(params[:project_id])
@@ -211,6 +211,12 @@ class SprintsController < ApplicationController
     check { can? :read, @sprint }
     @sprint
   end
+
+  def retrospective_report
+    check { can? :read, @sprint }
+    @sprint
+  end
+
 
 
   private
