@@ -156,6 +156,9 @@ class IssuesController < ApplicationController
         if @issue.sprint
           sync_on "sprints/#{@issue.sprint_id}"
         end
+        if @issue.epic 
+          sync_on "epics/#{@issue.epic_id}/issues/*"
+        end
 
         sync_on path
         sync_on_activities(@issue.project)
