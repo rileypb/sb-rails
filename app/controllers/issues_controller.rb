@@ -180,8 +180,6 @@ class IssuesController < ApplicationController
     @epic = @issue.epic
     check { can? :delete, @issue }
     check { can? :delete_issue, @project }
-    check { can? :delete_issue, @sprint } if @sprint
-    check { can? :update, @epic } if @epic
 
     if @issue.delete
       if @sprint

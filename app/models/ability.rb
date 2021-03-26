@@ -31,12 +31,12 @@ class Ability
 
       # can read/write demo project
       can [:create_issue, :delete_issue, :read, :update], Project, demo: true
-      can [:read, :update], Issue, project: { demo: true }
+      can [:read, :update, :delete], Issue, project: { demo: true }
       can [:create_sprint, :delete_sprint], Project, demo: true
       can [:create_epic, :delete_epic], Project, demo: true
       can [:read, :update, :start, :suspend, :finish], Sprint, project: { demo: true }
-      can [:read, :update], Task, issue: { project: { demo: true }}
-      can [:read, :update], Epic, project: { demo: true }
+      can [:read, :update, :delete], Task, issue: { project: { demo: true }}
+      can [:read, :update, :delete], Epic, project: { demo: true }
       can [:create_task, :delete_task], Issue, project: { demo: true }
 
       # per project permissions
@@ -46,13 +46,13 @@ class Ability
       can [:create_epic, :delete_epic], Project, project_permissions: { user: user, scope: "update"}
       can [:create_issue, :delete_issue], Project, project_permissions: { user: user, scope: "update"}
       can [:read], Sprint, project: { project_permissions: { user: user, scope: "read"}}
-      can [:update, :start, :suspend, :finish], Sprint, project: { project_permissions: { user: user, scope: "update"}}
+      can [:update, :delete_issue, :start, :suspend, :finish], Sprint, project: { project_permissions: { user: user, scope: "update"}}
       can [:read], Epic, project: { project_permissions: { user: user, scope: "read"}}
-      can [:update], Epic, project: { project_permissions: { user: user, scope: "update"}}
+      can [:update, :delete], Epic, project: { project_permissions: { user: user, scope: "update"}}
       can [:read], Issue, project: { project_permissions: { user: user, scope: "read"}}
-      can [:update], Issue, project: { project_permissions: { user: user, scope: "update"}}
+      can [:update, :delete], Issue, project: { project_permissions: { user: user, scope: "update"}}
       can [:read], Task, issue: { project: { project_permissions: { user: user, scope: "read"}}}
-      can [:update], Task, issue: { project: { project_permissions: { user: user, scope: "update"}}}
+      can [:update, :delete], Task, issue: { project: { project_permissions: { user: user, scope: "update"}}}
 
       can [:create_task, :delete_task], Issue, project: { project_permissions: { user: user, scope: "update" }}
     end
