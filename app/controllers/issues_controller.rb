@@ -181,6 +181,8 @@ class IssuesController < ApplicationController
     check { can? :delete, @issue }
     check { can? :delete_issue, @project }
 
+    @issue.tasks.each { |task| task.delete }
+
     if @issue.delete
       if @sprint
         @sprint.update!(issue_order: remove_from_order(@sprint.issue_order || default_issue_order(@sprint), @issue.id))
