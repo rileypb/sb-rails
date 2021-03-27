@@ -81,7 +81,7 @@ class User < ApplicationRecord
 	end
 
 	def assigned_issues
-		self.assigned_tasks.map { |t| t.issue }.uniq
+		self.assigned_tasks.map { |t| t.issue }.uniq.filter { |i| i != nil }
 	end
 
 	def admin?
