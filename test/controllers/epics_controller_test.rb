@@ -143,6 +143,8 @@ class EpicsControllerTest < ActionDispatch::IntegrationTest
     epic = create(:epic)
     project = epic.project
     issue = create(:issue, project: project, epic: epic)
+    epic.update!(issue_order: "#{issue.id}")
+    project.update!(issue_order: "#{issue.id}", epic_order: "#{epic.id}")
     assert_equal epic, issue.epic
 
     assert_difference('Epic.count', -1) do

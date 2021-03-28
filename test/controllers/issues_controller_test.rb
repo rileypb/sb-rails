@@ -8,12 +8,14 @@ class IssuesControllerTest < ActionDispatch::IntegrationTest
 
   ### IssuesController.index ###
 
-  test "project index for admin lists all issues without a sprint" do
+  test "project index for admin lists all incomplete issues" do
   	issue1 = create(:issue)
     project = issue1.project
     issue2 = create(:issue, project: project)
     sprint = create(:sprint, project: project)
     issue3 = create(:issue, project: project, sprint: sprint)
+    sprint2 = create(:sprint, project: project)
+    issue4 = create(:issue, project: project, sprint: sprint2, completed: true)
 
     get project_issues_url(project_id: project.id), 
         headers: { 'Authorization': "Bearer #{token}"}
@@ -22,7 +24,9 @@ class IssuesControllerTest < ActionDispatch::IntegrationTest
     body = JSON.load(body_s)
     issues = body["issues"]
     issues_list = issues["list"]
-    assert_equal 2, issues_list.length
+    assert_equal 3, issues_list.length
+
+    issues_list.each { |i| assert !i["completed"] }
   end
 
   test "sprint index for admin lists all issues" do
