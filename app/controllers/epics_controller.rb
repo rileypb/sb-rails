@@ -67,19 +67,13 @@ class EpicsController < ApplicationController
       check { can? :delete, @epic }
       check { can? :delete_epic, @project }
 
-      new_issue_order = @project.issue_order || ""
       @epic.issues.each do |issue| 
         issue.update!(epic: nil)
-        if new_issue_order.present?
-          new_issue_order += ",#{issue.id}"
-        else
-          new_issue_order += issue.id.to_s
-        end
         sync_on "issues/#{issue.id}"
       end
 
       @epic.delete
-      @project.update!(issue_order: new_issue_order, epic_order: remove_from_order(@project.epic_order || default_epic_order(@project), @epic.id))
+      @project.update!(epic_order: remove_from_order(@project.epic_order || default_epic_order(@project), @epic.id))
       Activity.create(user: current_user, action: "deleted_epic", modifier: "\##{@epic.id} - #{@epic.title}", project: @project, project_context: @project)
       sync_on path
       sync_on_activities(@project)

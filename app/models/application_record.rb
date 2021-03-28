@@ -37,7 +37,7 @@ class ApplicationRecord < ActiveRecord::Base
 
   def validate_order_length(children, order_field)
     if (children.count != (self.attributes[order_field.to_s] || '').split(',').count)
-      errors.add(order_field, "length mismatch")
+      errors.add(order_field, "length mismatch: #{order_field}")
     end
   end
 
