@@ -45,6 +45,7 @@ class Ability
       can [:configure], Project, project_permissions: { user: user, scope: "configure" }
       can [:create_epic, :delete_epic], Project, project_permissions: { user: user, scope: "update"}
       can [:create_issue, :delete_issue], Project, project_permissions: { user: user, scope: "update"}
+      can [:create_sprint, :delete_sprint], Project, project_permissions: { user: user, scope: "update"}
       can [:read], Sprint, project: { project_permissions: { user: user, scope: "read"}}
       can [:update, :delete_issue, :start, :suspend, :finish], Sprint, project: { project_permissions: { user: user, scope: "update"}}
       can [:read], Epic, project: { project_permissions: { user: user, scope: "read"}}
