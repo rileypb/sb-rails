@@ -141,6 +141,9 @@ class TasksController < ApplicationController
       else
         Activity.create(user: current_user, action: "set_task_incomplete", task: @task, project_context: @task.issue.project)
       end
+
+      @issue.project.update_burndown_data!
+
       sync_on path
       sync_on_activities(@issue.project)
       render json: { result: "success"}, status: :ok, location: @task
