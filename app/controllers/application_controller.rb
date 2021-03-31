@@ -6,6 +6,9 @@ class ApplicationController < ActionController::Base
   rescue_from CanCan::AccessDenied, with: :render_not_found_response_no_message
   rescue_from ActiveRecord::RecordInvalid, with: :render_unprocessable_entity_response
   rescue_from ActiveRecord::RecordNotFound, with: :render_not_found_response
+  rescue_from ActionController::BadRequest, with: :bad_request
+
+
 
   # protect_from_forgery with: :exception
   # before_action :check_authorization
@@ -35,6 +38,10 @@ class ApplicationController < ActionController::Base
 
   def render_not_found_response_no_message(exception)
     render json: { error: "Record not found" }, status: :not_found
+  end
+  
+  def bad_request(exception)
+    render status: 400, json: {:error => exception.message}.to_json
   end
 
 

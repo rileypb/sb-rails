@@ -11,6 +11,7 @@ Rails.application.routes.draw do
   		resources :sprints
   		resources :issues
       resources :epics
+      resources :comments
       get 'activity', defaults: {format: :json}, to: 'projects#activity'
       get 'all_issues', defaults: {format: :json}, to: 'issues#all_issues'
       patch 'reorder_epics', defaults: {format: :json}, to: 'projects#reorder_epics'
@@ -19,6 +20,7 @@ Rails.application.routes.draw do
   	end
     resources :sprints, defaults: {format: :json} do
       resources :issues
+      resources :comments
       patch 'reorder_issues', defaults: {format: :json}, to: 'sprints#reorder_issues'
       patch 'remove_issue', defaults: {format: :json}, to: 'sprints#remove_issue'
       post 'start', defaults: {format: :json}, to: 'sprints#start'
@@ -29,6 +31,7 @@ Rails.application.routes.draw do
     end
     resources :issues, defaults: {format: :json} do
       resources :tasks
+      resources :comments
       patch 'reorder_tasks', defaults: {format: :json}, to: 'issues#reorder_tasks'
       patch 'assign_issue', defaults: {format: :json}, to: 'issues#assign_issue'
       patch 'mark_complete', defaults: {format: :json}, to: 'issues#mark_complete'
@@ -43,6 +46,7 @@ Rails.application.routes.draw do
     end
     resources :epics, defaults: {format: :json} do
       resources :issues
+      resources :comments
       patch 'remove_issue', defaults: {format: :json}, to: 'epics#remove_issue'
       patch 'add_issue', defaults: {format: :json}, to: 'epics#add_issue'
       patch 'reorder_issues', defaults: {format: :json}, to: 'epics#reorder_issues'
@@ -51,6 +55,7 @@ Rails.application.routes.draw do
   	resources :users, defaults: {format: :json}
   	get 'me', to: 'users#me'
     get 'user_profile', to: 'users#profile'
+    resources :comments, defaults: {format: :json}
   end
 
   mount ActionCable.server => '/cable'

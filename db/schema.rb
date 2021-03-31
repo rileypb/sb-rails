@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_03_23_014317) do
+ActiveRecord::Schema.define(version: 2021_03_31_164525) do
 
   create_table "activities", force: :cascade do |t|
     t.integer "user_id"
@@ -44,6 +44,24 @@ ActiveRecord::Schema.define(version: 2021_03_23_014317) do
     t.integer "value"
     t.integer "sprint_id", null: false
     t.index ["sprint_id"], name: "index_burndown_data_on_sprint_id"
+  end
+
+  create_table "comments", force: :cascade do |t|
+    t.text "text"
+    t.integer "user_id", null: false
+    t.integer "issue_id"
+    t.integer "epic_id"
+    t.integer "sprint_id"
+    t.integer "project_id"
+    t.integer "project_context_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["epic_id"], name: "index_comments_on_epic_id"
+    t.index ["issue_id"], name: "index_comments_on_issue_id"
+    t.index ["project_context_id"], name: "index_comments_on_project_context_id"
+    t.index ["project_id"], name: "index_comments_on_project_id"
+    t.index ["sprint_id"], name: "index_comments_on_sprint_id"
+    t.index ["user_id"], name: "index_comments_on_user_id"
   end
 
   create_table "epics", force: :cascade do |t|
@@ -164,6 +182,12 @@ ActiveRecord::Schema.define(version: 2021_03_23_014317) do
   add_foreign_key "activities", "projects", column: "project_context_id"
   add_foreign_key "activities", "users", column: "user2_id"
   add_foreign_key "burndown_data", "sprints"
+  add_foreign_key "comments", "epics"
+  add_foreign_key "comments", "issues"
+  add_foreign_key "comments", "projects"
+  add_foreign_key "comments", "projects", column: "project_context_id"
+  add_foreign_key "comments", "sprints"
+  add_foreign_key "comments", "users"
   add_foreign_key "issues", "epics"
   add_foreign_key "issues", "issues", column: "parent_id"
   add_foreign_key "issues", "users", column: "assignee_id"
