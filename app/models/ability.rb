@@ -18,6 +18,7 @@ class Ability
       can :access, Sprint
       can :access, Epic
       can :access, Task
+      can :access, Comment
 
       # # project owner can do anything with the project
       can [:create_issue, :delete_issue, :read, :update, :configure], Project, owner: user
