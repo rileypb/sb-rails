@@ -91,4 +91,16 @@ class User < ApplicationRecord
 	def label
 	  "#{self.last_name}, #{first_name}"
 	end
+
+	def fullname
+		if self.last_name && self.first_name
+			"#{self.first_name} #{self.last_name}"
+		elsif self.last_name
+			self.last_name
+		elsif self.first_name
+			self.first_name
+		else
+			"NONAME"
+		end
+	end
 end

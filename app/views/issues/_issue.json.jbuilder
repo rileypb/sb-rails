@@ -46,3 +46,10 @@ if issue.assignee
 		json.partial! "users/user", user: issue.assignee
 	end
 end
+
+json.comments do
+	json.array!(issue.comments.order(id: :desc)) do |comment|
+		json.partial! "comments/comment", comment: comment
+	end
+end
+

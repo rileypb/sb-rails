@@ -44,20 +44,25 @@ class CommentsController < ApplicationController
       if @project
         @comment.project = @project
         @comment.project_context = @project
+        sync_on "projects/#{@project.id}"
       elsif @epic
         @comment.epic = @epic
         @comment.project_context = @epic.project
+        sync_on "epics/#{@epic.id}"
       elsif @issue
         @comment.issue = @issue
         @comment.project_context = @issue.project
+        sync_on "issues/#{@issue.id}"
       elsif @sprint
         @comment.sprint = @sprint
         @comment.project_context = @sprint.project
+        sync_on "sprints/#{@sprint.id}"
       else
         raise ActionController::BadRequest
       end
 
       @comment.save!
+
     end
   end
 
