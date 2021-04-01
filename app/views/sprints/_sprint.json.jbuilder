@@ -6,3 +6,9 @@ json.project do
   json.current_sprint_id sprint.project.current_sprint_id
 end
 json.permissions sprint.permissions(@current_user)
+
+json.comments do
+	json.array!(sprint.comments.order(id: :desc)) do |comment|
+		json.partial! "comments/comment", comment: comment
+	end
+end

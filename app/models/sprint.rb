@@ -1,7 +1,8 @@
 class Sprint < ApplicationRecord
 	belongs_to :project
 	has_many :issues
-
+    has_many :comments
+    
 	validate :orders_are_valid
     validate :issue_order_length
 
