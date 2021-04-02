@@ -64,7 +64,7 @@ class ApplicationController < ActionController::Base
       begin
         model_class = controller_name.classify.constantize
       rescue
-  	    model_class = @@security_check_model_class
+  	    return
       end
   	  if cannot? :access, model_class
   	 	  raise CanCan::AccessDenied

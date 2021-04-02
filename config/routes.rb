@@ -56,6 +56,9 @@ Rails.application.routes.draw do
   	get 'me', to: 'users#me'
     get 'user_profile', to: 'users#profile'
     resources :comments, defaults: {format: :json}
+
+    get 'news', to: 'news#news', defaults: {format: :json}
+    post 'news/readAll', to: 'news#readAll'
   end
 
   mount ActionCable.server => '/cable'

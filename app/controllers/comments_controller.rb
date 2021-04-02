@@ -63,6 +63,15 @@ class CommentsController < ApplicationController
 
       @comment.save!
 
+      project = @comment.project_context
+      team = project.team_members
+      team.each do |member|
+        if member != current_user
+          NewsItem.create!(user: member, seen: false, comment: @comment)
+        end
+      end
+      sync_on "news"
+
     end
   end
 

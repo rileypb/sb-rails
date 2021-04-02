@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_03_31_164525) do
+ActiveRecord::Schema.define(version: 2021_04_01_184528) do
 
   create_table "activities", force: :cascade do |t|
     t.integer "user_id"
@@ -97,6 +97,16 @@ ActiveRecord::Schema.define(version: 2021_03_31_164525) do
     t.index ["parent_id"], name: "index_issues_on_parent_id"
     t.index ["project_id"], name: "index_issues_on_project_id"
     t.index ["sprint_id"], name: "index_issues_on_sprint_id"
+  end
+
+  create_table "news_items", force: :cascade do |t|
+    t.integer "comment_id"
+    t.integer "user_id", null: false
+    t.boolean "seen"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["comment_id"], name: "index_news_items_on_comment_id"
+    t.index ["user_id"], name: "index_news_items_on_user_id"
   end
 
   create_table "project_permissions", force: :cascade do |t|
@@ -192,6 +202,8 @@ ActiveRecord::Schema.define(version: 2021_03_31_164525) do
   add_foreign_key "issues", "issues", column: "parent_id"
   add_foreign_key "issues", "users", column: "assignee_id"
   add_foreign_key "issues", "users", column: "last_changed_by_id"
+  add_foreign_key "news_items", "comments"
+  add_foreign_key "news_items", "users"
   add_foreign_key "projects", "sprints", column: "current_sprint_id"
   add_foreign_key "sprints", "projects"
   add_foreign_key "tasks", "users", column: "assignee_id"
