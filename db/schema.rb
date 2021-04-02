@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_04_01_184528) do
+ActiveRecord::Schema.define(version: 2021_04_02_154841) do
 
   create_table "activities", force: :cascade do |t|
     t.integer "user_id"
@@ -192,12 +192,6 @@ ActiveRecord::Schema.define(version: 2021_04_01_184528) do
   add_foreign_key "activities", "projects", column: "project_context_id"
   add_foreign_key "activities", "users", column: "user2_id"
   add_foreign_key "burndown_data", "sprints"
-  add_foreign_key "comments", "epics"
-  add_foreign_key "comments", "issues"
-  add_foreign_key "comments", "projects"
-  add_foreign_key "comments", "projects", column: "project_context_id"
-  add_foreign_key "comments", "sprints"
-  add_foreign_key "comments", "users"
   add_foreign_key "issues", "epics"
   add_foreign_key "issues", "issues", column: "parent_id"
   add_foreign_key "issues", "users", column: "assignee_id"
