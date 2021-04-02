@@ -1,6 +1,6 @@
 class NewsController < ApplicationController
 	def news
-		@feed = NewsItem.where(user: current_user).order(id: :desc)
+		@feed = NewsItem.where(user: current_user).order(id: :desc).limit(20)
 	end
 
 	def readAll
