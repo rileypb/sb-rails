@@ -203,7 +203,6 @@ class IssuesController < ApplicationController
         sync_on "epics/#{@epic.id}/issues"
       end
 
-      sync_on path
       sync_on_activities(@project)
       render json: { result: "success" }, status: :ok, location: @project
     else
