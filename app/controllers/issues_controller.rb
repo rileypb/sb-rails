@@ -203,6 +203,12 @@ class IssuesController < ApplicationController
         sync_on "epics/#{@epic.id}/issues"
       end
 
+      if @sprint 
+        sync_on "sprints/#{@sprint.id}/issues/*"
+      else
+        sync_on "projects/#{@project.id}/issues/*"
+      end
+
       sync_on_activities(@project)
       render json: { result: "success" }, status: :ok, location: @project
     else

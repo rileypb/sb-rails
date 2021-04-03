@@ -75,6 +75,8 @@ class EpicsController < ApplicationController
       @epic.delete
       @project.update!(epic_order: remove_from_order(@project.epic_order || default_epic_order(@project), @epic.id))
       Activity.create(user: current_user, action: "deleted_epic", modifier: "\##{@epic.id} - #{@epic.title}", project: @project, project_context: @project)
+      sync_on "projects/#{@epic.project_id}/epics"
+      sync_on "projects/#{@epic.project_id}/epics/*"
 
       sync_on_activities(@project)
       render json: { result: "success" }, status: :ok, location: @project
