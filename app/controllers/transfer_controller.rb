@@ -100,10 +100,10 @@ class TransferController < ApplicationController
 			old_order2_split.insert(to_index, moved_id)
 
 			moved_issue = Issue.find(moved_id)
-			moved_issue.update(epic: epic2)
+			moved_issue.update!(epic: epic2)
 
-			epic1.update(issue_order: old_order1_split.join(','))
-			epic2.update(issue_order: old_order2_split.join(','))
+			epic1.update!(issue_order: old_order1_split.join(','))
+			epic2.update!(issue_order: old_order2_split.join(','))
 
 			Activity.create(user: current_user, action: "moved_issue_between_epics", issue: moved_issue, epic: epic1, epic2: epic2, project_context: epic1.project)
 			sync_on "issues/#{moved_id}"
