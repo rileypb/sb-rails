@@ -32,24 +32,17 @@ class SprintsController < ApplicationController
       order = params[:order]
       params.delete(:order)
       if order
-        @sprint.update(issue_order: order)
+        @sprint.update!(issue_order: order)
         sync_on "sprints/#{@sprint.id}/issues"
         Activity.create(user: current_user, action: "reordered_issues", sprint: @sprint, project_context: @sprint.project)
       end
 
       @sprint.project.update_burndown_data!
 
-      respond_to do |format|
-        if @sprint.update(params)
-          format.json { render :show, status: :ok}
-          sync_on "sprints/#{@sprint.id}"
-
-          sync_on_activities(@sprint.project)
-          Activity.create(user: current_user, action: "updated_sprint", sprint: @sprint, project_context: @sprint.project)
-        else
-          format.json { render json: @sprint.errors, status: :unprocessable_entity }
-        end
-      end
+      @sprint.update!(params)
+      sync_on "sprints/#{@sprint.id}"
+      sync_on_activities(@sprint.project)
+      Activity.create(user: current_user, action: "updated_sprint", sprint: @sprint, project_context: @sprint.project)
     end
   end
 
