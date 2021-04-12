@@ -84,4 +84,5 @@ gem 'pg'
 
 gem 'jwt'
 
+gem 'dotenv-rails', groups: [:development, :test]
 
