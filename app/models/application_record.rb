@@ -25,15 +25,15 @@ class ApplicationRecord < ActiveRecord::Base
   end
 
   def validate_order(order_field)
-    order = self.attributes[order_field.to_s]
-    return if !order || (order.strip.length == 0)
-    if order 
-      order.split(',').each do |entry|
-        if !(Integer(entry) rescue false)
-          errors.add(order_field, "has invalid format")
-        end
-      end
-    end
+    # order = self.attributes[order_field.to_s]
+    # return if !order || (order.strip.length == 0)
+    # if order 
+    #   order.split(',').each do |entry|
+    #     if !(Integer(entry) rescue false)
+    #       errors.add(order_field, "has invalid format")
+    #     end
+    #   end
+    # end
   end
 
   def validate_order_length(children, order_field)
