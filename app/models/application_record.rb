@@ -26,7 +26,7 @@ class ApplicationRecord < ActiveRecord::Base
 
   def validate_order(order_field)
     order = self.attributes[order_field.to_s]
-    return if order.strip.length == 0
+    return if !order || (order.strip.length == 0)
     if order 
       order.split(',').each do |entry|
         if !(Integer(entry) rescue false)
