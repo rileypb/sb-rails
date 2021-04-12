@@ -26,7 +26,8 @@ class ApplicationRecord < ActiveRecord::Base
 
   def validate_order(order_field)
     order = self.attributes[order_field.to_s]
-    if order
+    return if order.trim.length == 0
+    if order 
       order.split(',').each do |entry|
         if !(Integer(entry) rescue false)
           errors.add(order_field, "has invalid format")
