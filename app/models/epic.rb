@@ -5,7 +5,7 @@ class Epic < ApplicationRecord
 	has_many :comments
 
 	validate :orders_are_valid
-	validate :issue_order_length
+	# validate :issue_order_length
 
 	def issues_in_order
 		order = (issue_order || '').split(',')
