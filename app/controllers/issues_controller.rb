@@ -392,6 +392,9 @@ class IssuesController < ApplicationController
     @ac.update!(completed: acparams[:completed])
 
     sync_on "issues/#{@issue.id}"
+    if @issue.sprint
+      sync_on "sprints/#{@issue.sprint_id}"
+    end
   end
 
   def update_ac

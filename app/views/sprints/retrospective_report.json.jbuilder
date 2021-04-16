@@ -14,6 +14,11 @@ json.report do
 					json.assignee_name (task.assignee ? "#{task.assignee.first_name} #{task.assignee.last_name}" : "unassigned")
 				end
 			end
+			json.acceptance_criteria do
+				json.array!(issue.acceptance_criteria.order(id: :asc)) do |ac|
+					json.extract! ac, :id, :criterion, :completed
+				end
+			end
 		end
 	end
 end
