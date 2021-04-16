@@ -275,4 +275,64 @@ class IssuesControllerTest < ActionDispatch::IntegrationTest
   end
 
 
+  test "add_acceptance_criterion" do
+    issue = create(:issue)
+
+    assert_difference('AcceptanceCriterion.count') do
+      post issue_add_acceptance_criterion_url(issue_id: issue.id), params: { acceptance_criterion: { criterion: "this is the acceptance criterion" }},
+        headers: { 'Authorization': "Bearer #{token}"}
+      assert_response :no_content
+    end
+
+    issue.reload
+    new_ac = issue.acceptance_criteria.first
+    assert_equal "this is the acceptance criterion", new_ac.criterion
+  end
+
+  test "add_acceptance_criterion no parameters" do
+    issue = create(:issue)
+
+    assert_no_difference('AcceptanceCriterion.count') do
+      post issue_add_acceptance_criterion_url(issue_id: issue.id), params: { acceptance_criterion: { }},
+        headers: { 'Authorization': "Bearer #{token}"}
+      assert_response :bad_request
+    end
+  end
+
+  test "add_acceptance_criterion no criterion supplied" do
+    issue = create(:issue)
+
+    assert_no_difference('AcceptanceCriterion.count') do
+      post issue_add_acceptance_criterion_url(issue_id: issue.id), params: { acceptance_criterion: { foo: :bar }},
+        headers: { 'Authorization': "Bearer #{token}"}
+      assert_response :bad_request
+    end
+  end
+
+  test "delete_acceptance_criterion" do
+    issue = create(:issue)
+    ac1 = create(:acceptance_criterion, issue: issue)
+    ac2 = create(:acceptance_criterion, issue: issue)
+
+    assert_difference('AcceptanceCriterion.count', -1) do
+      delete issue_remove_acceptance_criterion_url(issue_id: issue.id, ac_id: ac1.id),
+        headers: { 'Authorization': "Bearer #{token}"}
+      assert_response :no_content
+    end
+
+    issue.reload
+    assert_equal [ac2], issue.acceptance_criteria
+  end
+
+  test "delete_acceptance_criterion wrong issue" do
+    issue = create(:issue)
+    issue2 = create(:issue)
+    ac1 = create(:acceptance_criterion, issue: issue)
+
+    assert_no_difference('AcceptanceCriterion.count') do
+      delete issue_remove_acceptance_criterion_url(issue_id: issue2.id, ac_id: ac1.id),
+        headers: { 'Authorization': "Bearer #{token}"}
+      assert_response :not_found
+    end
+  end
 end

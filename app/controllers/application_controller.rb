@@ -7,7 +7,7 @@ class ApplicationController < ActionController::Base
   rescue_from ActiveRecord::RecordInvalid, with: :render_unprocessable_entity_response
   rescue_from ActiveRecord::RecordNotFound, with: :render_not_found_response
   rescue_from ActionController::BadRequest, with: :bad_request
-
+  rescue_from ActionController::ParameterMissing, with: :bad_request
 
 
   # protect_from_forgery with: :exception

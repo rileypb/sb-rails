@@ -8,6 +8,7 @@ class Issue < ApplicationRecord
 	belongs_to :parent, class_name: 'Issue', optional: true
 	belongs_to :assignee, class_name: 'User', optional: true
 	has_many :comments
+	has_many :acceptance_criteria
 
 	validate :orders_are_valid
 	validate :task_order_length

@@ -10,7 +10,16 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_04_02_154841) do
+ActiveRecord::Schema.define(version: 2021_04_14_192412) do
+
+  create_table "acceptance_criteria", force: :cascade do |t|
+    t.text "criterion", null: false
+    t.boolean "completed", default: false, null: false
+    t.integer "issue_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["issue_id"], name: "index_acceptance_criteria_on_issue_id"
+  end
 
   create_table "activities", force: :cascade do |t|
     t.integer "user_id"
@@ -130,6 +139,7 @@ ActiveRecord::Schema.define(version: 2021_04_02_154841) do
     t.boolean "demo"
     t.boolean "setting_auto_close_issues", default: false, null: false
     t.string "picture"
+    t.boolean "setting_use_acceptance_criteria", default: false, null: false
     t.index ["current_sprint_id"], name: "index_projects_on_current_sprint_id"
     t.index ["owner_id"], name: "index_projects_on_owner_id"
   end

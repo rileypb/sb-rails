@@ -53,3 +53,9 @@ json.comments do
 	end
 end
 
+json.acceptance_criteria do
+	json.array!(issue.acceptance_criteria.order(id: :asc)) do |ac|
+		json.extract! ac, :id, :criterion, :completed
+	end
+end
+

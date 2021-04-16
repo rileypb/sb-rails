@@ -368,6 +368,41 @@ class IssuesController < ApplicationController
     end
   end
 
+  def add_acceptance_criterion
+    @issue = Issue.find(params[:issue_id])
+    acparams = params.require(:acceptance_criterion).permit(:criterion)
+    raise ActionController::BadRequest.new("criterion missing") unless acparams[:criterion] 
+    AcceptanceCriterion.create!(issue: @issue, criterion: acparams[:criterion])
+
+    sync_on "issues/#{@issue.id}"
+  end
+
+  def remove_acceptance_criterion
+    @issue = Issue.find(params[:issue_id])
+    @ac = @issue.acceptance_criteria.find(params[:ac_id])
+    @ac.delete
+
+    sync_on "issues/#{@issue.id}"
+  end
+
+  def set_ac_completed
+    @issue = Issue.find(params[:issue_id])
+    acparams = params.require(:acceptance_criterion).permit(:completed)
+    @ac = @issue.acceptance_criteria.find(params[:ac_id])
+    @ac.update!(completed: acparams[:completed])
+
+    sync_on "issues/#{@issue.id}"
+  end
+
+  def update_ac
+    @issue = Issue.find(params[:issue_id])
+    acparams = params.require(:acceptance_criterion).permit(:criterion)
+    @ac = @issue.acceptance_criteria.find(params[:ac_id])
+    @ac.update!(criterion: acparams[:criterion])
+
+    sync_on "issues/#{@issue.id}"
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_issue
