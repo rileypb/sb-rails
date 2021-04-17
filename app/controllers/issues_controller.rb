@@ -370,6 +370,7 @@ class IssuesController < ApplicationController
 
   def add_acceptance_criterion
     @issue = Issue.find(params[:issue_id])
+    check { can? :update, @issue }
     acparams = params.require(:acceptance_criterion).permit(:criterion)
     raise ActionController::BadRequest.new("criterion missing") unless acparams[:criterion] 
     AcceptanceCriterion.create!(issue: @issue, criterion: acparams[:criterion])
@@ -379,6 +380,7 @@ class IssuesController < ApplicationController
 
   def remove_acceptance_criterion
     @issue = Issue.find(params[:issue_id])
+    check { can? :update, @issue }
     @ac = @issue.acceptance_criteria.find(params[:ac_id])
     @ac.delete
 
@@ -387,6 +389,7 @@ class IssuesController < ApplicationController
 
   def set_ac_completed
     @issue = Issue.find(params[:issue_id])
+    check { can? :update, @issue }
     acparams = params.require(:acceptance_criterion).permit(:completed)
     @ac = @issue.acceptance_criteria.find(params[:ac_id])
     @ac.update!(completed: acparams[:completed])
@@ -399,6 +402,7 @@ class IssuesController < ApplicationController
 
   def update_ac
     @issue = Issue.find(params[:issue_id])
+    check { can? :update, @issue }
     acparams = params.require(:acceptance_criterion).permit(:criterion)
     @ac = @issue.acceptance_criteria.find(params[:ac_id])
     @ac.update!(criterion: acparams[:criterion])
