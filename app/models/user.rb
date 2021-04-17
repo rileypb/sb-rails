@@ -103,4 +103,9 @@ class User < ApplicationRecord
 			"NONAME"
 		end
 	end
+
+	def projects
+		#(Project.find_by(owner_id: self.id) || []).to_ary.concat(self.project_permissions.where(scope: 'update').map { |perm| perm.project }).uniq
+		Project.where(owner: self).to_a.concat(self.project_permissions.where(scope: 'read').map { |perm| perm.project }).uniq
+	end
 end
