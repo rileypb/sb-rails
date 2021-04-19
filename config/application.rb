@@ -22,5 +22,7 @@ module SbRails
     		resource '*', :headers => :any, :methods => [:get, :post, :patch, :options, :delete]
     	end
     end
+
+    config.send_active_users = ENV['SB_ACTIVE_USERS'] == 'true'
   end
 end

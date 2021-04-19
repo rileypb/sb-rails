@@ -64,11 +64,15 @@ class SyncChannel < ApplicationCable::Channel
   end
 
   def update_users
-    SyncChannel.broadcast_to 'users', { action: 'sync', selector: 'users', data: user_data}
+    if Rails.application.config.send_active_users
+      SyncChannel.broadcast_to 'users', { action: 'sync', selector: 'users', data: user_data}
+    end
   end
 
   def update_users_for_project(project_id)
-    SyncChannel.broadcast_to "users_#{project_id}", { action: 'sync', selector: "users_#{project_id}", data: user_data_for_project(project_id)}
+    if Rails.application.config.send_active_users
+      SyncChannel.broadcast_to "users_#{project_id}", { action: 'sync', selector: "users_#{project_id}", data: user_data_for_project(project_id)}
+    end
   end
 
   def user_data
