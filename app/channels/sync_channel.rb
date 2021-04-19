@@ -1,25 +1,22 @@
 
 class SyncChannel < ApplicationCable::Channel
-  @@users = []
-
-  @@users_per_project = Hash.new { |hash, key| hash[key] = [] }
+  @@uuids = []
 
   def subscribed
     stream_from 'sync'
   end
 
   def unsubscribed
-    # @@users.delete_at(@@users.index(current_user.id) || @@users.length)
     stop_all_streams
-    # update_users
+    update_users
+    @@uuids.delete connection.connection_identifier
 
-    # if !current_user.admin?
-    #   projects = current_user.projects
-    #   projects.each do |proj|
-    #     @@users_per_project[proj.id].delete_at(@@users_per_project[proj.id].index(current_user.id) || @@users_per_project[proj.id].length)
-    #     update_users_for_project(proj.id)
-    #   end
-    # end
+    if !connection.current_user.admin?
+      projects = connection.current_user.projects
+      projects.each do |proj|
+        update_users_for_project(proj.id)
+      end
+    end
   end
 
   def receive(data)
@@ -42,21 +39,22 @@ class SyncChannel < ApplicationCable::Channel
     user = User.find_user_for_jwt(auth_info['token'])
     connection.current_user = user
 
-    # if user.admin?
-    #   stream_from "sync:users"
-    # end
+    uuid = connection.connection_identifier
 
-    # @@users << user.id
-    # update_users
+    if !@@uuids.include?(uuid)
+      if user.admin?
+        stream_from "sync:users"
+      else
+        projects = user.projects
+        projects.each do |proj|
+          stream_from "sync:users_#{proj.id}"
+          update_users_for_project(proj.id)
+        end
+      end
+    end
 
-    # if !user.admin?
-    #   projects = user.projects
-    #   projects.each do |proj|
-    #     @@users_per_project[proj.id] << user.id
-    #     stream_from "sync:users_#{proj.id}"
-    #     update_users_for_project(proj.id)
-    #   end
-    # end
+    @@uuids << uuid
+    update_users
   end
 
   def self.broadcast_sync(sync_info) 
@@ -65,26 +63,30 @@ class SyncChannel < ApplicationCable::Channel
     end
   end
 
-  # def update_users
-  #   SyncChannel.broadcast_to 'users', { action: 'sync', selector: 'users', data: user_data}
-  # end
+  def update_users
+    SyncChannel.broadcast_to 'users', { action: 'sync', selector: 'users', data: user_data}
+  end
 
-  # def update_users_for_project(project_id)
-  #   SyncChannel.broadcast_to "users_#{project_id}", { action: 'sync', selector: "users_#{project_id}", data: user_data_for_project(project_id)}
-  # end
+  def update_users_for_project(project_id)
+    SyncChannel.broadcast_to "users_#{project_id}", { action: 'sync', selector: "users_#{project_id}", data: user_data_for_project(project_id)}
+  end
 
-  # def user_data
-  #   @@users.uniq.map do |userid|
-  #     user = User.find(userid)
-  #     { id: user.id, first_name: user.first_name, last_name: user.last_name, displayName: user.displayName, picture: user.picture }
-  #   end
-  # end
+  def user_data
+    all_users =  connection.server.connections.map {|c| c.current_user}.filter {|u| u}.map {|u| u.id}.uniq
+    all_users.map do |userid|
+      user = User.find(userid)
+      { id: user.id, first_name: user.first_name, last_name: user.last_name, displayName: user.displayName, picture: user.picture }
+    end
+  end
 
-  # def user_data_for_project(project_id)
-  #   @@users_per_project[project_id].uniq.map do |userid|
-  #     user = User.find(userid)
-  #     { id: user.id, first_name: user.first_name, last_name: user.last_name, displayName: user.displayName, picture: user.picture }
-  #   end
-  # end
+  def user_data_for_project(project_id)
+    project = Project.find(project_id)
+    all_users =  connection.server.connections.map {|c| c.current_user}.filter {|u| u}.map {|u| u.id}.uniq
+    team_members = project.team_members
+    online_now = team_members.filter { |member| all_users.include?(member.id) && !member.admin? }
+    online_now.map do |user|
+      { id: user.id, first_name: user.first_name, last_name: user.last_name, displayName: user.displayName, picture: user.picture }
+    end
+  end
 
 end
