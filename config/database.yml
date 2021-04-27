@@ -20,6 +20,13 @@ test:
   <<: *default
   database: db/test.sqlite3
 
+staging:
+  adapter: postgresql
+  encoding: unicode
+  database: scrumboard_api_db
+  username: scrumboard_api_db_user
+  password: <%= ENV["DB_PASSWORD"] %>
+
 production:
   adapter: postgresql
   encoding: unicode

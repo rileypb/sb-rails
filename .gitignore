@@ -52,3 +52,4 @@ yarn-debug.log*
 .env
 
 /config/credentials/staging.key
+config/.DS_Store
