@@ -25,22 +25,25 @@ class ApplicationRecord < ActiveRecord::Base
   end
 
   def validate_order(order_field)
-    # order = self.attributes[order_field.to_s]
-    # return if !order || (order.strip.length == 0)
-    # if order 
-    #   order.split(',').each do |entry|
-    #     if !(Integer(entry) rescue false)
-    #       errors.add(order_field, "has invalid format")
-    #     end
-    #   end
-    # end
+    if Rails.application.config.strict_order_checking
+      order = self.attributes[order_field.to_s]
+      return if !order || (order.strip.length == 0)
+      if order 
+        order.split(',').each do |entry|
+          if !(Integer(entry) rescue false)
+            errors.add(order_field, "has invalid format")
+          end
+        end
+      end
+    end
   end
 
   def validate_order_length(children, order_field)
-    # turn off all order validation temporarily
-    # if (children.count != (self.attributes[order_field.to_s] || '').split(',').count)
-    #   errors.add(order_field, "length mismatch: #{self.class.name}.#{order_field}")
-    # end
+    if Rails.application.config.strict_order_checking
+      if (children.count != (self.attributes[order_field.to_s] || '').split(',').count)
+        errors.add(order_field, "length mismatch: #{self.class.name}.#{order_field}")
+      end
+    end
   end
 
   def create_valid_order(children, order_field)

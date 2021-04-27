@@ -24,5 +24,6 @@ module SbRails
     end
 
     config.send_active_users = ENV['SB_ACTIVE_USERS'] == 'true'
+    config.strict_order_checking = ENV['SB_CHECK_ORDER'] == 'true'
   end
 end
