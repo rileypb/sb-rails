@@ -99,8 +99,8 @@ class EpicsController < ApplicationController
       @epic.update!(issue_order: remove_from_order(@epic.issue_order, issue_id))
 
       Activity.create(user: current_user, action: "removed_issue_from_epic", issue: issue, epic: @epic, project_context: @epic.project)
-      sync_on "issues/#{issue_id}"
-      sync_on "issues/*"
+      sync_on "projects/#{issue.project_id}/issues/#{issue_id}"
+      sync_on "projects/#{issue.project_id}/issues/*"
       sync_on "epics/#{epic_id}/issues"
       sync_on "epics/#{epic_id}/issues/*"
       sync_on_activities(@epic.project)
