@@ -36,6 +36,7 @@ Rails.application.routes.draw do
       patch 'assign_issue', defaults: {format: :json}, to: 'issues#assign_issue'
       patch 'mark_complete', defaults: {format: :json}, to: 'issues#mark_complete'
       patch 'move_to_backlog', defaults: {format: :json}, to: 'issues#move_to_backlog'
+      patch 'move_to_sprint/:sprint_id', defaults: {format: :json}, to: 'issues#move_to_sprint'
       post 'add_acceptance_criterion', defaults: {format: :json}, to: 'issues#add_acceptance_criterion'
       delete 'remove_acceptance_criterion/:ac_id', defaults: {format: :json}, to: 'issues#remove_acceptance_criterion', as: 'remove_acceptance_criterion'
       patch 'set_ac_completed/:ac_id', defaults: {format: :json}, to: 'issues#set_ac_completed', as: 'set_ac_completed'

@@ -30,6 +30,11 @@ class IssuesController < ApplicationController
     iss.each do |i|
       @issues << i if !@issues.include?(i) && !i.completed
     end
+    if params[:backlog] == 'true'
+      @issues = @issues.select do |issue|
+        !issue.sprint
+      end
+    end
     @issues = @issues.select do |issue|
       can? :read, issue
     end 
@@ -363,7 +368,47 @@ class IssuesController < ApplicationController
 
       sync_on "issues/#{issue_id}"
       sync_on "sprints/#{sprint_id}/issues"
-      sync_on "project/#{@issue.project_id}/issues"
+      sync_on "projects/#{@issue.project_id}/issues"
+      sync_on_activities(@issue.project)
+    end
+  end
+
+  def move_to_sprint
+    Issue.transaction do
+      issue_id = params[:issue_id]
+      @issue = Issue.find(issue_id)
+      sprint_id = params[:sprint_id]
+      @sprint = Sprint.find(sprint_id)
+
+      _assert(ArgumentError, "Sprints must differ") { |issue| @issue.sprint != @sprint }
+      
+      check { can? :update, @issue }
+      if @issue.sprint 
+        check { can? :update, @issue.sprint }
+      end
+      check { can? :update, @sprint }
+
+      old_sprint = @issue.sprint
+      @project = @issue.project
+
+      @issue.update!(sprint: @sprint)
+      if old_sprint
+        old_sprint.update!(issue_order: remove_from_order(old_sprint.issue_order, @issue.id))
+      else
+        @project.update!(issue_order: remove_from_order(@project.issue_order, @issue.id))
+      end
+
+      @sprint.update!(issue_order: append_to_order(@sprint.issue_order, @issue.id.to_s))
+
+      create_transfer_activity_for(@issue)
+
+      sync_on "issues/#{issue_id}"
+      if old_sprint
+        sync_on "sprints/#{old_sprint.id}/issues"
+      else
+        sync_on "projects/#{@issue.project_id}/issues"
+      end
+      sync_on "sprints/#{sprint_id}/issues"
       sync_on_activities(@issue.project)
     end
   end

@@ -10,10 +10,11 @@ end
 
 json.project do
 	json.id issue.project.id
+	json.current_sprint_id issue.project.current_sprint_id
 end
 
 if issue.sprint
 	json.sprint do
-		json.extract! issue.sprint, :id, :title, :completed
+		json.extract! issue.sprint, :id, :title, :completed, :started
 	end
 end
