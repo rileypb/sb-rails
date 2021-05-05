@@ -108,6 +108,47 @@ class SprintsController < ApplicationController
     end
   end
 
+  def add_issue
+    Epic.transaction do
+      add_params = params.require(:issue).permit(:issue_id)
+      issue_id = add_params[:issue_id]
+      sprint_id = request.params[:sprint_id] 
+
+      issue = Issue.find(issue_id)
+      @sprint = Sprint.find(sprint_id)
+      check { can? :update, @sprint }
+      check { can? :update, issue }
+      _assert(ArgumentError, "issue already belongs to sprint") { issue.sprint != @sprint }
+
+      original_sprint = issue.sprint
+      issue.update!(sprint: @sprint)
+      if original_sprint
+        check { can? :update, original_sprint }
+        original_sprint.update!(issue_order: remove_from_order(original_sprint.issue_order, issue_id))
+      end
+      @sprint.update!(issue_order: append_to_order(@sprint.issue_order, issue_id))
+
+      if !original_sprint
+        Activity.create(user: current_user, action: "added_issue_to_sprint", issue: issue, sprint: @sprint, project_context: @sprint.project)
+      else
+        Activity.create(user: current_user, action: "moved_issue_between_sprints", issue: issue, sprint: original_sprint, sprint2: @sprint, project_context: @sprint.project)
+      end
+
+      sync_on "issues/#{issue_id}"
+      sync_on "projects/#{issue.project.id}/issues/*"
+      sync_on "sprints/#{issue.sprint_id}/issues/*"
+      sync_on "sprints/#{sprint_id}"
+      sync_on "sprints/#{sprint_id}/issues"
+
+      if original_sprint
+        sync_on "sprints/#{original_sprint.id}"
+        sync_on "sprints/#{original_sprint.id}/issues"
+      end
+        
+      sync_on_activities(@sprint.project)
+    end
+  end
+
   def reorder_issues
     Sprint.transaction do
       sprint_id = params[:sprint_id]

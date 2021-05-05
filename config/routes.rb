@@ -23,6 +23,7 @@ Rails.application.routes.draw do
       resources :comments
       patch 'reorder_issues', defaults: {format: :json}, to: 'sprints#reorder_issues'
       patch 'remove_issue', defaults: {format: :json}, to: 'sprints#remove_issue'
+      patch 'add_issue', defaults: {format: :json}, to: 'sprints#add_issue'
       post 'start', defaults: {format: :json}, to: 'sprints#start'
       post 'suspend', defaults: {format: :json}, to: 'sprints#suspend'
       post 'finish', defaults: {format: :json}, to: 'sprints#finish'
