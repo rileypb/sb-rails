@@ -112,9 +112,10 @@ class SprintsController < ApplicationController
     Epic.transaction do
       add_params = params.require(:issue).permit(:issue_id)
       issue_id = add_params[:issue_id]
-      sprint_id = request.params[:sprint_id] 
+      sprint_id = request.params[:sprint_id]
 
       issue = Issue.find(issue_id)
+      project =  issue.project
       @sprint = Sprint.find(sprint_id)
       check { can? :update, @sprint }
       check { can? :update, issue }
@@ -125,6 +126,9 @@ class SprintsController < ApplicationController
       if original_sprint
         check { can? :update, original_sprint }
         original_sprint.update!(issue_order: remove_from_order(original_sprint.issue_order, issue_id))
+      else
+        check { can? :update, project }
+        project.update!(issue_order: remove_from_order(project.issue_order, issue_id))
       end
       @sprint.update!(issue_order: append_to_order(@sprint.issue_order, issue_id))
 
