@@ -103,6 +103,7 @@ class EpicsController < ApplicationController
       sync_on "projects/#{issue.project_id}/issues/*"
       sync_on "epics/#{epic_id}/issues"
       sync_on "epics/#{epic_id}/issues/*"
+      sync_on "issues/#{issue_id}"
       sync_on_activities(@epic.project)
     end
   end
