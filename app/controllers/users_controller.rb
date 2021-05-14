@@ -1,5 +1,5 @@
 class UsersController < ApplicationController
-	skip_before_action :security_check, only: [:me]
+	skip_before_action :security_check
 	# skip_before_action :authorize_request, only: [:me]
 
 	def index
@@ -27,7 +27,8 @@ class UsersController < ApplicationController
 				first_name: current_user.first_name,
 				id: current_user.id,
 				picture: current_user.picture, 
-				displayName: current_user.displayName }
+				displayName: current_user.displayName,
+				theme: current_user.theme }
 			perms = []
 			perms << 'new-project' if can?(:create, Project)
 			user_hash['permissions'] = perms
@@ -57,6 +58,6 @@ class UsersController < ApplicationController
 
     private
     def user_params
-    	params.require(:user).permit(:displayName)
+    	params.require(:user).permit(:displayName, :theme)
     end
 end
