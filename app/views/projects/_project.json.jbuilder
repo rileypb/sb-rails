@@ -6,6 +6,7 @@ if project.owner
 		json.id project.owner.id
 		json.first_name project.owner.first_name
 		json.last_name project.owner.last_name
+		json.displayName project.owner.displayName
 		json.picture project.owner.picture
 	end
 end
