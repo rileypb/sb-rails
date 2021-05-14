@@ -54,9 +54,13 @@ class User < ApplicationRecord
 			  		user.oauthsub = id
 				    user.first_name = user_info["given_name"] || user_info["nickname"]
 				    user.last_name = user_info["family_name"]
-				    if user_info["nickname"] 
-				    	user.displayName = user_info["nickname"]
-				    end
+
+				    # # can't use the nickname since some services automatically 
+				    # # set nickname to be the left-hand part of the email address.
+				    # if user_info["nickname"] 
+				    # 	user.displayName = user_info["nickname"]
+				    # end
+				    
 				    user.picture = user_info["picture"]
 				    user.password = "passwordnotrequired"
 				end
