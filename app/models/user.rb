@@ -107,6 +107,20 @@ class User < ApplicationRecord
 		end
 	end
 
+	def orderable_name
+		if self.displayName
+			self.displayName
+		elsif self.last_name && self.first_name
+			"#{self.last_name}, #{self.first_name}"
+		elsif self.last_name
+			self.last_name
+		elsif self.first_name
+			self.first_name
+		else
+			"NONAME"
+		end
+	end
+
 	def projects
 		#(Project.find_by(owner_id: self.id) || []).to_ary.concat(self.project_permissions.where(scope: 'update').map { |perm| perm.project }).uniq
 		Project.where(owner: self).to_a.concat(self.project_permissions.where(scope: 'read').map { |perm| perm.project }).uniq

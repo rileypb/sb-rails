@@ -63,11 +63,11 @@ class Project < ApplicationRecord
 		result = [ self.owner ]
 		result.concat(self.project_permissions.map { |pp| pp.user })
 		if self.demo
-			result.concat(User.all.limit(10)) # if this is a demo project, everyone's on the team!
+			result.concat(User.where(demo: true)) # if this is a demo project, add demo users
 		end
 		result << current_user if current_user
 		result.uniq!
-		return result
+		return result.sort_by { |u| u.orderable_name }
 	end
 
 

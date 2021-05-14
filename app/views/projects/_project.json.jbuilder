@@ -23,7 +23,7 @@ json.activities do
 end
 
 json.team do
-	json.array!(project.team_members.sort_by { |u| u.id }) do |user|
+	json.array!(project.team_members) do |user|
 		json.partial! "users/user", user: user
 	end
 end
