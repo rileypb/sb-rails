@@ -20,6 +20,12 @@ end
 if activity.task
 	json.task do
 		json.extract! activity.task, :id, :title
+		json.issue do
+			json.extract! activity.task.issue, :id, :title
+			json.project do 
+				json.id activity.task.issue.project.id
+			end
+		end
 	end
 end
 if activity.issue
