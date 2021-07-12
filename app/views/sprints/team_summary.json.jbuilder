@@ -20,6 +20,7 @@ json.team do
 		end
 	end
 	json.unassignedWork do
+		json.total_work @sprint.total_unassigned_work
 		json.unassigned_issues do
 			json.array!(@sprint.unassigned_issues) do |issue|
 				json.extract! issue, :id, :title

@@ -106,6 +106,10 @@ class Sprint < ApplicationRecord
         self.issues.flat_map {|i| i.tasks}.sum {|t| t.estimate || 0} 
     end
 
+    def total_unassigned_work
+        self.issues.flat_map {|i| i.tasks.filter {|t| !t.assignee}}.sum {|t| t.estimate || 0}
+    end
+
     def unassigned_issues
         self.issues.flat_map {|i| i.tasks.filter {|t| !t.assignee}}.map { |t| t.issue }.uniq
     end
