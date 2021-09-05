@@ -114,6 +114,23 @@ class ProjectsController < ApplicationController
     check { can? :read, @project }
   end
 
+  def join_project  
+    Project.transaction do
+      @project = Project.find_by_key(params[:data][:projectKey])
+      if @project 
+        read_permissions = ProjectPermission.where(user: current_user, project: @project, scope: 'read')
+        write_permissions = ProjectPermission.where(user: current_user, project: @project, scope: 'update')
+        if !read_permissions.present?
+          ProjectPermission.create!(user: current_user, project: @project, scope: 'read')
+        end
+        if !write_permissions.present?
+          ProjectPermission.create!(user: current_user, project: @project, scope: 'write')
+        end
+      else
+        raise ActiveRecord::RecordNotFound.new
+      end
+    end
+  end
 
   private
     # Use callbacks to share common setup or constraints between actions.

@@ -1,4 +1,6 @@
 class Project < ApplicationRecord
+	KEY_LENGTH = 8
+
 	has_many :project_permissions
 	has_many :sprints
 	has_many :epics
@@ -16,16 +18,26 @@ class Project < ApplicationRecord
 	validate :issue_order_length
 	validate :epic_order_length
 
+	before_create :set_random_key
+
+	def self.random_key(n)
+		Array.new(n){[*"a".."z", *"0".."9"].sample}.join
+	end
+
+	def set_random_key
+		self.key = Project.random_key(Project::KEY_LENGTH)
+	end
+
 	def current_sprint_from_same_project
 		if self.current_sprint && self.current_sprint.project != self
 			errors.add(:current_sprint, "must be from same project")
 		end
 	end
 
-    def orders_are_valid
-    	validate_order(:issue_order)
-    	validate_order(:epic_order)
-    end
+  def orders_are_valid
+  	validate_order(:issue_order)
+  	validate_order(:epic_order)
+  end
 
 	def permissions(user)
 		perms = super
