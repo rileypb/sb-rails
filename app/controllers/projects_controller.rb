@@ -6,7 +6,7 @@ class ProjectsController < ApplicationController
   # GET /projects.json
   def index
     @projects = Project.all.sort_by(&:id).select do |project|
-      can? :read, project
+      !project.hidden && can?(:read, project)
     end
   end
 
