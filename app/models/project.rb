@@ -25,7 +25,9 @@ class Project < ApplicationRecord
 	end
 
 	def set_random_key
-		self.key = Project.random_key(Project::KEY_LENGTH)
+		if !self.key.present?
+			self.key = Project.random_key(Project::KEY_LENGTH)
+		end
 	end
 
 	def current_sprint_from_same_project
