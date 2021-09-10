@@ -124,7 +124,7 @@ class ProjectsController < ApplicationController
           ProjectPermission.create!(user: current_user, project: @project, scope: 'read')
         end
         if !write_permissions.present?
-          ProjectPermission.create!(user: current_user, project: @project, scope: 'write')
+          ProjectPermission.create!(user: current_user, project: @project, scope: 'update')
         end
       else
         raise ActiveRecord::RecordNotFound.new
