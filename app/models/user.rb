@@ -52,7 +52,7 @@ class User < ApplicationRecord
 			  	user = User.create! do |user|
 			  		user.email = user_info["email"]
 			  		user.oauthsub = id
-				    user.first_name = user_info["given_name"] || user_info["nickname"] || user_info["email"]
+				    user.first_name = user_info["given_name"] || user_info["nickname"] || user_info["email"] || ''
 				    user.last_name = user_info["family_name"] || ''
 
 				    # # can't use the nickname since some services automatically 
