@@ -30,6 +30,7 @@ Rails.application.routes.draw do
       post 'finish', defaults: {format: :json}, to: 'sprints#finish'
       get 'team_summary', defaults: {format: :json}, to: 'sprints#team_summary'
       get 'retrospective_report', defaults: {format: :json}, to: 'sprints#retrospective_report'
+      get 'snapshot', defaults: {format: :json}, to: 'sprints#snapshot'
     end
     resources :issues, defaults: {format: :json} do
       resources :tasks

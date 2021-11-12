@@ -1,5 +1,5 @@
 class SprintsController < ApplicationController
-  before_action :set_sprint, only: [:show, :edit, :update, :destroy, :start, :suspend, :finish, :team_summary, :retrospective_report]
+  before_action :set_sprint, only: [:show, :edit, :update, :destroy, :start, :suspend, :finish, :team_summary, :retrospective_report, :snapshot]
 
   def index
   	@project = Project.find(params[:project_id])
@@ -188,6 +188,8 @@ class SprintsController < ApplicationController
 
           @project.update_burndown_data!
 
+          @sprint.update!(snapshot: generate_snapshot(@sprint))
+
           Activity.create(user: current_user, action: "started_sprint", sprint: @sprint, project: @project, project_context: @project)
           sync_on "sprints/#{@sprint.id}"
           sync_on "projects/#{@project.id}"
@@ -255,6 +257,10 @@ class SprintsController < ApplicationController
     @sprint
   end
 
+  def snapshot
+    @sprint
+  end
+
 
 
   private
@@ -271,5 +277,9 @@ class SprintsController < ApplicationController
 
     def clear_burndown_data(sprint)
       sprint.clear_burndown_data!
+    end
+
+    def generate_snapshot(sprint)
+      self.render_to_string(:template => 'sprints/snapshot')
     end
 end
