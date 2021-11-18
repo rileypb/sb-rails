@@ -18,6 +18,7 @@ Rails.application.routes.draw do
       patch 'reorder_epics', defaults: {format: :json}, to: 'projects#reorder_epics'
       patch 'reorder_issues', defaults: {format: :json}, to: 'projects#reorder_issues'
       get 'team', defaults: {format: :json}, to: 'projects#team'
+      post 'add_member', defaults: { format: :json }, to: 'projects.add_member'
   	end
     resources :sprints, defaults: {format: :json} do
       resources :issues

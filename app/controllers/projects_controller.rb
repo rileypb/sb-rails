@@ -118,21 +118,39 @@ class ProjectsController < ApplicationController
     Project.transaction do
       @project = Project.find_by_key(params[:data][:projectKey])
       if @project 
-        read_permissions = ProjectPermission.where(user: current_user, project: @project, scope: 'read')
-        write_permissions = ProjectPermission.where(user: current_user, project: @project, scope: 'update')
-        if !read_permissions.present?
-          ProjectPermission.create!(user: current_user, project: @project, scope: 'read')
-        end
-        if !write_permissions.present?
-          ProjectPermission.create!(user: current_user, project: @project, scope: 'update')
-        end
+        self.add_user_to_project(@project, current_user)
       else
         raise ActiveRecord::RecordNotFound.new
       end
     end
   end
 
+  def add_member
+    Project.transaction do
+      @project = Project.find(params[:project_id])
+      check { can? :add_user_to_project, @project }
+      new_member = User.find_by_email(params[:data][:email])
+      if @project && new_member 
+        self.add_user_to_project(@project, new_member)
+      else
+        raise ActiveRecord::RecordNotFound.new
+      end
+    end
+  end
+
+  def add_user_to_project(project, new_member)
+    read_permissions = ProjectPermission.where(user: new_member, project: project, scope: 'read')
+    write_permissions = ProjectPermission.where(user: new_member, project: project, scope: 'update')
+    if !read_permissions.present?
+      ProjectPermission.create!(user: new_member, project: project, scope: 'read')
+    end
+    if !write_permissions.present?
+      ProjectPermission.create!(user: new_member, project: project, scope: 'update')
+    end
+  end
+
   private
+
     # Use callbacks to share common setup or constraints between actions.
     def set_project
       @project = Project.find(params[:id])

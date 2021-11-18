@@ -29,18 +29,22 @@ class ApplicationController < ActionController::Base
   end
 
   def render_unprocessable_entity_response(exception)
+    puts exception.message
     render json: exception.record.errors, status: :unprocessable_entity
   end
 
   def render_not_found_response(exception)
+    puts exception.message
     render json: { error: exception.message }, status: :not_found
   end
 
   def render_not_found_response_no_message(exception)
+    puts exception.message
     render json: { error: "Record not found" }, status: :not_found
   end
   
   def bad_request(exception)
+    puts exception.message
     render status: 400, json: {:error => exception.message}.to_json
   end
 
