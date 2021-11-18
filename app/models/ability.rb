@@ -12,6 +12,7 @@ class Ability
           can :read, :dashboard
           can :create_issue, :all
           can :add_user_to_project, :all
+          can :remove_user_from_project, :all
       end
 
       can :access, Project
@@ -22,7 +23,7 @@ class Ability
       can :access, Comment
 
       # # project owner can do anything with the project
-      can [:create_issue, :delete_issue, :read, :update, :configure, :add_user_to_project], Project, owner: user
+      can [:create_issue, :delete_issue, :read, :update, :configure, :add_user_to_project, :remove_user_from_project], Project, owner: user
       can [:read, :update], Issue, project: { owner: user }
       can [:create_sprint, :delete_sprint], Project, owner: user
       can [:create_epic, :delete_epic], Project, owner: user

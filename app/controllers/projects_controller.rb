@@ -149,6 +149,20 @@ class ProjectsController < ApplicationController
     end
   end
 
+  def remove_member
+   Project.transaction do
+      @project = Project.find(params[:project_id])
+      check { can? :remove_user_from_project, @project }
+      member = User.find(params[:data][:userId])
+      if @project && member 
+        ProjectPermission.where(user: member, project: @project, scope: 'read').each { |m| m.delete }
+        ProjectPermission.where(user: member, project: @project, scope: 'update').each { |m| m.delete }
+      else
+        raise ActiveRecord::RecordNotFound.new
+      end
+    end
+  end
+
   private
 
     # Use callbacks to share common setup or constraints between actions.
