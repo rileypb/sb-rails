@@ -1,5 +1,5 @@
 class SprintsController < ApplicationController
-  before_action :set_sprint, only: [:show, :edit, :update, :destroy, :start, :suspend, :finish, :team_summary, :retrospective_report, :snapshot]
+  before_action :set_sprint, only: [:show, :edit, :update, :destroy, :start, :suspend, :finish, :team_summary, :retrospective_report, :snapshot, :compare]
 
   def index
   	@project = Project.find(params[:project_id])
@@ -259,6 +259,16 @@ class SprintsController < ApplicationController
 
   def snapshot
     @sprint
+  end
+
+  def compare
+    Sprint.transaction do
+      if !@sprint.snapshot
+        render status: 200, json: {:error => "sprint has no snapshot"}.to_json
+      else
+        @snapshot = JSON.parse(@sprint.snapshot)["sprint_snapshot"]
+      end
+    end
   end
 
 
