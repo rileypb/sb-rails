@@ -188,7 +188,7 @@ class SprintsController < ApplicationController
 
           @project.update_burndown_data!
 
-          @sprint.update!(snapshot: generate_snapshot(@sprint))
+          @sprint.update!(snapshot: generate_snapshot(@sprint)) if !@sprint.snapshot or start_params[:reset]
 
           Activity.create(user: current_user, action: "started_sprint", sprint: @sprint, project: @project, project_context: @project)
           sync_on "sprints/#{@sprint.id}"

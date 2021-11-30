@@ -1,11 +1,4 @@
-json.extract! epic, :id, :title, :description, :size, :color, :created_at, :updated_at
-# if epic.last_changed_by 
-# 	json.last_changed_by do
-# 		json.partial! "users/user", user: epic.last_changed_by
-# 	end
-# else
-# 	json.last_changed_by nil
-# end
+json.extract! epic, :id, :title, :description, :size, :color
 json.path project_epic_path(project_id: epic.project.id, id: epic.id, format: :json)
 json.permissions epic.permissions(@current_user)
 json.project do
