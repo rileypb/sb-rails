@@ -29,9 +29,29 @@ json.tasks_new do
 	end
 end
 
-json.acceptance_criteria_old issue_old["acceptance_criteria"]
-json.acceptance_criteria_new do
-	json.array!(issue.acceptance_criteria.order(id: :asc)) do |ac|
-		json.extract! ac, :id, :criterion
+
+start_ac_ids = (issue_old["acceptance_criteria"] || []).map { |x| x["id"] }
+end_ac_ids = (issue.acceptance_criteria || []).map(&:id)
+all_ac_ids = (start_ac_ids + end_ac_ids).uniq
+
+ac_ids_removed = start_ac_ids - end_ac_ids
+ac_ids_added = end_ac_ids - start_ac_ids
+ac_ids_normal = all_ac_ids - (ac_ids_removed + ac_ids_added)
+
+json.acceptance_criteria do
+	json.array!(ac_ids_normal) do |id|
+		ac_old = issue_old["acceptance_criteria"].find { |x| x["id"] == id }
+		ac = AcceptanceCriterion.find(id)
+
+		json.id id
+		json.criterion_old ac_old["criterion"]
+		json.criterion_new ac.criterion
 	end
 end
+
+# json.acceptance_criteria_old issue_old["acceptance_criteria"]
+# json.acceptance_criteria_new do
+# 	json.array!(issue.acceptance_criteria.order(id: :asc)) do |ac|
+# 		json.extract! ac, :id, :criterion
+# 	end
+# end

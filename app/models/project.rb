@@ -55,7 +55,7 @@ class Project < ApplicationRecord
 	end
 
 	def add_issue(issue)
-		if self.issue_order
+		if self.issue_order.present?
 	    	self.issue_order += ",#{issue.id}"
 	    else
 	    	self.issue_order = "#{issue.id}"
