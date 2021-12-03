@@ -49,9 +49,19 @@ json.acceptance_criteria do
 	end
 end
 
-# json.acceptance_criteria_old issue_old["acceptance_criteria"]
-# json.acceptance_criteria_new do
-# 	json.array!(issue.acceptance_criteria.order(id: :asc)) do |ac|
-# 		json.extract! ac, :id, :criterion
-# 	end
-# end
+json.acceptance_criteria_removed do
+	json.array!(ac_ids_removed) do |id|
+		ac_old = issue_old["acceptance_criteria"].find { |x| x["id"] == id }
+		json.id id
+		json.criterion ac_old["criterion"]
+	end
+end
+
+json.acceptance_criteria_added do
+	json.array!(ac_ids_added) do |id|
+		ac = AcceptanceCriterion.find(id)
+		json.id id
+		json.criterion ac.criterion
+	end
+end
+
