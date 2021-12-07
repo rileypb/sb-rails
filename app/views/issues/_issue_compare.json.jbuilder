@@ -75,6 +75,10 @@ json.tasks do
 		json.id id
 		json.title_old task_old["title"]
 		json.title_new task.title
+		json.description_old task_old["description"]
+		json.description_new task.description
+		json.estimate_old task_old["estimate"]
+		json.estimate_new task.estimate
 	end
 end
 
@@ -83,6 +87,8 @@ json.tasks_removed do
 		task_old = issue_old["tasks"].find { |x| x["id"] == id }
 		json.id id
 		json.title task_old["title"]
+		json.description task_old["description"]
+		json.estimate task_old["estimate"]
 	end
 end
 
@@ -91,6 +97,8 @@ json.tasks_added do
 		task = Task.find(id)
 		json.id id
 		json.title task.title
+		json.description task.description
+		json.estimate task.estimate
 	end
 end
 
