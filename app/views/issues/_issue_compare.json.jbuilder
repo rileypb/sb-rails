@@ -78,19 +78,19 @@ json.tasks do
 	end
 end
 
-json.acceptance_criteria_removed do
-	json.array!(ac_ids_removed) do |id|
-		ac_old = issue_old["acceptance_criteria"].find { |x| x["id"] == id }
+json.tasks_removed do
+	json.array!(task_ids_removed) do |id|
+		task_old = issue_old["tasks"].find { |x| x["id"] == id }
 		json.id id
-		json.criterion ac_old["criterion"]
+		json.title task_old["title"]
 	end
 end
 
-json.acceptance_criteria_added do
-	json.array!(ac_ids_added) do |id|
-		ac = AcceptanceCriterion.find(id)
+json.tasks_added do
+	json.array!(task_ids_added) do |id|
+		task = Task.find(id)
 		json.id id
-		json.criterion ac.criterion
+		json.title task.title
 	end
 end
 
