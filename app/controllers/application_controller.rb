@@ -21,8 +21,10 @@ class ApplicationController < ActionController::Base
 
   #after_action :set_csrf_cookie_for_ng
   after_action :broadcast_sync
+  after_action :broadcast_pulse
 
   @current_user = nil
+  @pulse = false
 
   def current_user
     @current_user
@@ -120,6 +122,17 @@ class ApplicationController < ActionController::Base
 
   def sync_on_activities(project)
     sync_on("projects/#{project.id}/activity")
+  end
+
+  def record_action
+    current_user.update(last_action: Time.now, action_count: (current_user.action_count || 0) + 1)
+    @pulse = true
+  end
+  
+  def broadcast_pulse
+    if @pulse 
+      SyncChannel.send_user_pulse(current_user)
+    end
   end
 
 

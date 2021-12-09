@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_09_05_175048) do
+ActiveRecord::Schema.define(version: 2021_12_07_022637) do
 
   create_table "acceptance_criteria", force: :cascade do |t|
     t.text "criterion", null: false
@@ -161,6 +161,7 @@ ActiveRecord::Schema.define(version: 2021_09_05_175048) do
     t.string "goal"
     t.date "actual_end_date"
     t.string "retrospective"
+    t.text "snapshot"
     t.index ["project_id"], name: "index_sprints_on_project_id"
   end
 
@@ -199,6 +200,8 @@ ActiveRecord::Schema.define(version: 2021_09_05_175048) do
     t.boolean "blocked", default: false, null: false
     t.boolean "demo"
     t.string "theme", default: "jmu"
+    t.integer "action_count"
+    t.datetime "last_action"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end

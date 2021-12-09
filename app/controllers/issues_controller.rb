@@ -102,6 +102,8 @@ class IssuesController < ApplicationController
       project.update_burndown_data!
 
       sync_on_activities(project)
+
+      record_action
     end
   end
 
@@ -167,6 +169,8 @@ class IssuesController < ApplicationController
 
         sync_on path
         sync_on_activities(@issue.project)
+
+        record_action
         render json: @issue, status: :ok, location: @project
       else
         render json: @issue.errors, status: :unprocessable_entity
@@ -215,6 +219,8 @@ class IssuesController < ApplicationController
       end
 
       sync_on_activities(@project)
+
+      record_action
       render json: { result: "success" }, status: :ok, location: @project
     else
       render json: @issue.errors, status: :unprocessable_entity
@@ -238,6 +244,8 @@ class IssuesController < ApplicationController
       sync_on "issues/#{issue_id}/tasks"
       sync_on "issues/#{issue_id}"
       sync_on_activities(@issue.project)
+
+      record_action
     end
   end
 
@@ -304,6 +312,8 @@ class IssuesController < ApplicationController
       check { can? :update, parent2 }
       parent1.update(issue_order: order1)
       parent2.update(issue_order: order2)
+
+      record_action
     end
   end
 
@@ -325,6 +335,8 @@ class IssuesController < ApplicationController
       end
       
       sync_on_activities(@issue.project)
+
+      record_action
     end
   end
 
@@ -343,6 +355,8 @@ class IssuesController < ApplicationController
       sync_on "sprints/#{@issue.sprint_id}/issues"
       
       @issue.project.update_burndown_data!
+
+      record_action
     end
   end
 
@@ -370,6 +384,8 @@ class IssuesController < ApplicationController
       sync_on "sprints/#{sprint_id}/issues"
       sync_on "projects/#{@issue.project_id}/issues"
       sync_on_activities(@issue.project)
+
+      record_action
     end
   end
 
@@ -410,6 +426,8 @@ class IssuesController < ApplicationController
       end
       sync_on "sprints/#{sprint_id}/issues"
       sync_on_activities(@issue.project)
+
+      record_action
     end
   end
 
@@ -421,6 +439,8 @@ class IssuesController < ApplicationController
     AcceptanceCriterion.create!(issue: @issue, criterion: acparams[:criterion])
 
     sync_on "issues/#{@issue.id}"
+
+    record_action
   end
 
   def remove_acceptance_criterion
@@ -430,6 +450,8 @@ class IssuesController < ApplicationController
     @ac.delete
 
     sync_on "issues/#{@issue.id}"
+
+    record_action
   end
 
   def set_ac_completed
@@ -443,6 +465,8 @@ class IssuesController < ApplicationController
     if @issue.sprint
       sync_on "sprints/#{@issue.sprint_id}"
     end
+
+    record_action
   end
 
   def update_ac
@@ -453,6 +477,8 @@ class IssuesController < ApplicationController
     @ac.update!(criterion: acparams[:criterion])
 
     sync_on "issues/#{@issue.id}"
+
+    record_action
   end
 
   private

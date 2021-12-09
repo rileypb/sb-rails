@@ -44,6 +44,7 @@ class SyncChannel < ApplicationCable::Channel
     if !@@uuids.include?(uuid)
       if user.admin?
         stream_from "sync:users"
+        stream_from "sync:user_pulse"
       else
         projects = user.projects
         projects.each do |proj|
@@ -91,6 +92,11 @@ class SyncChannel < ApplicationCable::Channel
     online_now.map do |user|
       { id: user.id, first_name: user.first_name, last_name: user.last_name, displayName: user.displayName, picture: user.picture }
     end
+  end
+
+  def self.send_user_pulse(user)
+    puts "SEND USER PULSE"
+    SyncChannel.broadcast_to "user_pulse", { action: 'sync', selector: "user_pulse", data: { id: user.id }}
   end
 
 end

@@ -22,6 +22,8 @@ class ProjectsController < ApplicationController
     check { can? :create, Project }
     @project = Project.new(project_params)
 
+    record_action
+
     respond_to do |format|
       if @project.save
         format.html { redirect_to @project, notice: 'Project was successfully created.' }
@@ -47,6 +49,8 @@ class ProjectsController < ApplicationController
           format.json { render :show, status: :ok, location: @project }
           sync_on "projects/#{@project.id}"
           sync_on_activities(@project)
+
+          record_action
         else
           format.json { render json: @project.errors, status: :unprocessable_entity }
         end
