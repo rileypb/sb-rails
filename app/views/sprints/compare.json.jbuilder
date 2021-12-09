@@ -33,12 +33,37 @@ json.comparison do
 	json.added_issues do
 		json.array!(issue_ids_added) do |id|
 			json.id id
+			issue = Issue.find(id)
+			json.title issue.title
+			json.description issue.description
+			json.estimate issue.estimate
+			if issue.epic
+				json.epic do
+					json.title issue.epic.title
+				end
+			end
+
+			json.acceptance_criteria do
+				json.array!(issue.acceptance_criteria) do |ac|
+					json.id ac.id
+					json.criterion ac.criterion
+				end
+			end
 		end
 	end
 
 	json.removed_issues do
 		json.array!(issue_ids_removed) do |id|
 			json.id id
+			issue = Issue.find(id)
+			json.title issue.title
+			json.description issue.description
+			json.estimate issue.estimate
+			if issue.epic
+				json.epic do
+					json.title issue.epic.title
+				end
+			end
 		end
 	end
 end
