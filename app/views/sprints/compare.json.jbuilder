@@ -49,6 +49,15 @@ json.comparison do
 					json.criterion ac.criterion
 				end
 			end
+
+			json.tasks do
+				json.array!(issue.tasks) do |task|
+					json.id task.id
+					json.title task.title
+					json.description task.description
+					json.estimate task.estimate
+				end
+			end
 		end
 	end
 
@@ -62,6 +71,22 @@ json.comparison do
 			if issue.epic
 				json.epic do
 					json.title issue.epic.title
+				end
+			end
+
+			json.acceptance_criteria do
+				json.array!(issue.acceptance_criteria) do |ac|
+					json.id ac.id
+					json.criterion ac.criterion
+				end
+			end
+
+			json.tasks do
+				json.array!(issue.tasks) do |task|
+					json.id task.id
+					json.title task.title
+					json.description task.description
+					json.estimate task.estimate
 				end
 			end
 		end

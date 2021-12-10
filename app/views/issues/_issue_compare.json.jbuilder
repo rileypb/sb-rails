@@ -79,6 +79,12 @@ json.tasks do
 		json.description_new task.description
 		json.estimate_old task_old["estimate"]
 		json.estimate_new task.estimate
+		json.assignee_old (task_old["assignee"]["first_name"] + " " + task_old["assignee"]["last_name"]).strip
+		if task.assignee
+			json.assignee_new task.assignee.first_name + " " + task.assignee.last_name
+		else
+			json.assignee_new ""
+		end
 	end
 end
 
@@ -89,6 +95,7 @@ json.tasks_removed do
 		json.title task_old["title"]
 		json.description task_old["description"]
 		json.estimate task_old["estimate"]
+		json.assignee (task_old["assignee"]["first_name"] + " " + task_old["assignee"]["last_name"]).strip
 	end
 end
 
@@ -99,6 +106,11 @@ json.tasks_added do
 		json.title task.title
 		json.description task.description
 		json.estimate task.estimate
+		if (json.assignee) 
+			json.assignee task.assignee.first_name + " " + task.assignee.last_name
+		else
+			json.assignee ""
+		end
 	end
 end
 
