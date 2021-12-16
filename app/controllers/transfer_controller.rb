@@ -67,6 +67,7 @@ class TransferController < ApplicationController
 				sync_on_activities(p)
 			end
 
+      record_action
 			create_transfer_activity_for(moved_issue)
 		end
 	end
@@ -119,6 +120,8 @@ class TransferController < ApplicationController
 			sync_on "epics/#{epic2.id}/issues/*"
 
 			sync_on_activities(moved_issue.project)
+
+      record_action
 		end
 	end
 end

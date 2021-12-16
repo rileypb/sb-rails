@@ -52,6 +52,8 @@ class SprintsController < ApplicationController
       @sprint = Sprint.create(sprint_params.merge(project: @project))
       sync_on "projects/#{@sprint.project_id}/sprints"
       sync_on_activities(@project)
+
+      record_action
       Activity.create(user: current_user, action: "created_sprint", sprint: @sprint, project_context: @sprint.project)
     end
   end
@@ -69,6 +71,8 @@ class SprintsController < ApplicationController
       @sprint.issues.each { |issue| issue.update(sprint: nil) }
 
       if @sprint.delete
+
+        record_action
         sync_on "projects/#{@project.id}/sprints"
         render json: { result: "success" }, status: :ok, location: @project
         sync_on_activities(@project)
@@ -94,6 +98,8 @@ class SprintsController < ApplicationController
       issue.project.update!(issue_order: append_to_order(issue.project.issue_order, issue_id))
       
       @sprint.project.update_burndown_data!
+
+      record_action
 
       Activity.create(user: current_user, action: "removed_issue_from_sprint", issue: issue, sprint: @sprint, project_context: @sprint.project)
       sync_on "issues/#{issue_id}"
@@ -148,6 +154,8 @@ class SprintsController < ApplicationController
         sync_on "sprints/#{original_sprint.id}"
         sync_on "sprints/#{original_sprint.id}/issues"
       end
+
+      record_action
         
       sync_on_activities(@sprint.project)
     end
@@ -166,6 +174,8 @@ class SprintsController < ApplicationController
       sync_on "sprints/#{sprint_id}/issues"
       sync_on "sprints/#{sprint_id}"
       sync_on_activities(@sprint.project)
+
+      record_action
 
       Activity.create(user: current_user, action: "reordered_issues", sprint: @sprint, project_context: @sprint.project)
     end
@@ -187,6 +197,8 @@ class SprintsController < ApplicationController
           @sprint.update!(started: true, start_date: start_params[:startDate], end_date: start_params[:endDate])
 
           @project.update_burndown_data!
+
+          record_action
 
           Activity.create(user: current_user, action: "started_sprint", sprint: @sprint, project: @project, project_context: @project)
           sync_on "sprints/#{@sprint.id}"
@@ -212,6 +224,8 @@ class SprintsController < ApplicationController
         sync_on "projects/#{@project.id}"
         sync_on "projects/#{@project.id}/sprints"
         sync_on_activities(@project)
+
+        record_action
         render json: { message: "Current sprint suspended" }, status: :ok
       else
         render json: @project.errors, status: :unprocessable_entity
@@ -230,6 +244,8 @@ class SprintsController < ApplicationController
 
         closed_issues = @sprint.issues.where("state = 'Closed'")
         closed_issues.each { |issue| issue.update!(completed: true) }
+
+        record_action
 
         Activity.create(user: current_user, action: "finished_sprint", sprint: @sprint, project: @project, project_context: @project)
         sync_on "sprints/#{@sprint.id}"

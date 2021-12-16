@@ -59,6 +59,8 @@ class TasksController < ApplicationController
 
       @issue.add_task(@task)
       sync_on_activities(@issue.project)
+
+      record_action
     end
   end
 
@@ -78,6 +80,8 @@ class TasksController < ApplicationController
     sync_on "issues/#{@task.issue.id}"
     Activity.create(user: current_user, action: "updated_task", task: @task, project_context: @task.issue.project)
     sync_on_activities(@task.issue.project)
+
+    record_action
     render json: @task, status: :ok, location: @issue
   end
 
@@ -101,6 +105,8 @@ class TasksController < ApplicationController
       sync_on "issues/#{@task.issue.id}/tasks"
       sync_on "issues/#{@task.issue.id}"
       sync_on_activities(@issue.project)
+
+      record_action
       render json: { result: "success"}, status: :ok, location: @issue
     end
   end
@@ -146,6 +152,8 @@ class TasksController < ApplicationController
 
       sync_on path
       sync_on_activities(@issue.project)
+
+      record_action
       render json: { result: "success"}, status: :ok, location: @task
     end
   end
@@ -169,6 +177,8 @@ class TasksController < ApplicationController
       else
         Activity.create(user: current_user, action: "unassigned_task", task: @task, project_context: @task.issue.project)
       end
+
+      record_action
       
       sync_on_activities(@task.issue.project)
     end

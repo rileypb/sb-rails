@@ -70,6 +70,8 @@ class ProjectsController < ApplicationController
 
       @project.update(epic_order: order_split.join(','))
 
+      record_action
+
       Activity.create(user: current_user, action: "reordered_epics", project: @project, project_context: @project)
 
       sync_on "projects/#{project_id}/epics"
@@ -90,6 +92,8 @@ class ProjectsController < ApplicationController
 
       Activity.create!(user: current_user, action: "reordered_issues", project: @project, project_context: @project)
 
+      record_action
+
       @project.update!(issue_order: order_split.join(','))
       sync_on "projects/#{project_id}/issues"
       sync_on "projects/#{project_id}"
@@ -102,6 +106,7 @@ class ProjectsController < ApplicationController
   def destroy
     check { can? :delete, @project }
     @project.destroy
+    record_action
     respond_to do |format|
       format.html { redirect_to projects_url, notice: 'Project was successfully destroyed.' }
       format.json { head :no_content }
