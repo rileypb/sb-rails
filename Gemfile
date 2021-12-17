@@ -4,15 +4,17 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 ruby '~> 2.6.1'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '~> 6.1.3.2'
+gem 'rails', '>= 6.1.4.1'
 # Use Puma as the app server
-gem 'puma', '~> 3.11'
+gem 'puma', '>= 4.3.9'
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 5.0'
 # Use Uglifier as compressor for JavaScript assets
 gem 'uglifier', '>= 1.3.0'
 # See https://github.com/rails/execjs#readme for more supported runtimes
 # gem 'mini_racer', platforms: :ruby
+
+gem "actionpack", ">= 6.1.4.1"
 
 gem "webpacker"
 
@@ -61,6 +63,9 @@ group :test do
   gem 'factory_bot_rails'
   gem 'simplecov', require: false
 end
+
+gem "nokogiri", ">= 1.12.5"
+gem "addressable", ">= 2.8.0"
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
