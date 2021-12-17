@@ -14,6 +14,7 @@ class Sprint < ApplicationRecord
         perms << 'start' if ability.can? :start, self
         perms << 'suspend' if ability.can? :suspend, self
         perms << 'finish' if ability.can? :finish, self
+        perms << 'compare' if ability.can? :compare, self
 		return perms
 	end
 

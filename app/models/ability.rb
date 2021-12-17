@@ -11,6 +11,7 @@ class Ability
           can :access, :rails_admin
           can :read, :dashboard
           can :create_issue, :all
+          can :compare, :all
       end
 
       can :access, Project
@@ -26,6 +27,7 @@ class Ability
       can [:create_sprint, :delete_sprint], Project, owner: user
       can [:create_epic, :delete_epic], Project, owner: user
       can [:read, :update, :start, :suspend, :finish], Sprint, project: { owner: user }
+      can [:compare], Sprint, project: { owner: user }
       can [:read, :update], Task, issue: { project: { owner: user }}
       can [:read, :update], Epic, project: { owner: user }
       can [:create_task, :delete_task], Issue, project: { owner: user }
