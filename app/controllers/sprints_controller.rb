@@ -200,7 +200,7 @@ class SprintsController < ApplicationController
 
           @sprint.update!(snapshot: generate_snapshot(@sprint)) if !@sprint.snapshot or start_params[:reset]
           
-	  record_action
+	        record_action
 
           Activity.create(user: current_user, action: "started_sprint", sprint: @sprint, project: @project, project_context: @project)
           sync_on "sprints/#{@sprint.id}"
@@ -247,6 +247,8 @@ class SprintsController < ApplicationController
         closed_issues = @sprint.issues.where("state = 'Closed'")
         closed_issues.each { |issue| issue.update!(completed: true) }
 
+        @sprint.update!(final_snapshot: generate_snapshot(@sprint))
+
         record_action
 
         Activity.create(user: current_user, action: "finished_sprint", sprint: @sprint, project: @project, project_context: @project)
@@ -283,6 +285,7 @@ class SprintsController < ApplicationController
         render status: 200, json: {:error => "sprint has no snapshot"}.to_json
       else
         @snapshot = JSON.parse(@sprint.snapshot)["sprint_snapshot"]
+        @final = JSON.parse(@sprint.final_snapshot)["sprint_snapshot"]
       end
     end
   end

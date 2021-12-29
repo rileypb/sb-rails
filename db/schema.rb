@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_12_28_212235) do
+ActiveRecord::Schema.define(version: 2021_12_29_215126) do
 
   create_table "acceptance_criteria", force: :cascade do |t|
     t.text "criterion", null: false
@@ -163,6 +163,7 @@ ActiveRecord::Schema.define(version: 2021_12_28_212235) do
     t.date "actual_end_date"
     t.string "retrospective"
     t.text "snapshot"
+    t.text "final_snapshot"
     t.index ["project_id"], name: "index_sprints_on_project_id"
   end
 
