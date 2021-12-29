@@ -1,4 +1,4 @@
-json.extract! issue, :id, :title, :description, :estimate, :progress, :created_at, :updated_at, :completed
+json.extract! issue, :id, :title, :description, :estimate, :progress, :created_at, :updated_at, :completed, :closable
 json.state (issue.state || 'Open')
 if issue.last_changed_by
 	json.last_changed_by do

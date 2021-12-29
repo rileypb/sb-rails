@@ -181,6 +181,6 @@ class ProjectsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def project_params
-      params.require(:project).permit(:name, :owner_id, :picture, :setting_auto_close_issues, :setting_use_acceptance_criteria, :hidden)
+      params.require(:project).permit(:name, :owner_id, :picture, :setting_auto_close_issues, :setting_use_acceptance_criteria, :allow_issue_completion_without_sprint, :hidden)
     end
 end

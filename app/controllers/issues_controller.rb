@@ -344,6 +344,18 @@ class IssuesController < ApplicationController
     Issue.transaction do
       issue_id = params[:issue_id]
       @issue = Issue.find(issue_id)
+
+      project = @issue.project
+      sprint = @issue.sprint
+      if !project.allow_issue_completion_without_sprint
+        if !sprint
+          raise ActionController::BadRequest.new("cannot complete issue without a sprint.")
+        end
+        if sprint && !project.current_sprint == sprint.id 
+          raise ActionController::BadRequest.new("cannot complete issue if its sprint is not in progress.")
+        end
+      end
+
       check { can? :update, @issue }
 
       @issue.update!(state: 'Closed', completed: true)

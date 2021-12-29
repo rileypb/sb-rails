@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_12_07_022637) do
+ActiveRecord::Schema.define(version: 2021_12_28_212235) do
 
   create_table "acceptance_criteria", force: :cascade do |t|
     t.text "criterion", null: false
@@ -142,6 +142,7 @@ ActiveRecord::Schema.define(version: 2021_12_07_022637) do
     t.boolean "setting_use_acceptance_criteria", default: false, null: false
     t.string "key"
     t.boolean "hidden", default: false
+    t.boolean "allow_issue_completion_without_sprint", default: false
     t.index ["current_sprint_id"], name: "index_projects_on_current_sprint_id"
     t.index ["owner_id"], name: "index_projects_on_owner_id"
   end
