@@ -1,6 +1,6 @@
 json.extract! project, :id, :name, :created_at, :updated_at, :picture, 
 					   :setting_auto_close_issues, :setting_use_acceptance_criteria,
-					   :hidden
+					   :allow_issue_completion_without_sprint, :hidden, :allow_issue_completion_without_sprint
 json.path project_path(project, format: :json)
 json.permissions project.permissions(@current_user)
 if project.owner

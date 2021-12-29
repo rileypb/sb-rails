@@ -44,6 +44,14 @@ class SyncChannel < ApplicationCable::Channel
     if !@@uuids.include?(uuid)
       if user.admin?
         stream_from "sync:users"
+        stream_from "sync:user_pulse"
+      elsif user.teacher?
+        stream_from "sync:user_pulse_#{user.id}"
+        projects = user.projects
+        projects.each do |proj|
+          stream_from "sync:users_#{proj.id}_teacher"
+          update_users_for_project(proj.id)
+        end
       else
         projects = user.projects
         projects.each do |proj|
@@ -71,7 +79,8 @@ class SyncChannel < ApplicationCable::Channel
 
   def update_users_for_project(project_id)
     if Rails.application.config.send_active_users
-      SyncChannel.broadcast_to "users_#{project_id}", { action: 'sync', selector: "users_#{project_id}", data: user_data_for_project(project_id)}
+      SyncChannel.broadcast_to "users_#{project_id}", { action: 'sync', selector: "users_#{project_id}", data: user_data_for_project(project_id, false)}
+      SyncChannel.broadcast_to "users_#{project_id}_teacher", { action: 'sync', selector: "users_#{project_id}", data: user_data_for_project(project_id, true)}
     end
   end
 
@@ -83,14 +92,22 @@ class SyncChannel < ApplicationCable::Channel
     end
   end
 
-  def user_data_for_project(project_id)
+  def user_data_for_project(project_id, is_teacher)
     project = Project.find(project_id)
     all_users =  connection.server.connections.map {|c| c.current_user}.filter {|u| u}.map {|u| u.id}.uniq
     team_members = project.team_members
-    online_now = team_members.filter { |member| all_users.include?(member.id) && !member.admin? }
+    online_now = team_members.filter { |member| all_users.include?(member.id) && !member.admin? && (!member.teacher? || is_teacher) }
     online_now.map do |user|
       { id: user.id, first_name: user.first_name, last_name: user.last_name, displayName: user.displayName, picture: user.picture }
     end
+  end
+
+  def self.send_user_pulse(user)
+    SyncChannel.broadcast_to "user_pulse", { action: 'sync', selector: "user_pulse", data: { id: user.id }}
+    user.projects.map { |project| project.team_members }.flatten.uniq.filter { |tm| tm.teacher? }.each do |teacher|
+      SyncChannel.broadcast_to "user_pulse_#{teacher.id}", { action: 'sync', selector: "user_pulse", data: { id: user.id }}
+    end
+
   end
 
 end

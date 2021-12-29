@@ -95,6 +95,10 @@ class User < ApplicationRecord
 	  return (self.permission_scope || "").include? "admin" 
 	end
 
+	def teacher?
+	  return (self.permission_scope || "").include? "teacher" 
+	end
+
 	def label
 	  "#{self.last_name}, #{first_name}"
 	end

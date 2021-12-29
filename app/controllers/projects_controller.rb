@@ -22,6 +22,8 @@ class ProjectsController < ApplicationController
     check { can? :create, Project }
     @project = Project.new(project_params)
 
+    record_action
+
     respond_to do |format|
       if @project.save
         format.html { redirect_to @project, notice: 'Project was successfully created.' }
@@ -47,6 +49,8 @@ class ProjectsController < ApplicationController
           format.json { render :show, status: :ok, location: @project }
           sync_on "projects/#{@project.id}"
           sync_on_activities(@project)
+
+          record_action
         else
           format.json { render json: @project.errors, status: :unprocessable_entity }
         end
@@ -65,6 +69,8 @@ class ProjectsController < ApplicationController
       order_split.insert(Integer(safe_params[:toIndex]), order_split.delete_at(Integer(safe_params[:fromIndex])))
 
       @project.update(epic_order: order_split.join(','))
+
+      record_action
 
       Activity.create(user: current_user, action: "reordered_epics", project: @project, project_context: @project)
 
@@ -86,6 +92,8 @@ class ProjectsController < ApplicationController
 
       Activity.create!(user: current_user, action: "reordered_issues", project: @project, project_context: @project)
 
+      record_action
+
       @project.update!(issue_order: order_split.join(','))
       sync_on "projects/#{project_id}/issues"
       sync_on "projects/#{project_id}"
@@ -98,6 +106,7 @@ class ProjectsController < ApplicationController
   def destroy
     check { can? :delete, @project }
     @project.destroy
+    record_action
     respond_to do |format|
       format.html { redirect_to projects_url, notice: 'Project was successfully destroyed.' }
       format.json { head :no_content }
@@ -118,14 +127,45 @@ class ProjectsController < ApplicationController
     Project.transaction do
       @project = Project.find_by_key(params[:data][:projectKey])
       if @project 
-        read_permissions = ProjectPermission.where(user: current_user, project: @project, scope: 'read')
-        write_permissions = ProjectPermission.where(user: current_user, project: @project, scope: 'update')
-        if !read_permissions.present?
-          ProjectPermission.create!(user: current_user, project: @project, scope: 'read')
-        end
-        if !write_permissions.present?
-          ProjectPermission.create!(user: current_user, project: @project, scope: 'update')
-        end
+        self.add_user_to_project(@project, current_user)
+      else
+        raise ActiveRecord::RecordNotFound.new
+      end
+    end
+  end
+
+  def add_member
+    Project.transaction do
+      @project = Project.find(params[:project_id])
+      check { can? :add_user_to_project, @project }
+      new_member = User.find_by_email(params[:data][:email])
+      if @project && new_member 
+        self.add_user_to_project(@project, new_member)
+      else
+        raise ActiveRecord::RecordNotFound.new
+      end
+    end
+  end
+
+  def add_user_to_project(project, new_member)
+    read_permissions = ProjectPermission.where(user: new_member, project: project, scope: 'read')
+    write_permissions = ProjectPermission.where(user: new_member, project: project, scope: 'update')
+    if !read_permissions.present?
+      ProjectPermission.create!(user: new_member, project: project, scope: 'read')
+    end
+    if !write_permissions.present?
+      ProjectPermission.create!(user: new_member, project: project, scope: 'update')
+    end
+  end
+
+  def remove_member
+   Project.transaction do
+      @project = Project.find(params[:project_id])
+      check { can? :remove_user_from_project, @project }
+      member = User.find(params[:data][:userId])
+      if @project && member 
+        ProjectPermission.where(user: member, project: @project, scope: 'read').each { |m| m.delete }
+        ProjectPermission.where(user: member, project: @project, scope: 'update').each { |m| m.delete }
       else
         raise ActiveRecord::RecordNotFound.new
       end
@@ -133,6 +173,7 @@ class ProjectsController < ApplicationController
   end
 
   private
+
     # Use callbacks to share common setup or constraints between actions.
     def set_project
       @project = Project.find(params[:id])
@@ -140,6 +181,6 @@ class ProjectsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def project_params
-      params.require(:project).permit(:name, :owner_id, :picture, :setting_auto_close_issues, :setting_use_acceptance_criteria, :hidden)
+      params.require(:project).permit(:name, :owner_id, :picture, :setting_auto_close_issues, :setting_use_acceptance_criteria, :allow_issue_completion_without_sprint, :hidden)
     end
 end

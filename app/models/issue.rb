@@ -45,4 +45,18 @@ class Issue < ApplicationRecord
     def task_order_length
     	validate_order_length(self.tasks, :task_order)
     end
+
+    def closable
+      project = self.project
+      sprint = self.sprint
+      if !project.allow_issue_completion_without_sprint
+        if !sprint
+          return false
+        end
+        if sprint && !project.current_sprint == sprint.id 
+          return false
+        end
+      end
+      return true
+    end
 end

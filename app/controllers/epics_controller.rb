@@ -41,6 +41,8 @@ class EpicsController < ApplicationController
       Activity.create(user: current_user, action: "created_epic", epic: @epic, project_context: @epic.project)
       sync_on_activities(@epic.project)
       @epic.project.update!(epic_order: append_to_order(@epic.project.epic_order, @epic.id))
+
+      record_action
     end
   end
 
@@ -53,6 +55,8 @@ class EpicsController < ApplicationController
         sync_on path
         sync_on "epics/#{@epic.id}/issues/*"
         sync_on_activities(@epic.project)
+
+        record_action
         render json: @epic, status: :ok, location: @project
       else
         render json: @epic.errors, status: :unprocessable_entity
@@ -79,6 +83,8 @@ class EpicsController < ApplicationController
       sync_on "projects/#{@epic.project_id}/epics/*"
 
       sync_on_activities(@project)
+
+      record_action
       render json: { result: "success" }, status: :ok, location: @project
     end
   end
@@ -105,6 +111,8 @@ class EpicsController < ApplicationController
       sync_on "epics/#{epic_id}/issues/*"
       sync_on "issues/#{issue_id}"
       sync_on_activities(@epic.project)
+
+      record_action
     end
   end
 
@@ -147,6 +155,8 @@ class EpicsController < ApplicationController
       end
         
       sync_on_activities(@epic.project)
+
+      record_action
     end
   end
 
@@ -168,6 +178,8 @@ class EpicsController < ApplicationController
       Activity.create(user: current_user, action: "reordered_issues_within_epic", epic: @epic, project_context: @epic.project)
 
       sync_on_activities(@epic.project)
+
+      record_action
     end
   end
 
