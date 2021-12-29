@@ -364,6 +364,7 @@ class IssuesController < ApplicationController
 
       sync_on_activities(@issue.project)
       sync_on "issues/#{issue_id}"
+      sync_on "projects/#{@issue.project_id}/issues"
       sync_on "sprints/#{@issue.sprint_id}/issues"
       
       @issue.project.update_burndown_data!
