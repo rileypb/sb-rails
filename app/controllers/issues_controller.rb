@@ -469,7 +469,7 @@ class IssuesController < ApplicationController
 
   def set_ac_completed
     @issue = Issue.find(params[:issue_id])
-    check { can? :update, @issue }
+    check { can? :accept_ac, @issue }
     acparams = params.require(:acceptance_criterion).permit(:completed)
     @ac = @issue.acceptance_criteria.find(params[:ac_id])
     @ac.update!(completed: acparams[:completed])

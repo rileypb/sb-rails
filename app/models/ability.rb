@@ -14,6 +14,11 @@ class Ability
           can :compare, :all
           can :add_user_to_project, :all
           can :remove_user_from_project, :all
+          can :accept_ac, :all
+      end
+
+      if user.teacher?
+        can [:compare], Sprint, project: { owner: user }
       end
 
       can :access, Project
@@ -23,13 +28,12 @@ class Ability
       can :access, Task
       can :access, Comment
 
-      # # project owner can do anything with the project
+      # # project owner can do almost anything with the project
       can [:create_issue, :delete_issue, :read, :update, :configure, :add_user_to_project, :remove_user_from_project], Project, owner: user
-      can [:read, :update], Issue, project: { owner: user }
+      can [:read, :update, :accept_ac], Issue, project: { owner: user }
       can [:create_sprint, :delete_sprint], Project, owner: user
       can [:create_epic, :delete_epic], Project, owner: user
       can [:read, :update, :start, :suspend, :finish], Sprint, project: { owner: user }
-      can [:compare], Sprint, project: { owner: user }
       can [:read, :update], Task, issue: { project: { owner: user }}
       can [:read, :update], Epic, project: { owner: user }
       can [:create_task, :delete_task], Issue, project: { owner: user }

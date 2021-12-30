@@ -26,6 +26,7 @@ class Issue < ApplicationRecord
   		ability = Ability.new(user)
 		perms << 'create-task' if ability.can? :create_task, self
 		perms << 'delete-task' if ability.can? :delete_task, self
+		perms << 'accept_ac' if ability.can? :accept_ac, self
 		return perms
 	end
 
