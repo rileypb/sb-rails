@@ -38,6 +38,9 @@ class IssuesController < ApplicationController
     @issues = @issues.select do |issue|
       can? :read, issue
     end 
+    @issues = @issues.select do |issue|
+      !issue.completed
+    end
   end
 
   def all_issues
