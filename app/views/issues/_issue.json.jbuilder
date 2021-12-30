@@ -20,6 +20,7 @@ if issue.sprint
 	json.sprint do 
 		json.id issue.sprint.id
 		json.title issue.sprint.title
+		json.completed issue.sprint.completed
 	end
 end
 

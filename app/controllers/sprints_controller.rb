@@ -123,6 +123,10 @@ class SprintsController < ApplicationController
       issue = Issue.find(issue_id)
       project =  issue.project
       @sprint = Sprint.find(sprint_id)
+
+      _assert(ActionController::BadRequest, "Cannot add issue to completed sprint") { !@sprint.completed }
+      _assert(ActionController::BadRequest, "Cannot add completed issue to sprint") { !issue.completed }
+
       check { can? :update, @sprint }
       check { can? :update, issue }
       _assert(ArgumentError, "issue already belongs to sprint") { issue.sprint != @sprint }

@@ -112,6 +112,8 @@ class IssuesController < ApplicationController
       if !@issue
         raise ActionController::RoutingError, "Not Found"
       end 
+      _assert(ActionController::BadRequest, "Cannot update completed issue") { !@issue.completed }
+
       check { can? :update, @issue }
 
       iparams = issue_params
@@ -408,6 +410,9 @@ class IssuesController < ApplicationController
       @issue = Issue.find(issue_id)
       sprint_id = params[:sprint_id]
       @sprint = Sprint.find(sprint_id)
+
+      _assert(ActionController::BadRequest, "Cannot add issue to completed sprint") { !@sprint.completed }
+      _assert(ActionController::BadRequest, "Cannot add completed issue to sprint") { !@issue.completed }
 
       _assert(ArgumentError, "Sprints must differ") { |issue| @issue.sprint != @sprint }
       
