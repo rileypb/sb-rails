@@ -34,6 +34,7 @@ Rails.application.routes.draw do
       get 'retrospective_report', defaults: {format: :json}, to: 'sprints#retrospective_report'
       get 'snapshot', defaults: {format: :json}, to: 'sprints#snapshot'
       get 'compare', defaults: { format: :json }, to: 'sprints#compare'
+      get 'teacher_report', defaults: { format: :json }, to: 'sprints#teacher_report'
     end
     resources :issues, defaults: {format: :json} do
       resources :tasks
