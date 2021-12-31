@@ -55,12 +55,20 @@ class Project < ApplicationRecord
 	end
 
 	def add_issue(issue)
-		if self.issue_order.present?
+		if issue.completed
+			if self.issue_order.present?
 	    	self.issue_order += ",#{issue.id}"
 	    else
 	    	self.issue_order = "#{issue.id}"
 	    end
-	    self.save!
+	  else
+	  	if self.issue_order.present?
+		  	self.issue_order = "#{issue.id},#{self.issue_order}"
+		  else
+		  	self.issue_order = "#{issue.id}"
+		  end
+	  end
+    self.save!
 	end
 
 	def update_burndown_data!
