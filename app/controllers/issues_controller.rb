@@ -38,9 +38,6 @@ class IssuesController < ApplicationController
     @issues = @issues.select do |issue|
       can? :read, issue
     end 
-    @issues = @issues.select do |issue|
-      !issue.completed
-    end
   end
 
   def all_issues
@@ -362,6 +359,11 @@ class IssuesController < ApplicationController
       end
 
       check { can? :update, @issue }
+
+      if !@issue.sprint
+        check { can? :update, project }
+        project.update!(issue_order: append_to_order(remove_from_order(project.issue_order, issue_id),issue_id))
+      end
 
       @issue.update!(state: 'Closed', completed: true)
 
