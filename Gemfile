@@ -71,7 +71,7 @@ gem "addressable", ">= 2.8.0"
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 
 gem 'devise'
-gem 'omniauth', '~> 1.9.1'
+gem 'omniauth', '~> 2.1.0'
 # gem 'omniauth-gitlab'
 gem 'omniauth-google-oauth2'
 
