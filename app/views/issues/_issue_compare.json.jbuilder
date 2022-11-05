@@ -34,7 +34,7 @@ ac_ids_normal = all_ac_ids - (ac_ids_removed + ac_ids_added)
 json.acceptance_criteria do
 	json.array!(ac_ids_normal) do |id|
 		ac_old = issue_old["acceptance_criteria"].find { |x| x["id"] == id }
-		ac issue["acceptance_criteria"].find { |x| x["id"] == id }
+		ac = issue["acceptance_criteria"].find { |x| x["id"] == id }
 
 		json.id id
 		json.criterion_old ac_old["criterion"]
