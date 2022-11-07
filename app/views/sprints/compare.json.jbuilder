@@ -53,7 +53,7 @@ json.comparison do
 			json.tasks do
 				json.array!(issue["tasks"]) do |task|
 					json.id task["id"]
-					json.title tas["title"]
+					json.title task["title"]
 					json.description task["description"]
 					json.estimate task["estimate"]
 				end
