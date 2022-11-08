@@ -12,7 +12,7 @@ json.teacher_report do
 		end
 	end
 
-	incomplete_tasks = issues.map { |issue| issue["tasks"].filter { |task| !task["completed"] } }.flatten
+	incomplete_tasks = issues.map { |issue| issue["tasks"].filter { |task| task["state"] != "complete" } }.flatten
 	if incomplete_tasks.present?
 		json.incompleteTasks do
 			json.array!(incomplete_tasks) do |task|
