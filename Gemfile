@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-ruby '~> 2.6.1'
+ruby '~> 2.7'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '>= 6.1.4.1'
@@ -74,6 +74,7 @@ gem 'devise'
 gem 'omniauth', '~> 2.1.0'
 # gem 'omniauth-gitlab'
 gem 'omniauth-google-oauth2'
+#gem 'omniauth-auth0'
 
 gem 'cancancan'
 
