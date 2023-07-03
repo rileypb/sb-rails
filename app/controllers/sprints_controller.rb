@@ -42,6 +42,7 @@ class SprintsController < ApplicationController
       @sprint.update!(params)
       sync_on "sprints/#{@sprint.id}"
       sync_on_activities(@sprint.project)
+      sync_on path
       Activity.create(user: current_user, action: "updated_sprint", sprint: @sprint, project_context: @sprint.project)
     end
   end
@@ -323,5 +324,11 @@ class SprintsController < ApplicationController
 
     def generate_snapshot(sprint)
       self.render_to_string(:template => 'sprints/snapshot')
+    end
+
+    def path
+      return ["sprints/#{@sprint.id}",
+              "projects/#{@sprint.project_id}/sprints",
+              "projects/#{@sprint.project_id}/sprints/*"] 
     end
 end

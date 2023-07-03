@@ -50,10 +50,12 @@ class Issue < ApplicationRecord
     def closable
       project = self.project
       sprint = self.sprint
+	  if sprint && project.current_sprint == sprint.id
+		return true
+	  end
       if !project.allow_issue_completion_without_sprint
-        if !sprint
-          return false
-        end
+		return false
+	  else
         if sprint && !project.current_sprint == sprint.id 
           return false
         end
