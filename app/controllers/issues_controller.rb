@@ -348,6 +348,7 @@ class IssuesController < ApplicationController
       @issue = Issue.find(issue_id)
       if !@issue.closable
         raise ActionController::BadRequest.new("Sprint is not closable.")
+      end
 
       project = @issue.project
       sprint = @issue.sprint
