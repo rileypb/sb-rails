@@ -361,6 +361,7 @@ class IssuesController < ApplicationController
       end
       if !@issue.closable
         raise ActionController::BadRequest.new("sprint is not closable.")
+      end
 
       check { can? :update, @issue }
 
