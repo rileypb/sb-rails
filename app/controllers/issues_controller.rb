@@ -346,6 +346,8 @@ class IssuesController < ApplicationController
     Issue.transaction do
       issue_id = params[:issue_id]
       @issue = Issue.find(issue_id)
+      if !@issue.closable
+        raise ActionController::BadRequest.new("Sprint is not closable.")
 
       project = @issue.project
       sprint = @issue.sprint
@@ -357,6 +359,8 @@ class IssuesController < ApplicationController
           raise ActionController::BadRequest.new("cannot complete issue if its sprint is not in progress.")
         end
       end
+      if !@issue.closable
+        raise ActionController::BadRequest.new("sprint is not closable.")
 
       check { can? :update, @issue }
 
