@@ -47,6 +47,10 @@ RailsAdmin.config do |config|
       field :id do
         sort_reverse false
       end
+      field :email
+      field :first_name
+      field :last_name
+      field :picture
     end
     object_label_method do
       :label
