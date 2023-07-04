@@ -59,4 +59,36 @@ RailsAdmin.config do |config|
     end
   end
 
+  config.model 'Project' do
+    object_label_method do
+      :label
+    end
+    list do
+      field :name
+      field :owner do
+        searchable [:email]
+      end
+      field :demo
+      field :key
+      field :hidden
+      field :created_at
+      field :updated_at
+      field :picture
+      field :setting_auto_close_issues
+      field :setting_use_acceptance_criteria
+      field :epic_order
+      field :issue_order
+      field :current_sprint
+      field :project_permissions
+      field :allow_issue_completion_without_sprint
+      configure :created_at do
+        read_only true
+      end
+      configure :updated_at do
+        read_only true
+      end
+    end
+
+  end
+
 end
