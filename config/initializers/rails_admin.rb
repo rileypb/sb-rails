@@ -42,6 +42,12 @@ RailsAdmin.config do |config|
   end
 
   config.model 'User' do 
+    list do
+      sort_by :id
+      field :id do
+        sort_reverse false
+      end
+    end
     object_label_method do
       :label
     end
@@ -66,7 +72,7 @@ RailsAdmin.config do |config|
     list do
       field :name
       field :owner do
-        searchable [:email]
+        searchable [:email, :name]
       end
       field :demo
       field :key
