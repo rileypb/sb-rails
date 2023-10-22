@@ -3,6 +3,7 @@ require 'uri'
 
 class JsonWebToken
   def verify(token)
+    puts ">>> verify #{token}"
     JWT.decode(token, nil,
                true, # Verify the signature of this token
                algorithm: 'RS256',

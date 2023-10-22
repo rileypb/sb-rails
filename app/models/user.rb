@@ -36,12 +36,16 @@ class User < ApplicationRecord
 	end
 
 	def self.find_user_for_jwt(token)
+		puts ">>> find_user_for_jwt #{token}"
 		info = Rails.application.config.token_verifier.verify(token)
+		puts ">>> find_user_for_jwt #{info}"
 		id = info[0]["sub"]
+		puts ">>> find_user_for_jwt #{id}"
 
 		return nil unless id
 
 		user = User.where(oauthsub: id).first
+		puts ">>> find_user_for_jwt #{user}"
 
 		if !user
 			user_info = Rails.application.config.token_verifier.get_user_info(token)
