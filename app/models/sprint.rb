@@ -115,6 +115,10 @@ class Sprint < ApplicationRecord
         self.issues.flat_map {|i| i.tasks.filter {|t| !t.assignee}}.map { |t| t.issue }.uniq
     end
 
+    def closed?
+        return self.completed
+    end
+
     #
     # day number = Time.now.to_i / (24*3600)
     # day number -> string: Time.at(a*24*3600).getutc.strftime("%m/%d")
