@@ -40,7 +40,7 @@ class SyncChannel < ApplicationCable::Channel
   def auth(auth_info) 
     # pp ActionCable.server.connections
     puts "*** auth #{auth_info}"
-    user = User.find_user_for_jwt(auth_info['token'])
+    user = User.find_user_for_jwt(auth_info['data']['token'])
     puts ">>>>>>>>>>> auth #{user}"
     connection.current_user = user
 
