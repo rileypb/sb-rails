@@ -11,14 +11,12 @@ class SyncChannel < ApplicationCable::Channel
     update_users
     @@uuids.delete connection.connection_identifier
 
-    if connection.current_user
-      if !connection.current_user.admin?
-        projects = connection.current_user.projects
-        projects.each do |proj|
-          update_users_for_project(proj.id)
-        end
+    if !connection.current_user.admin?
+      projects = connection.current_user.projects
+      projects.each do |proj|
+        update_users_for_project(proj.id)
       end
-    end 
+    end
   end
 
   def receive(data)
