@@ -2,14 +2,14 @@
   "name": "sb-rails",
   "private": true,
   "dependencies": {
-    "@rails/webpacker": "5.4.4",
+    "@babel/core": "^7.23.2",
+    "@rails/webpacker": "6.0.0-rc.5",
     "babel-loader": "^8.0.0",
     "webpack": "^4.0.0",
-    "@babel/core": "^7.23.2",
     "webpack-cli": "^4.0.0"
   },
   "devDependencies": {
-    "webpack-dev-server": "^4.15.1",
-    "webpack": "^4.0.0"
+    "webpack": "^4.0.0",
+    "webpack-dev-server": "^4.15.1"
   }
 }
