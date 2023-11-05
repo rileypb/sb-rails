@@ -66,16 +66,16 @@ class ApplicationController < ActionController::Base
   	if !current_user
   		raise CanCan::AccessDenied
   	end
-  	if !self.is_a? RailsAdmin::MainController
-      begin
-        model_class = controller_name.classify.constantize
-      rescue
-  	    return
-      end
-  	  if cannot? :access, model_class
-  	 	  raise CanCan::AccessDenied
-  	  end 
-    end
+  	# if !self.is_a? RailsAdmin::MainController
+    #   begin
+    #     model_class = controller_name.classify.constantize
+    #   rescue
+  	#     return
+    #   end
+  	#   if cannot? :access, model_class
+  	#  	  raise CanCan::AccessDenied
+  	#   end 
+    # end
   end
 
 
