@@ -1,16 +1,19 @@
 {
   "name": "sb-rails",
   "private": true,
-  "engines" : { "node": "16.18.1" },
   "dependencies": {
+    "@babel/core": "^7.23.2",
     "@rails/webpacker": "5.4.4",
     "babel-loader": "^8.0.0",
+    "rails_admin": "3.1.2",
     "webpack": "^4.0.0",
-    "@babel/core": "^7.23.2",
     "webpack-cli": "^4.0.0"
   },
   "devDependencies": {
-    "webpack-dev-server": "^4.15.1",
-    "webpack": "^4.0.0"
+    "webpack": "^4.0.0",
+    "webpack-dev-server": "^4.15.1"
+  },
+  "resolutions": {
+    "rails_admin/@fortawesome/fontawesome-free": "^5.15.0"
   }
 }
