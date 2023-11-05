@@ -50,6 +50,9 @@ class Issue < ApplicationRecord
     def closable
       project = self.project
       sprint = self.sprint
+	  if sprint && sprint.closed
+		return true
+	  end
 	  if sprint && project.current_sprint == sprint.id
 		return true
 	  end
