@@ -1,5 +1,5 @@
 
-class CS345
+class Cs345
 	def self.add(last_name, team_number)
 		user = User.find_by_last_name(last_name)
 		if !user
