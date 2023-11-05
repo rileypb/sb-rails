@@ -1,6 +1,7 @@
 {
   "name": "sb-rails",
   "private": true,
+  "engines" : { "node": "16.18.1" },
   "dependencies": {
     "@rails/webpacker": "5.4.4",
     "babel-loader": "^8.0.0",
