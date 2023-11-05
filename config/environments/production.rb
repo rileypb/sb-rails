@@ -1,3 +1,4 @@
+require_relative '../../app/lib/json_web_token'
 require "active_support/core_ext/integer/time"
 
 Rails.application.configure do
