@@ -1,6 +1,9 @@
 {
   "name": "sb-rails",
   "private": true,
+  "engines": {
+    "node": "18.0"
+  },
   "dependencies": {
     "@babel/core": "^7.23.2",
     "@rails/webpacker": "5.4.4",
