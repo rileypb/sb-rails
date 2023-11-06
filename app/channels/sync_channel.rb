@@ -27,18 +27,33 @@ class SyncChannel < ApplicationCable::Channel
   def sync(data)
     # if current_user.admin? || data['selector'] != 'users'
     puts "--------------------------------- sync #{data}"
-    stream_from "sync:#{data['selector']}"
+    if data.include?('selector')
+      selector = data['selector']
+    else  
+      selector = data['data']['selector']
+    end
+    stream_from "sync:#{selector}"
     # end
   end
 
   def cancelsync(data)
-    stop_stream_from "sync:#{data['selector']}"
+    if data.include?('selector')
+      selector = data['selector']
+    else  
+      selector = data['data']['selector']
+    end
+    stop_stream_from "sync:#{selector}"
   end
 
   def auth(auth_info) 
     # pp ActionCable.server.connections
     puts "*** auth #{auth_info}"
-    user = User.find_user_for_jwt(auth_info['token'])
+    if auth_info.include?('token')
+      token = auth_info['token']
+    else
+      token = auth_info['data']['token']
+    end
+    user = User.find_user_for_jwt(token)
     puts ">>>>>>>>>>> auth #{user}"
     connection.current_user = user
 
