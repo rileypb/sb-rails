@@ -78,7 +78,7 @@ gem 'omniauth-google-oauth2'
 
 gem 'cancancan'
 
-#gem 'rails_admin', "3.0.0"
+gem 'rails_admin', "3.0.0"
 
 #gem 'angular_rails_csrf'
 
