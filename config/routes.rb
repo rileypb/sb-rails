@@ -7,6 +7,7 @@ Rails.application.routes.draw do
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 
   scope '/api' do
+    post 'projects', defaults: {format: :json}, to: 'projects#create'
     post 'projects/join', defaults: {format: :json}, to: 'projects#join_project'
   	resources :projects, except: [:new, :edit], defaults: {format: :json} do
   		resources :sprints
