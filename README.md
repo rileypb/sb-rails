@@ -4,6 +4,8 @@ This is the back end for Scrumboard. Good to see you! See [sb-angular](https://g
 
 You'll also need to clone and run https://github.com/rileypb/sb-angular. 
 
+If you need help setting up Scrumboard, please contact me at rileypb@gmail.com
+
 ## Setting Up
 
 After cloning the repository, install the dependencies with `bundle install`. 
