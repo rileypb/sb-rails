@@ -29,7 +29,7 @@ class SyncChannel < ApplicationCable::Channel
   def sync(data)
     # if current_user.admin? || data['selector'] != 'users'
     puts "--------------------------------- sync #{data}"
-    stream_from "sync:#{data['data']['selector']}"
+    stream_from "sync:#{data['selector']}"
     # end
   end
 
