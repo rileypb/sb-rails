@@ -49,6 +49,10 @@ class TasksController < ApplicationController
 
       params = task_params.merge(issue_id: issue_id)
 
+      if !(params[:estimate].is_a? Numeric)
+        params[:estimate] = 0
+      end
+
       params.delete :id if params[:id] == -1
 
       @task = Task.create(params)
@@ -195,6 +199,9 @@ class TasksController < ApplicationController
     end
 
     def task_params
+      if !(params[:estimate].is_a? Numeric)
+        params[:estimate] = 0
+      end
       params.require(:task).permit(:title, :description, :estimate)
     end
 
