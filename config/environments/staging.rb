@@ -118,4 +118,9 @@ Rails.application.configure do
   
 
   config.token_verifier = JsonWebToken.new
+
+  v = ENV["REDIS_URL"]
+  p v
+  p ">>>>", [v.bytes.first(3), v.bytes.last(3)]
+
 end
