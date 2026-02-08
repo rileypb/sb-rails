@@ -43,7 +43,11 @@ Rails.application.configure do
   # Mount Action Cable outside main process or domain.
   # config.action_cable.mount_path = '/cable'
   config.action_cable.url = ENV['ACTION_CABLE_URL']
-  config.action_cable.allowed_request_origins = [ 'https://sb-staging-ui.herokuapp.com', /http:\/\/sb-staging-ui.herokuapp.com.*/ ]
+  config.action_cable.allowed_request_origins = 
+    [ 'https://scrumboard-ui.herokuapp.com', /http:\/\/scrumboard-ui.herokuapp.com.*/, 
+      'https://www.learnscrum.xyz', /http:\/\/learnscrum.xyz.*/,
+      'https://sb-staging-ui-2-*.herokuapp.com', /https:\/\/sb-staging-ui-2-.*.herokuapp.com.*/,
+      'https://sb-staging-ui.herokuapp.com', /http:\/\/sb-staging-ui.herokuapp.com.*/ ]
 
   # Force all access to the app over SSL, use Strict-Transport-Security, and use secure cookies.
   # config.force_ssl = true
