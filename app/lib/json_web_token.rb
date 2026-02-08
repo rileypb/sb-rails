@@ -4,6 +4,7 @@ require 'uri'
 class JsonWebToken
   def verify(token)
     puts ">>> verify #{token}"
+    puts ">>> #{Rails.application.credentials}"
     JWT.decode(token, nil,
                true, # Verify the signature of this token
                algorithm: 'RS256',
