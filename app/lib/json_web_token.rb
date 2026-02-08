@@ -4,12 +4,15 @@ require 'uri'
 class JsonWebToken
   def verify(token)
     puts ">>> verify #{token}"
+    Rails.logger.info("+++ ENV=#{Rails.env} creds_file=#{Rails.application.credentials.content_path}")
+    Rails.logger.info("+++ auth0=#{Rails.application.credentials.dig(:auth0).inspect}")
+
     JWT.decode(token, nil,
                true, # Verify the signature of this token
                algorithm: 'RS256',
-               iss: Rails.application.credentials[:auth0][:domain],
+               iss: Rails.application.credentials.auth0[:domain],
                verify_iss: true,
-               aud: Rails.application.credentials[:auth0][:api_identifier],
+               aud: Rails.application.credentials.auth0[:api_identifier],
                verify_aud: true) do |header|
       jwks_hash[header['kid']]
     end
