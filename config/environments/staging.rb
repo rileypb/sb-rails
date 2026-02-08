@@ -119,8 +119,15 @@ Rails.application.configure do
 
   config.token_verifier = JsonWebToken.new
 
-  v = ENV["REDIS_URL"]
-  p v
-  p ">>>>", [v.bytes.first(3), v.bytes.last(3)]
+  Redis.class_eval do
+    class << self
+      alias_method :__new, :new
+      def new(*args, **kwargs)
+        Rails.logger.warn("Redis.new args=#{args.inspect} kwargs=#{kwargs.inspect}")
+        __new(*args, **kwargs)
+      end
+    end
+  end
+
 
 end
